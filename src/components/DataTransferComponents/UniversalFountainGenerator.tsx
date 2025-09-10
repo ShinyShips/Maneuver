@@ -8,6 +8,26 @@ import { toast } from "sonner";
 import { createEncoder, blockToBinary } from "luby-transform";
 import { fromUint8Array } from "js-base64";
 import { Info } from "lucide-react";
+import { 
+  compressScoutingData, 
+  shouldUseCompression, 
+  getCompressionStats,
+  isScoutingDataCollection,
+  MIN_FOUNTAIN_SIZE_COMPRESSED,
+  MIN_FOUNTAIN_SIZE_UNCOMPRESSED,
+  QR_CODE_SIZE_BYTES,
+  type ScoutingDataCollection
+} from "@/lib/compressionUtils";
+import {
+  type DataFilters,
+  createDefaultFilters,
+  applyFilters,
+  setLastExportedMatch,
+  extractMatchRange
+} from "@/lib/dataFiltering";
+import { 
+  DataFilteringControls
+} from "./DataFilteringControls";
 
 interface FountainPacket {
   type: string;
@@ -23,7 +43,7 @@ interface FountainPacket {
 interface UniversalFountainGeneratorProps {
   onBack: () => void;
   onSwitchToScanner?: () => void;
-  dataType: 'scouting' | 'match' | 'scouter' | 'combined' | 'pit-scouting';
+  dataType: 'scouting' | 'match' | 'scouter' | 'combined' | 'pit-scouting' | 'pit-images';
   loadData: () => Promise<unknown> | unknown;
   title: string;
   description: string;
@@ -43,6 +63,12 @@ const UniversalFountainGenerator = ({
   const [currentPacketIndex, setCurrentPacketIndex] = useState(0);
   const [data, setData] = useState<unknown>(null);
   const [cycleSpeed, setCycleSpeed] = useState(500);
+  const [compressionInfo, setCompressionInfo] = useState<string>('');
+
+  // Data Filtering State
+  const [filters, setFilters] = useState<DataFilters>(createDefaultFilters());
+  const [filteredData, setFilteredData] = useState<ScoutingDataCollection | null>(null);
+  const [showFiltering, setShowFiltering] = useState(false);
 
   // Speed presets
   const speedPresets = [
@@ -71,21 +97,88 @@ const UniversalFountainGenerator = ({
     loadDataAsync();
   }, [loadData, dataType]);
 
+  // Initialize filtering when data loads
+  useEffect(() => {
+    const shouldShow = dataType === 'scouting' && 
+                      isScoutingDataCollection(data) &&
+                      data.entries.length > 50;
+    
+    if (shouldShow) {
+      setShowFiltering(true);
+      setFilteredData(data);
+    } else {
+      setShowFiltering(false);
+      setFilteredData(null);
+    }
+  }, [data, dataType]);
+
+  // Handle filter changes
+  const handleFiltersChange = (newFilters: DataFilters) => {
+    setFilters(newFilters);
+  };
+
+  // Apply filters to data
+  const handleApplyFilters = () => {
+    if (isScoutingDataCollection(data)) {
+      const filtered = applyFilters(data, filters);
+      setFilteredData(filtered);
+      toast.success(`Filtered to ${filtered.entries.length} entries`);
+    }
+  };
+
+  // Get the data to use for QR generation (filtered or original)
+  const getDataForGeneration = (): unknown => {
+    if (showFiltering && filteredData) {
+      return filteredData;
+    }
+    return data;
+  };
+
   const generateFountainPackets = () => {
-    if (!data) {
+    const dataToUse = getDataForGeneration();
+    if (!dataToUse) {
       toast.error(`No ${dataType} data available`);
       return;
     }
 
-    const jsonString = JSON.stringify(data);
-    const encodedData = new TextEncoder().encode(jsonString);
+    // Cache JSON string to avoid duplicate serialization
+    const jsonString = JSON.stringify(dataToUse);
+    
+    // Determine if we should use advanced compression
+    const useCompression = shouldUseCompression(dataToUse, jsonString) && dataType === 'scouting';
+    
+    let encodedData: Uint8Array;
+    let currentCompressionInfo = '';
+    
+    if (useCompression && isScoutingDataCollection(dataToUse)) {
+      // Use advanced compression for scouting data
+      if (import.meta.env.DEV) {
+        console.log('🗜️ Using Phase 3 advanced compression...');
+      }
+      encodedData = compressScoutingData(dataToUse, jsonString);
+      const stats = getCompressionStats(dataToUse, encodedData, jsonString);
+      currentCompressionInfo = `Advanced compression: ${stats.originalSize} → ${stats.compressedSize} bytes (${(100 - stats.compressionRatio * 100).toFixed(1)}% reduction, ${stats.estimatedQRReduction})`;
+      toast.success(`Advanced compression: ${(100 - stats.compressionRatio * 100).toFixed(1)}% size reduction!`);
+    } else {
+      // Use standard JSON encoding
+      encodedData = new TextEncoder().encode(jsonString);
+      currentCompressionInfo = `Standard JSON: ${encodedData.length} bytes`;
+    }
+    
+    // Store compression info for display
+    setCompressionInfo(currentCompressionInfo);
     
     // Validate data size - need sufficient data for meaningful fountain codes
-    const minDataSize = 100; // Minimum 100 bytes for meaningful fountain codes
+    // Lower threshold for compressed data since compression can be very effective
+    const minDataSize = useCompression ? MIN_FOUNTAIN_SIZE_COMPRESSED : MIN_FOUNTAIN_SIZE_UNCOMPRESSED;
     if (encodedData.length < minDataSize) {
       toast.error(`${dataType} data is too small (${encodedData.length} bytes). Need at least ${minDataSize} bytes for fountain code generation.`);
       console.warn(`Data too small for fountain codes: ${encodedData.length} bytes (min: ${minDataSize})`);
       return;
+    }
+    
+    if (import.meta.env.DEV) {
+      console.log(`📊 ${currentCompressionInfo}`);
     }
         
     const blockSize = 200;
@@ -94,21 +187,36 @@ const UniversalFountainGenerator = ({
 
     const generatedPackets: FountainPacket[] = [];
     let packetId = 0;
-    const maxPackets = 30;
     const seenIndicesCombinations = new Set();
     let iterationCount = 0;
-    const maxIterations = maxPackets * 10; // Safety limit to prevent infinite loops
+    
+    // Calculate how many blocks we have for intelligent packet generation
+    const estimatedBlocks = Math.ceil(encodedData.length / blockSize);
+    // Generate enough packets for successful decoding: k blocks + 20% overhead for redundancy
+    const targetPackets = Math.ceil(estimatedBlocks * 1.2);
+    // Cap maximum iterations to prevent infinite loops (generous safety limit)
+    const maxIterations = targetPackets * 5;
+
+    if (import.meta.env.DEV) {
+      console.log(`📊 Fountain code generation: ${estimatedBlocks} blocks, targeting ${targetPackets} packets`);
+    }
 
     for (const block of ltEncoder.fountain()) {
       iterationCount++;
       
       // Safety check to prevent infinite loops
       if (iterationCount > maxIterations) {
-        console.warn(`Reached maximum iterations (${maxIterations}), stopping generation`);
+        console.warn(`Reached maximum iterations (${maxIterations}), stopping generation with ${generatedPackets.length} packets`);
         break;
       }
       
-      if (packetId >= maxPackets) break;
+      // Stop when we have enough packets for reliable decoding
+      if (generatedPackets.length >= targetPackets) {
+        if (import.meta.env.DEV) {
+          console.log(`✅ Generated target ${targetPackets} packets, stopping`);
+        }
+        break;
+      }
       
       try {
         const indicesKey = block.indices.sort().join(',');
@@ -134,7 +242,7 @@ const UniversalFountainGenerator = ({
 
         const packetJson = JSON.stringify(packet);
 
-        if (packetJson.length > 1800) {
+        if (packetJson.length > (QR_CODE_SIZE_BYTES * 0.9)) { // 90% of QR capacity to leave room for encoding overhead
           console.warn(`Packet ${packetId} too large (${packetJson.length} chars), skipping`);
           continue;
         }
@@ -149,6 +257,12 @@ const UniversalFountainGenerator = ({
     
     setPackets(generatedPackets);
     setCurrentPacketIndex(0);
+    
+    // Track the last exported match for "from last export" filtering
+    if (isScoutingDataCollection(dataToUse) && dataType === 'scouting') {
+      const matchRange = extractMatchRange(dataToUse);
+      setLastExportedMatch(matchRange.max);
+    }
     
     const selectedSpeed = speedPresets.find(s => s.value === cycleSpeed);
     const estimatedTime = Math.round((generatedPackets.length * cycleSpeed) / 1000);
@@ -168,19 +282,54 @@ const UniversalFountainGenerator = ({
 
   // Helper function to check if data is sufficient for fountain code generation
   const isDataSufficient = () => {
-    if (!data) return false;
-    const jsonString = JSON.stringify(data);
-    const encodedData = new TextEncoder().encode(jsonString);
-    return encodedData.length >= 100; // Minimum 100 bytes
+    const dataToCheck = getDataForGeneration();
+    if (!dataToCheck) return false;
+    
+    // Cache JSON string to avoid duplicate serialization
+    const jsonString = JSON.stringify(dataToCheck);
+    
+    // Check if compression would be used
+    const useCompression = shouldUseCompression(dataToCheck, jsonString) && dataType === 'scouting';
+    const minSize = useCompression ? MIN_FOUNTAIN_SIZE_COMPRESSED : MIN_FOUNTAIN_SIZE_UNCOMPRESSED;
+    
+    if (useCompression && isScoutingDataCollection(dataToCheck)) {
+      // Use actual compression to get accurate size estimate
+      try {
+        const compressed = compressScoutingData(dataToCheck, jsonString);
+        const compressedSize = compressed.length;
+        return compressedSize >= minSize;
+      } catch (error) {
+        // Fallback to rough estimate if compression fails
+        if (import.meta.env.DEV) {
+          console.warn('Compression size estimation failed, using fallback:', error);
+        }
+        // Conservative compression ratio estimate for fallback
+        const CONSERVATIVE_COMPRESSION_RATIO = 0.1;
+        const estimatedCompressedSize = Math.floor(jsonString.length * CONSERVATIVE_COMPRESSION_RATIO);
+        return estimatedCompressedSize >= minSize;
+      }
+    } else {
+      // Standard JSON size check
+      const encodedData = new TextEncoder().encode(jsonString);
+      return encodedData.length >= minSize;
+    }
   };
 
   const getDataSizeInfo = () => {
-    if (!data) return null;
-    const jsonString = JSON.stringify(data);
+    const dataToCheck = getDataForGeneration();
+    if (!dataToCheck) return null;
+    
+    // Cache JSON string to avoid duplicate serialization
+    const jsonString = JSON.stringify(dataToCheck);
+    const useCompression = shouldUseCompression(dataToCheck, jsonString) && dataType === 'scouting';
+    const minSize = useCompression ? MIN_FOUNTAIN_SIZE_COMPRESSED : MIN_FOUNTAIN_SIZE_UNCOMPRESSED;
+    
     const encodedData = new TextEncoder().encode(jsonString);
+    
     return {
       size: encodedData.length,
-      sufficient: encodedData.length >= 100
+      sufficient: encodedData.length >= minSize,
+      compressed: useCompression
     };
   };
 
@@ -211,6 +360,28 @@ const UniversalFountainGenerator = ({
             </Button>
           )}
         </div>
+
+        {/* Data Filtering - Only show for large scouting datasets */}
+        {showFiltering && data && !packets.length ? (
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle className="text-center">Data Filtering</CardTitle>
+              <CardDescription className="text-center">
+                Reduce QR codes by filtering to specific teams or matches
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <DataFilteringControls
+                data={data as ScoutingDataCollection}
+                filters={filters}
+                onFiltersChange={handleFiltersChange}
+                onApplyFilters={handleApplyFilters}
+                useCompression={shouldUseCompression(data) && dataType === 'scouting'}
+                filteredData={filteredData}
+              />
+            </CardContent>
+          </Card>
+        ) : null}
 
         {!packets.length ? (
           <Card className="w-full">
@@ -257,7 +428,8 @@ const UniversalFountainGenerator = ({
                 <Alert variant="destructive">
                   <AlertDescription>
                     {dataType} data is too small ({dataSizeInfo?.size || 0} bytes). 
-                    Need at least 100 bytes for fountain code generation.
+                    Need at least {dataSizeInfo?.compressed ? MIN_FOUNTAIN_SIZE_COMPRESSED : MIN_FOUNTAIN_SIZE_UNCOMPRESSED} bytes for fountain code generation.
+                    {dataSizeInfo?.compressed && ' (Compressed data threshold)'}
                   </AlertDescription>
                 </Alert>
               ) : null}
@@ -330,6 +502,11 @@ const UniversalFountainGenerator = ({
                 </div>
                 <CardDescription>
                   Broadcasting {packets.length} fountain packets
+                  {compressionInfo && (
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {compressionInfo}
+                    </div>
+                  )}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">

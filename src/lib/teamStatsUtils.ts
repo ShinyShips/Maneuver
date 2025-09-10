@@ -1,4 +1,5 @@
-import type { ScoutingEntry, TeamStats, MatchResult } from './teamStatsTypes';
+import type { ScoutingEntry } from './scoutingTypes';
+import type { TeamStats, MatchResult } from './teamStatsTypes';
 
 export const parseScoutingEntry = (dataObject: Record<string, unknown>): ScoutingEntry => {
   return {

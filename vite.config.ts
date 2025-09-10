@@ -16,6 +16,7 @@ export default defineConfig({
       },
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'android-chrome-192x192.png', 'android-chrome-512x512.png'],
       workbox: {
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3 MB (increase from default 2 MB)
         runtimeCaching: [
           {
             urlPattern: ({ request }) => request.destination === "document",

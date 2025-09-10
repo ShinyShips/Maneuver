@@ -10,6 +10,8 @@ import { createDecoder, binaryToBlock } from "luby-transform";
 import { toUint8Array } from "js-base64";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import * as pako from 'pako';
+import { type CompressedEntry } from '@/lib/compressionUtils';
 
 interface FountainPacket {
   type: string;
@@ -25,7 +27,7 @@ interface FountainPacket {
 interface UniversalFountainScannerProps {
   onBack: () => void;
   onSwitchToGenerator?: () => void;
-  dataType: 'scouting' | 'match' | 'scouter' | 'combined' | 'pit-scouting';
+  dataType: 'scouting' | 'match' | 'scouter' | 'combined' | 'pit-scouting' | 'pit-images';
   expectedPacketType: string;
   saveData: (data: unknown) => void;
   validateData: (data: unknown) => boolean;
@@ -54,15 +56,18 @@ const UniversalFountainScanner = ({
   const [progress, setProgress] = useState({ received: 0, needed: 0, percentage: 0 });
   const [debugLog, setDebugLog] = useState<string[]>([]);
   const [allowDuplicates, setAllowDuplicates] = useState(false);
+  const [compressionDetected, setCompressionDetected] = useState<boolean | null>(null);
   
   // Use refs for immediate access without React state delays
   const decoderRef = useRef<unknown>(null);
   const packetsRef = useRef<Map<number, FountainPacket>>(new Map());
   const sessionRef = useRef<string | null>(null);
 
-  // Helper function to add debug messages
+  // Helper function to add debug messages (dev-only)
   const addDebugMsg = (message: string) => {
-    setDebugLog(prev => [...prev.slice(-20), `${new Date().toLocaleTimeString()}: ${message}`]);
+    if (import.meta.env.DEV) {
+      setDebugLog(prev => [...prev.slice(-20), `${new Date().toLocaleTimeString()}: ${message}`]);
+    }
   };
 
   const handleQRScan = (result: { rawValue: string; }[]) => {
@@ -126,8 +131,229 @@ const UniversalFountainScanner = ({
             addDebugMsg("🎉 DECODING COMPLETE!");
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const decodedData = (decoderRef.current as any).getDecoded();
-            const jsonString = new TextDecoder().decode(decodedData);
-            const parsedData = JSON.parse(jsonString);
+            addDebugMsg(`📊 Decoded data size: ${decodedData.length} bytes`);
+            
+            let parsedData: unknown;
+            
+            try {
+              // Check if data is gzip compressed (starts with magic bytes 1f 8b)
+              const isGzipCompressed = decodedData.length > 2 && 
+                                      decodedData[0] === 0x1f && 
+                                      decodedData[1] === 0x8b;
+              
+              if (isGzipCompressed) {
+                addDebugMsg("🗜️ Detected compressed data, decompressing...");
+                setCompressionDetected(true);
+                
+                // Decompress gzip
+                const decompressed = pako.ungzip(decodedData);
+                const jsonString = new TextDecoder().decode(decompressed);
+                const decompressedData = JSON.parse(jsonString);
+                
+                // Check if this is smart compression format
+                if (decompressedData && typeof decompressedData === 'object' && 
+                    decompressedData.meta && decompressedData.meta.compressed) {
+                  addDebugMsg("🔧 Detected smart compression format, expanding data...");
+                  addDebugMsg(`🔍 Compressed entries count: ${decompressedData.entries?.length || 0}`);
+                  addDebugMsg(`🔍 First compressed entry keys: ${decompressedData.entries?.[0] ? Object.keys(decompressedData.entries[0]).join(', ') : 'none'}`);
+                  
+                  // Rebuild dictionaries for expansion
+                  const scouterDict = decompressedData.meta.scouterDict || [];
+                  const eventDict = decompressedData.meta.eventDict || [];
+                  const allianceReverse = ['redAlliance', 'blueAlliance'] as const;
+                  addDebugMsg(`🔍 Scouter dictionary: ${scouterDict.length} entries`);
+                  addDebugMsg(`🔍 Event dictionary: ${eventDict.length} entries`);
+                  
+                  // Expand compressed entries back to full format
+                  const expandedEntries = decompressedData.entries.map((compressed: CompressedEntry, index: number) => {
+                    addDebugMsg(`🔍 Expanding entry ${index}: ${JSON.stringify(compressed).substring(0, 100)}...`);
+                    const expanded: Record<string, unknown> = {};
+                    
+                    // Expand dictionary-compressed fields
+                    if (typeof compressed.a === 'number') expanded.alliance = allianceReverse[compressed.a];
+                    if (typeof compressed.s === 'number') expanded.scouterInitials = scouterDict[compressed.s];
+                    if (typeof compressed.sf === 'string') expanded.scouterInitials = compressed.sf;
+                    if (typeof compressed.e === 'number') expanded.eventName = eventDict[compressed.e];
+                    if (typeof compressed.ef === 'string') expanded.eventName = compressed.ef;
+                    
+                    // Expand basic fields
+                    if (compressed.m) expanded.matchNumber = compressed.m;
+                    if (compressed.t) expanded.selectTeam = compressed.t;
+                    
+                    // Expand packed boolean start positions
+                    if (typeof compressed.p === 'number') {
+                      expanded.startPoses0 = !!(compressed.p & 1);
+                      expanded.startPoses1 = !!(compressed.p & 2);
+                      expanded.startPoses2 = !!(compressed.p & 4);
+                      expanded.startPoses3 = !!(compressed.p & 8);
+                      expanded.startPoses4 = !!(compressed.p & 16);
+                      expanded.startPoses5 = !!(compressed.p & 32);
+                    } else {
+                      expanded.startPoses0 = false;
+                      expanded.startPoses1 = false;
+                      expanded.startPoses2 = false;
+                      expanded.startPoses3 = false;
+                      expanded.startPoses4 = false;
+                      expanded.startPoses5 = false;
+                    }
+                    
+                    // Expand auto coral counts (default to 0 if not present)
+                    if (Array.isArray(compressed.ac)) {
+                      expanded.autoCoralPlaceL1Count = compressed.ac[0] || 0;
+                      expanded.autoCoralPlaceL2Count = compressed.ac[1] || 0;
+                      expanded.autoCoralPlaceL3Count = compressed.ac[2] || 0;
+                      expanded.autoCoralPlaceL4Count = compressed.ac[3] || 0;
+                    } else {
+                      // Ensure these fields exist even if not in compressed data
+                      expanded.autoCoralPlaceL1Count = 0;
+                      expanded.autoCoralPlaceL2Count = 0;
+                      expanded.autoCoralPlaceL3Count = 0;
+                      expanded.autoCoralPlaceL4Count = 0;
+                    }
+                    
+                    // Expand other auto counts
+                    if (Array.isArray(compressed.ao)) {
+                      expanded.autoCoralPlaceDropMissCount = compressed.ao[0] || 0;
+                      expanded.autoCoralPickPreloadCount = compressed.ao[1] || 0;
+                      expanded.autoCoralPickStationCount = compressed.ao[2] || 0;
+                      expanded.autoCoralPickMark1Count = compressed.ao[3] || 0;
+                      expanded.autoCoralPickMark2Count = compressed.ao[4] || 0;
+                      expanded.autoCoralPickMark3Count = compressed.ao[5] || 0;
+                    } else {
+                      expanded.autoCoralPlaceDropMissCount = 0;
+                      expanded.autoCoralPickPreloadCount = 0;
+                      expanded.autoCoralPickStationCount = 0;
+                      expanded.autoCoralPickMark1Count = 0;
+                      expanded.autoCoralPickMark2Count = 0;
+                      expanded.autoCoralPickMark3Count = 0;
+                    }
+                    
+                    // Expand auto algae
+                    if (Array.isArray(compressed.aa)) {
+                      expanded.autoAlgaePlaceNetShot = compressed.aa[0] || 0;
+                      expanded.autoAlgaePlaceProcessor = compressed.aa[1] || 0;
+                      expanded.autoAlgaePlaceDropMiss = compressed.aa[2] || 0;
+                      expanded.autoAlgaePlaceRemove = compressed.aa[3] || 0;
+                      expanded.autoAlgaePickReefCount = compressed.aa[4] || 0;
+                    } else {
+                      expanded.autoAlgaePlaceNetShot = 0;
+                      expanded.autoAlgaePlaceProcessor = 0;
+                      expanded.autoAlgaePlaceDropMiss = 0;
+                      expanded.autoAlgaePlaceRemove = 0;
+                      expanded.autoAlgaePickReefCount = 0;
+                    }
+                    
+                    // Expand teleop coral
+                    if (Array.isArray(compressed.tc)) {
+                      expanded.teleopCoralPlaceL1Count = compressed.tc[0] || 0;
+                      expanded.teleopCoralPlaceL2Count = compressed.tc[1] || 0;
+                      expanded.teleopCoralPlaceL3Count = compressed.tc[2] || 0;
+                      expanded.teleopCoralPlaceL4Count = compressed.tc[3] || 0;
+                      expanded.teleopCoralPlaceDropMissCount = compressed.tc[4] || 0;
+                      expanded.teleopCoralPickStationCount = compressed.tc[5] || 0;
+                      expanded.teleopCoralPickCarpetCount = compressed.tc[6] || 0;
+                    } else {
+                      expanded.teleopCoralPlaceL1Count = 0;
+                      expanded.teleopCoralPlaceL2Count = 0;
+                      expanded.teleopCoralPlaceL3Count = 0;
+                      expanded.teleopCoralPlaceL4Count = 0;
+                      expanded.teleopCoralPlaceDropMissCount = 0;
+                      expanded.teleopCoralPickStationCount = 0;
+                      expanded.teleopCoralPickCarpetCount = 0;
+                    }
+                    
+                    // Expand teleop algae
+                    if (Array.isArray(compressed.ta)) {
+                      expanded.teleopAlgaePlaceNetShot = compressed.ta[0] || 0;
+                      expanded.teleopAlgaePlaceProcessor = compressed.ta[1] || 0;
+                      expanded.teleopAlgaePlaceDropMiss = compressed.ta[2] || 0;
+                      expanded.teleopAlgaePlaceRemove = compressed.ta[3] || 0;
+                      expanded.teleopAlgaePickReefCount = compressed.ta[4] || 0;
+                      expanded.teleopAlgaePickCarpetCount = compressed.ta[5] || 0;
+                    } else {
+                      expanded.teleopAlgaePlaceNetShot = 0;
+                      expanded.teleopAlgaePlaceProcessor = 0;
+                      expanded.teleopAlgaePlaceDropMiss = 0;
+                      expanded.teleopAlgaePlaceRemove = 0;
+                      expanded.teleopAlgaePickReefCount = 0;
+                      expanded.teleopAlgaePickCarpetCount = 0;
+                    }
+                    
+                    // Expand endgame booleans (including autoPassedStartLine)
+                    if (typeof compressed.g === 'number') {
+                      expanded.shallowClimbAttempted = !!(compressed.g & 1);
+                      expanded.deepClimbAttempted = !!(compressed.g & 2);
+                      expanded.parkAttempted = !!(compressed.g & 4);
+                      expanded.climbFailed = !!(compressed.g & 8);
+                      expanded.playedDefense = !!(compressed.g & 16);
+                      expanded.brokeDown = !!(compressed.g & 32);
+                      expanded.autoPassedStartLine = !!(compressed.g & 64);
+                    } else {
+                      expanded.shallowClimbAttempted = false;
+                      expanded.deepClimbAttempted = false;
+                      expanded.parkAttempted = false;
+                      expanded.climbFailed = false;
+                      expanded.playedDefense = false;
+                      expanded.brokeDown = false;
+                      expanded.autoPassedStartLine = false;
+                    }
+                    
+                    // Keep comment
+                    if (compressed.c) expanded.comment = compressed.c;
+                    
+                    if (index === 0) {
+                      addDebugMsg(`🔍 Sample expanded keys: ${Object.keys(expanded).join(', ')}`);
+                      addDebugMsg(`🔍 Sample expanded scoring: ${JSON.stringify({
+                        autoCoralL1: expanded.autoCoralPlaceL1Count,
+                        teleopCoralL1: expanded.teleopCoralPlaceL1Count,
+                        autoAlgaeNet: expanded.autoAlgaePlaceNetShot,
+                        teleopAlgaeNet: expanded.teleopAlgaePlaceNetShot,
+                        autoPassedStartLine: expanded.autoPassedStartLine
+                      })}`);
+                    }
+                    
+                    // Use preserved original ID (should always exist since compression preserves it)
+                    const originalId = compressed.id;
+                    if (!originalId) {
+                      throw new Error(`Missing ID in compressed entry at index ${index}. This may indicate corrupted data or an incompatible compression format. Please regenerate the QR codes or contact support if this persists.`);
+                    }
+                    
+                    return {
+                      id: originalId,
+                      data: expanded,
+                      timestamp: Date.now()
+                    };
+                  });
+                  
+                  parsedData = { entries: expandedEntries };
+                  addDebugMsg(`✅ Smart decompression successful (${expandedEntries.length} entries expanded)`);
+                  addDebugMsg(`🔍 First expanded entry data: ${JSON.stringify(expandedEntries[0]?.data).substring(0, 150)}...`);
+                } else {
+                  // Standard JSON format
+                  addDebugMsg("📄 Standard JSON format detected");
+                  parsedData = decompressedData;
+                }
+              } else {
+                // Uncompressed data - standard JSON decoding
+                addDebugMsg("📄 Detected uncompressed data");
+                setCompressionDetected(false);
+                const jsonString = new TextDecoder().decode(decodedData);
+                parsedData = JSON.parse(jsonString);
+                addDebugMsg("✅ JSON parsing successful");
+              }
+            } catch (error) {
+              addDebugMsg(`❌ Data processing failed: ${error instanceof Error ? error.message : String(error)}`);
+              toast.error("Failed to process reconstructed data");
+              return;
+            }
+            
+            // Debug: Log the structure of the parsed data
+            addDebugMsg(`🔍 Parsed data type: ${typeof parsedData}`);
+            addDebugMsg(`🔍 Data keys: ${parsedData && typeof parsedData === 'object' ? Object.keys(parsedData as Record<string, unknown>).join(', ') : 'N/A'}`);
+            if (parsedData && typeof parsedData === 'object' && 'entries' in parsedData) {
+              const entries = (parsedData as { entries: unknown }).entries;
+              addDebugMsg(`🔍 Entries type: ${typeof entries}, length: ${Array.isArray(entries) ? entries.length : 'N/A'}`);
+            }
             
             if (validateData(parsedData)) {
               setReconstructedData(parsedData);
@@ -138,6 +364,7 @@ const UniversalFountainScanner = ({
               toast.success(completionMessage);
             } else {
               addDebugMsg("❌ Reconstructed data failed validation");
+              addDebugMsg(`❌ Data structure: ${JSON.stringify(parsedData).substring(0, 200)}...`);
               toast.error("Reconstructed data is invalid");
             }
             return;
@@ -177,6 +404,7 @@ const UniversalFountainScanner = ({
     setProgress({ received: 0, needed: 0, percentage: 0 });
     setDebugLog([]);
     setAllowDuplicates(false);
+    setCompressionDetected(null);
     decoderRef.current = null;
     packetsRef.current.clear();
     addDebugMsg("🔄 Scanner reset");
@@ -293,6 +521,16 @@ const UniversalFountainScanner = ({
                 <Badge variant="outline">
                   {progress.percentage.toFixed(1)}%
                 </Badge>
+                {compressionDetected === true && (
+                  <Badge variant="default" className="bg-green-600">
+                    🗜️ Compressed
+                  </Badge>
+                )}
+                {compressionDetected === false && (
+                  <Badge variant="outline">
+                    📄 Standard
+                  </Badge>
+                )}
               </div>
             )}
 

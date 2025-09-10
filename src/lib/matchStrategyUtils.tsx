@@ -1,56 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export interface ScoutingEntry {
-  matchNumber: string;
-  alliance: string;
-  scouterInitials: string;
-  selectTeam: string;
-  startPoses0: boolean;
-  startPoses1: boolean;
-  startPoses2: boolean;
-  startPoses3: boolean;
-  startPoses4: boolean;
-  startPoses5: boolean;
-  autoCoralPlaceL1Count: number;
-  autoCoralPlaceL2Count: number;
-  autoCoralPlaceL3Count: number;
-  autoCoralPlaceL4Count: number;
-  autoCoralPlaceDropMissCount: number;
-  autoCoralPickPreloadCount: number;
-  autoCoralPickStationCount: number;
-  autoCoralPickMark1Count: number;
-  autoCoralPickMark2Count: number;
-  autoCoralPickMark3Count: number;
-  autoAlgaePlaceNetShot: number;
-  autoAlgaePlaceProcessor: number;
-  autoAlgaePlaceDropMiss: number;
-  autoAlgaePlaceRemove: number;
-  autoAlgaePickReefCount: number;
-  autoAlgaePickMark1Count: number;
-  autoAlgaePickMark2Count: number;
-  autoAlgaePickMark3Count: number;
-  autoPassedStartLine: boolean;
-  teleopCoralPlaceL1Count: number;
-  teleopCoralPlaceL2Count: number;
-  teleopCoralPlaceL3Count: number;
-  teleopCoralPlaceL4Count: number;
-  teleopCoralPlaceDropMissCount: number;
-  teleopCoralPickStationCount: number;
-  teleopCoralPickCarpetCount: number;
-  teleopAlgaePlaceNetShot: number;
-  teleopAlgaePlaceProcessor: number;
-  teleopAlgaePlaceDropMiss: number;
-  teleopAlgaePlaceRemove: number;
-  teleopAlgaePickReefCount: number;
-  teleopAlgaePickCarpetCount: number;
-  shallowClimbAttempted: boolean;
-  deepClimbAttempted: boolean;
-  parkAttempted: boolean;
-  climbFailed: boolean;
-  playedDefense: boolean;
-  brokeDown: boolean;
-  comment: string;
-}
+// Import centralized ScoutingEntry type
+import type { ScoutingEntry } from './scoutingTypes';
 
 export interface TeamStats {
   matchesPlayed: number;
@@ -88,6 +39,7 @@ export const parseScoutingEntry = (dataObject: Record<string, unknown>): Scoutin
     alliance: dataObject.alliance?.toString() || "",
     scouterInitials: dataObject.scouterInitials?.toString() || "",
     selectTeam: dataObject.selectTeam?.toString() || "",
+    eventName: dataObject.eventName?.toString() || "",
     startPoses0: Boolean(dataObject.startPoses0),
     startPoses1: Boolean(dataObject.startPoses1),
     startPoses2: Boolean(dataObject.startPoses2),
