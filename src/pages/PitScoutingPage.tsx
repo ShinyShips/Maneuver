@@ -15,7 +15,7 @@ const PitScoutingPage = () => {
   const {
     teamNumber,
     eventName,
-    scouterInitials,
+    scoutName,
     weight,
     drivetrain,
     programmingLanguage,
@@ -29,7 +29,7 @@ const PitScoutingPage = () => {
     isLoading,
     setTeamNumber,
     setEventName,
-    setScouterInitials,
+    setScoutName,
     setWeight,
     setDrivetrain,
     setProgrammingLanguage,
@@ -65,8 +65,8 @@ const PitScoutingPage = () => {
             setTeamNumber={setTeamNumber}
             eventName={eventName}
             setEventName={setEventName}
-            scouterInitials={scouterInitials}
-            setScouterInitials={setScouterInitials}
+            scoutName={scoutName}
+            setScoutName={setScoutName}
           />
 
           <RobotPhotoSection

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 interface PitScoutingFormState {
   teamNumber: string;
   eventName: string;
-  scouterInitials: string;
+  scoutName: string;
   weight: string;
   drivetrain: string;
   programmingLanguage: string;
@@ -63,7 +63,7 @@ const initialEndgame = {
 export const usePitScoutingForm = (): PitScoutingFormState & {
   setTeamNumber: (value: string) => void;
   setEventName: (value: string) => void;
-  setScouterInitials: (value: string) => void;
+  setScoutName: (value: string) => void;
   setWeight: (value: string) => void;
   setDrivetrain: (value: string) => void;
   setProgrammingLanguage: (value: string) => void;
@@ -79,7 +79,7 @@ export const usePitScoutingForm = (): PitScoutingFormState & {
 } => {
   const [teamNumber, setTeamNumber] = useState("");
   const [eventName, setEventName] = useState("");
-  const [scouterInitials, setScouterInitials] = useState("");
+  const [scoutName, setScoutName] = useState("");
   const [weight, setWeight] = useState("");
   const [drivetrain, setDrivetrain] = useState("");
   const [programmingLanguage, setProgrammingLanguage] = useState("");
@@ -94,10 +94,10 @@ export const usePitScoutingForm = (): PitScoutingFormState & {
 
   // Initialize form with saved data
   useEffect(() => {
-    const savedScouterInitials = localStorage.getItem("currentScouter") || localStorage.getItem("scouterInitials") || "";
+    const savedScoutName = localStorage.getItem("currentScouter") || localStorage.getItem("scouterInitials") || "";
     const savedEventName = localStorage.getItem("eventName") || "";
     
-    setScouterInitials(savedScouterInitials);
+    setScoutName(savedScoutName);
     setEventName(savedEventName);
     
     // Track page visit
@@ -160,8 +160,8 @@ export const usePitScoutingForm = (): PitScoutingFormState & {
       toast.error("Event name is required");
       return false;
     }
-    if (!scouterInitials.trim()) {
-      toast.error("Scouter initials are required");
+    if (!scoutName.trim()) {
+      toast.error("Scout name is required");
       return false;
     }
     return true;
@@ -190,7 +190,7 @@ export const usePitScoutingForm = (): PitScoutingFormState & {
       const entry = {
         teamNumber: teamNumber.trim(),
         eventName: eventName.trim(),
-        scouterInitials: scouterInitials.trim(),
+        scoutName: scoutName.trim(),
         weight: weight ? parseFloat(weight) : undefined,
         drivetrain: drivetrain || undefined,
         programmingLanguage: programmingLanguage || undefined,
@@ -228,7 +228,7 @@ export const usePitScoutingForm = (): PitScoutingFormState & {
   return {
     teamNumber,
     eventName,
-    scouterInitials,
+    scoutName,
     weight,
     drivetrain,
     programmingLanguage,
@@ -242,7 +242,7 @@ export const usePitScoutingForm = (): PitScoutingFormState & {
     isLoading,
     setTeamNumber,
     setEventName,
-    setScouterInitials,
+    setScoutName,
     setWeight,
     setDrivetrain,
     setProgrammingLanguage,

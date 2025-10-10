@@ -26,7 +26,7 @@ export interface PitScoutingEntry {
   id: string;
   teamNumber: string;
   eventName: string;
-  scouterInitials: string;
+  scoutName: string;
   timestamp: number;
   
   // Basic Information

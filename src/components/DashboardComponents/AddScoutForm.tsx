@@ -2,19 +2,19 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-interface AddScouterFormProps {
+interface AddScoutFormProps {
   onAdd: (name: string) => Promise<void>
   onCancel: () => void
   initialValue?: string
 }
 
-export function AddScouterForm({ onAdd, onCancel, initialValue = "" }: AddScouterFormProps) {
-  const [newScouterName, setNewScouterName] = useState(initialValue)
+export function AddScoutForm({ onAdd, onCancel, initialValue = "" }: AddScoutFormProps) {
+  const [newScoutName, setNewScoutName] = useState(initialValue)
 
   const handleAdd = async () => {
-    if (newScouterName.trim()) {
-      await onAdd(newScouterName.trim())
-      setNewScouterName("")
+    if (newScoutName.trim()) {
+      await onAdd(newScoutName.trim())
+      setNewScoutName("")
     }
   }
 
@@ -29,10 +29,10 @@ export function AddScouterForm({ onAdd, onCancel, initialValue = "" }: AddScoute
   return (
     <div className="p-2 space-y-2">
       <Input
-        placeholder="Enter scouter name..."
-        value={newScouterName}
-        onChange={(e) => setNewScouterName(e.target.value)}
-        onInput={(e) => setNewScouterName((e.target as HTMLInputElement).value)}
+        placeholder="Enter scout name..."
+        value={newScoutName}
+        onChange={(e) => setNewScoutName(e.target.value)}
+        onInput={(e) => setNewScoutName((e.target as HTMLInputElement).value)}
         onKeyDown={handleKeyDown}
         autoFocus
         autoComplete="name"

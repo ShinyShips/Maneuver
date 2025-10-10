@@ -25,7 +25,7 @@ const InitialSelectTeamButton = ({
         className={cn(
           "w-full h-full flex flex-row items-center text-xl pl-2 active:bg-accent",
           isPreferred && "ring-2 ring-blue-500 ring-offset-2",
-          currentTeamStatus && "bg-gray-200 dark:bg-[#393939]"
+          currentTeamStatus && "bg-gray-200 dark:bg-neutral-600",
         )}
         onClick={() => clickTeam(currentTeamType, currentTeamStatus)}
       >

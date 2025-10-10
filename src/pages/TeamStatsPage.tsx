@@ -13,6 +13,7 @@ import { StatCard } from "../components/TeamStatsComponents/StatCard";
 import { ProgressCard } from "../components/TeamStatsComponents/ProgressCard";
 import { PitScoutingData } from "../components/TeamStatsComponents/PitScoutingData";
 import { DataAttribution } from "@/components/DataAttribution";
+import { MatchStatsButton } from "@/components/ui/match-stats-button";
 import { analytics } from '@/lib/analytics';
 import { getAllStoredEventTeams, getStoredEventTeams } from '@/lib/tbaUtils';
 import { getStoredNexusTeams } from '@/lib/nexusUtils';
@@ -844,6 +845,14 @@ const TeamStatsPage = () => {
                               <div className="text-xs text-muted-foreground italic border-t pt-2">
                                 "{match.comment}"
                               </div>
+                            )}
+                            {match.fullEntry && (
+                              <MatchStatsButton 
+                                matchData={match.fullEntry}
+                                variant="outline"
+                                size="default"
+                                className="w-full mt-2"
+                              />
                             )}
                           </div>
                         ))}
