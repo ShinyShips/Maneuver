@@ -2,7 +2,7 @@ import { gameDB } from './dexieDB';
 import { savePitScoutingEntry } from './pitScoutingUtils';
 
 // Import test data from JSON files
-import scouterProfilesData from './testData/scouterProfiles.json';
+import scoutProfilesData from './testData/scoutProfiles.json';
 import pitScoutingData from './testData/pitScoutingData.json';
 import matchScheduleData from './testData/matchSchedule.json';
 import matchScoutingData from './testData/matchScoutingData.json';
@@ -17,12 +17,12 @@ const getTimestamp = (timeSpec: { daysAgo?: number; hoursAgo?: number; minutesAg
   return now;
 };
 
-export const createTestScouterProfiles = async () => {
-  console.log('🧪 Creating test scouter profiles...');
+export const createTestScoutProfiles = async () => {
+  console.log('🧪 Creating test scout profiles...');
 
   try {
     // Convert JSON data to the format expected by the database
-    const testProfiles = scouterProfilesData.map(profile => ({
+    const testProfiles = scoutProfilesData.map(profile => ({
       ...profile,
       lastPredictionTime: profile.lastPredictionHoursAgo ? 
         Date.now() - (profile.lastPredictionHoursAgo * 60 * 60 * 1000) :
@@ -38,14 +38,14 @@ export const createTestScouterProfiles = async () => {
     }));
 
     // Clear existing test profiles (optional - comment out if you want to keep existing data)
-    // await gameDB.scouters.clear();
-    // await gameDB.scouterAchievements.clear();
+    // await gameDB.scouts.clear();
+    // await gameDB.scoutAchievements.clear();
 
     for (const profile of testProfiles) {
       console.log(`Creating profile for ${profile.name}...`);
       
-      // Create or update the scouter
-      await gameDB.scouters.put({
+      // Create or update the scout
+      await gameDB.scouts.put({
         name: profile.name,
         stakes: profile.stakes,
         stakesFromPredictions: profile.stakesFromPredictions,
@@ -59,15 +59,15 @@ export const createTestScouterProfiles = async () => {
 
       // Add achievements
       for (const achievement of profile.achievements) {
-        await gameDB.scouterAchievements.put({
-          scouterName: profile.name,
+        await gameDB.scoutAchievements.put({
+          scoutName: profile.name,
           achievementId: achievement.achievementId,
           unlockedAt: achievement.unlockedAt,
         });
       }
     }
 
-    console.log('✅ Test scouter profiles created successfully!');
+    console.log('✅ Test scout profiles created successfully!');
     console.log('📊 Profiles created:');
     testProfiles.forEach(profile => {
       const accuracy = Math.round((profile.correctPredictions / profile.totalPredictions) * 100);
@@ -97,7 +97,7 @@ export const createTestPitScoutingData = async () => {
     console.log('✅ Test pit scouting data created successfully!');
     console.log(`📊 Created ${createdCount} pit scouting entries:`);
     pitScoutingData.forEach(entry => {
-      console.log(`  - Team ${entry.teamNumber} (${entry.eventName}) by ${entry.scouterInitials}`);
+      console.log(`  - Team ${entry.teamNumber} (${entry.eventName}) by ${entry.scoutName}`);
     });
 
     return pitScoutingData;
@@ -153,7 +153,7 @@ export const createAllTestData = async () => {
   console.log('🚀 Creating all test data...');
   
   try {
-    await createTestScouterProfiles();
+    await createTestScoutProfiles();
     await createTestPitScoutingData();
     await createTestMatchSchedule();
     await createTestMatchScoutingData();
@@ -162,7 +162,7 @@ export const createAllTestData = async () => {
     console.log('✅ All test data created successfully!');
     console.log('');
     console.log('📋 Available demo data:');
-    console.log('  - Scouter profiles with achievements');
+    console.log('  - Scout profiles with achievements');
     console.log('  - Pit scouting entries');
     console.log('  - Match schedule and scouting data');
     console.log('  - Event teams data (TBA and Nexus formats)');
@@ -177,8 +177,8 @@ export const createAllTestData = async () => {
 export const clearTestData = async () => {
   console.log('🧹 Clearing all test data...');
   try {
-    await gameDB.scouters.clear();
-    await gameDB.scouterAchievements.clear();
+    await gameDB.scouts.clear();
+    await gameDB.scoutAchievements.clear();
     
     // Also clear pit scouting data
     const { clearAllPitScoutingData } = await import('./pitScoutingUtils');
@@ -299,7 +299,7 @@ export const clearAllTestData = async () => {
 
 // Export the data for direct access if needed
 export { 
-  scouterProfilesData, 
+  scoutProfilesData, 
   pitScoutingData, 
   matchScheduleData, 
   matchScoutingData,

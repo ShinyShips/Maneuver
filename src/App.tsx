@@ -98,7 +98,7 @@ function App() {
         // Make achievement functions available globally for debugging
         import('./lib/achievementUtils').then(achievementUtils => {
           (window as typeof window & { achievements: { backfillAll: () => Promise<void>, checkForNewAchievements: (name: string) => Promise<unknown[]> } }).achievements = {
-            backfillAll: achievementUtils.backfillAchievementsForAllScouters,
+            backfillAll: achievementUtils.backfillAchievementsForAllScouts,
             checkForNewAchievements: achievementUtils.checkForNewAchievements
           };
         });
@@ -106,12 +106,12 @@ function App() {
         // Make test data generator available globally for testing
         import('./lib/testDataGenerator').then(testData => {
           (window as typeof window & { testData: { createTestProfiles: () => Promise<unknown>, clearAll: () => Promise<void> } }).testData = {
-            createTestProfiles: testData.createTestScouterProfiles,
+            createTestProfiles: testData.createTestScoutProfiles,
             clearAll: testData.clearTestData
           };
           console.log('🧪 Test data functions available:');
-          console.log('  - window.testData.createTestProfiles() - Create test scouter profiles');
-          console.log('  - window.testData.clearAll() - Clear all scouter data');
+          console.log('  - window.testData.createTestProfiles() - Create test scout profiles');
+          console.log('  - window.testData.clearAll() - Clear all scout data');
         });
 
         // Make gameDB available for debugging
@@ -120,14 +120,14 @@ function App() {
           console.log('🗄️ Database available at window.gameDB');
         });
 
-        // Debug function to check scouter data
-        (window as typeof window & { debugScouterData: (name: string) => Promise<void> }).debugScouterData = async (scouterName: string) => {
+        // Debug function to check scout data
+        (window as typeof window & { debugScoutData: (name: string) => Promise<void> }).debugScoutData = async (scoutName: string) => {
           const { gameDB } = await import('./lib/dexieDB');
-          const scouter = await gameDB.scouters.get(scouterName);
-          console.log(`Scouter data for ${scouterName}:`, scouter);
+          const scout = await gameDB.scouts.get(scoutName);
+          console.log(`Scout data for ${scoutName}:`, scout);
           
-          const achievements = await gameDB.scouterAchievements.where('scouterName').equals(scouterName).toArray();
-          console.log(`Achievements for ${scouterName}:`, achievements);
+          const achievements = await gameDB.scoutAchievements.where('scoutName').equals(scoutName).toArray();
+          console.log(`Achievements for ${scoutName}:`, achievements);
           
           // Check specific stake achievements
           const { checkAchievement, ACHIEVEMENT_DEFINITIONS } = await import('./lib/achievementTypes');
@@ -135,12 +135,12 @@ function App() {
           
           stakeAchievements.forEach(achievement => {
             const isUnlocked = achievements.some(a => a.achievementId === achievement.id);
-            const meetsRequirements = checkAchievement(achievement, scouter!);
-            console.log(`${achievement.name}: unlocked=${isUnlocked}, meetsReq=${meetsRequirements}, stakesFromPredictions=${scouter?.stakesFromPredictions}`);
+            const meetsRequirements = checkAchievement(achievement, scout!);
+            console.log(`${achievement.name}: unlocked=${isUnlocked}, meetsReq=${meetsRequirements}, stakesFromPredictions=${scout?.stakesFromPredictions}`);
           });
         };
 
-        console.log('🐛 Debug function available: window.debugScouterData("Riley Davis")');
+        console.log('🐛 Debug function available: window.debugScoutData("Riley Davis")');
       }, 2000);
     }
 

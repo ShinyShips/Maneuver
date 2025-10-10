@@ -208,7 +208,7 @@ export const getDataSummary = async (data?: { entries: ScoutingDataWithId[] }): 
   totalEntries: number;
   teams: string[];
   matches: string[];
-  scouters: string[];
+  scouts: string[];
 }> => {
   let dataToUse = data;
   
@@ -218,16 +218,16 @@ export const getDataSummary = async (data?: { entries: ScoutingDataWithId[] }): 
   
   const teams = new Set<string>();
   const matches = new Set<string>();
-  const scouters = new Set<string>();
+  const scouts = new Set<string>();
   
   dataToUse.entries.forEach(entry => {
     // Skip the ID at index 0, so actual data starts at index 1
     const matchNumber = entry.data[1]?.toString(); // was index 0, now index 1
-    const scouterInitials = entry.data[3]?.toString(); // was index 2, now index 3
+    const scoutName = entry.data[3]?.toString(); // was index 2, now index 3
     const teamNumber = entry.data[4]?.toString();   // was index 3, now index 4
     
     if (matchNumber) matches.add(matchNumber);
-    if (scouterInitials) scouters.add(scouterInitials);
+    if (scoutName) scouts.add(scoutName);
     if (teamNumber) teams.add(teamNumber);
   });
   
@@ -235,6 +235,6 @@ export const getDataSummary = async (data?: { entries: ScoutingDataWithId[] }): 
     totalEntries: dataToUse.entries.length,
     teams: Array.from(teams).sort((a, b) => Number(a) - Number(b)),
     matches: Array.from(matches).sort((a, b) => Number(a) - Number(b)),
-    scouters: Array.from(scouters).sort()
+    scouts: Array.from(scouts).sort()
   };
 };

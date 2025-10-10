@@ -37,7 +37,7 @@ export const parseScoutingEntry = (dataObject: Record<string, unknown>): Scoutin
   return {
     matchNumber: dataObject.matchNumber?.toString() || "",
     alliance: dataObject.alliance?.toString() || "",
-    scouterInitials: dataObject.scouterInitials?.toString() || "",
+    scoutName: dataObject.scoutName?.toString() || "",
     selectTeam: dataObject.selectTeam?.toString() || "",
     eventName: dataObject.eventName?.toString() || "",
     startPoses0: Boolean(dataObject.startPoses0),

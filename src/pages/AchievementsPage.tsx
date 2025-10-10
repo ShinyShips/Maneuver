@@ -4,11 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Trophy, Users, Award, Star } from 'lucide-react';
 import { AchievementsSection } from '@/components/ScoutManagementComponents/AchievementsSection';
 import { getAchievementLeaderboard } from '@/lib/achievementUtils';
-import { useCurrentScouter } from '@/hooks/useCurrentScouter';
+import { useCurrentScout } from '@/hooks/useCurrentScout';
 import { ACHIEVEMENT_TIERS, type Achievement } from '@/lib/achievementTypes';
 
 interface AchievementLeaderboardEntry {
-  scouterName: string;
+  scoutName: string;
   achievementCount: number;
   totalStakesFromAchievements: number;
   recentUnlock?: Achievement & { unlockedAt: number };
@@ -17,7 +17,7 @@ interface AchievementLeaderboardEntry {
 const AchievementsPage: React.FC = () => {
   const [leaderboard, setLeaderboard] = useState<AchievementLeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const { currentScouter } = useCurrentScouter();
+  const { currentScout } = useCurrentScout();
 
   useEffect(() => {
     const loadLeaderboard = async () => {
@@ -35,7 +35,7 @@ const AchievementsPage: React.FC = () => {
     loadLeaderboard();
   }, []);
 
-  if (!currentScouter) {
+  if (!currentScout) {
     return (
       <div className="min-h-screen container mx-auto p-4 space-y-6">
         <div className="text-center space-y-2">
@@ -64,7 +64,7 @@ const AchievementsPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Achievements Section - Takes up 3 columns */}
         <div className="lg:col-span-3">
-          <AchievementsSection scouterName={currentScouter.name} />
+          <AchievementsSection scoutName={currentScout.name} />
         </div>
 
         {/* Leaderboard Sidebar - Takes up 1 column */}
@@ -91,9 +91,9 @@ const AchievementsPage: React.FC = () => {
                 <div className="space-y-3">
                   {leaderboard.slice(0, 10).map((entry, index) => (
                     <div 
-                      key={entry.scouterName} 
+                      key={entry.scoutName} 
                       className={`flex items-center gap-3 p-2 rounded-lg ${
-                        entry.scouterName === currentScouter.name 
+                        entry.scoutName === currentScout.name 
                           ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800' 
                           : 'hover:bg-gray-50 dark:hover:bg-gray-800'
                       }`}
@@ -117,7 +117,7 @@ const AchievementsPage: React.FC = () => {
                       
                       <div className="flex-1 min-w-0">
                         <div className="font-medium text-sm truncate">
-                          {entry.scouterName}
+                          {entry.scoutName}
                         </div>
                         <div className="flex items-center gap-2 text-xs text-gray-500">
                           <span className="flex items-center gap-1">

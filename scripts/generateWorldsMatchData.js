@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Data pools for realistic variation
-const scouterInitials = ['SC', 'MR', 'AK', 'ET', 'AN', 'JD', 'KL', 'RW', 'TM', 'BH', 'LN', 'QS', 'VX', 'ZY'];
+const scoutName = ['SC', 'MR', 'AK', 'ET', 'AN', 'JD', 'KL', 'RW', 'TM', 'BH', 'LN', 'QS', 'VX', 'ZY'];
 const eventName = '2025chmp'; // World Championship event
 const alliances = ['redAlliance', 'blueAlliance'];
 
@@ -192,7 +192,7 @@ const generateComment = (matchNumber, teamNumber, brokeDown, playedDefense) => {
 };
 
 // Generate single match entry
-const generateMatchEntry = (matchNumber, alliance, teamNumber, scouterInitials) => {
+const generateMatchEntry = (matchNumber, alliance, teamNumber, scoutName) => {
   const startPoses = generateStartPoses();
   const autoScoring = generateAutoScoring();
   const teleopScoring = generateTeleopScoring();
@@ -202,7 +202,7 @@ const generateMatchEntry = (matchNumber, alliance, teamNumber, scouterInitials) 
   return {
     matchNumber: matchNumber.toString(),
     alliance,
-    scouterInitials,
+    scoutName,
     selectTeam: teamNumber.toString(),
     ...startPoses,
     ...autoScoring,
@@ -230,18 +230,18 @@ const generateWorldsMatchData = () => {
     // Red alliance
     for (let i = 0; i < 3; i++) {
       const teamNumber = teams[teamIndex % teams.length];
-      const scouter = scouterInitials[Math.floor(Math.random() * scouterInitials.length)];
+      const scout = scoutName[Math.floor(Math.random() * scoutName.length)];
       
-      matchData.push(generateMatchEntry(matchNum, 'redAlliance', teamNumber, scouter));
+      matchData.push(generateMatchEntry(matchNum, 'redAlliance', teamNumber, scout));
       teamIndex++;
     }
     
     // Blue alliance
     for (let i = 0; i < 3; i++) {
       const teamNumber = teams[teamIndex % teams.length];
-      const scouter = scouterInitials[Math.floor(Math.random() * scouterInitials.length)];
+      const scout = scoutName[Math.floor(Math.random() * scoutName.length)];
       
-      matchData.push(generateMatchEntry(matchNum, 'blueAlliance', teamNumber, scouter));
+      matchData.push(generateMatchEntry(matchNum, 'blueAlliance', teamNumber, scout));
       teamIndex++;
     }
     

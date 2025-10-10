@@ -3,7 +3,7 @@
     {
       "teamNumber": "3314",
       "eventName": "2025pawar",
-      "scouterInitials": "SC",
+      "scoutName": "SC",
       "weight": 118,
       "drivetrain": "Swerve",
       "programmingLanguage": "C++",
@@ -75,7 +75,7 @@
     {
       "teamNumber": "2539",
       "eventName": "2025pawar",
-      "scouterInitials": "MR",
+      "scoutName": "MR",
       "weight": 95,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "Java",
@@ -147,7 +147,7 @@
     {
       "teamNumber": "1168",
       "eventName": "2025pawar",
-      "scouterInitials": "AK",
+      "scoutName": "AK",
       "weight": 102,
       "drivetrain": "West Coast",
       "programmingLanguage": "Python",
@@ -219,7 +219,7 @@
     {
       "teamNumber": "5895",
       "eventName": "2025mrcmp",
-      "scouterInitials": "ET",
+      "scoutName": "ET",
       "weight": 110,
       "drivetrain": "Mecanum",
       "programmingLanguage": "C++",
@@ -291,7 +291,7 @@
     {
       "teamNumber": "341",
       "eventName": "2025mrcmp",
-      "scouterInitials": "AN",
+      "scoutName": "AN",
       "weight": 88,
       "drivetrain": "Swerve",
       "programmingLanguage": "Java",
@@ -363,7 +363,7 @@
     {
       "teamNumber": "1600",
       "eventName": "2025pawar",
-      "scouterInitials": "MR",
+      "scoutName": "MR",
       "weight": 92,
       "drivetrain": "West Coast",
       "programmingLanguage": "Python",
@@ -435,7 +435,7 @@
     {
       "teamNumber": "1700",
       "eventName": "2025pawar",
-      "scouterInitials": "SC",
+      "scoutName": "SC",
       "weight": 118,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "C++",
@@ -507,7 +507,7 @@
     {
       "teamNumber": "1800",
       "eventName": "2025mrcmp",
-      "scouterInitials": "AK",
+      "scoutName": "AK",
       "weight": 90,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "Python",
@@ -579,7 +579,7 @@
     {
       "teamNumber": "1900",
       "eventName": "2025mrcmp",
-      "scouterInitials": "AK",
+      "scoutName": "AK",
       "weight": 88,
       "drivetrain": "Mecanum",
       "programmingLanguage": "Java",
@@ -651,7 +651,7 @@
     {
       "teamNumber": "2000",
       "eventName": "2025mrcmp",
-      "scouterInitials": "MR",
+      "scoutName": "MR",
       "weight": 80,
       "drivetrain": "Mecanum",
       "programmingLanguage": "Java",

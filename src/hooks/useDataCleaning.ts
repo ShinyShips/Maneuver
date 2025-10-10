@@ -34,22 +34,22 @@ export const useDataCleaning = (
     }
   }, [refreshData]);
 
-  const handleClearScouterGameData = useCallback(async () => {
+  const handleClearScoutGameData = useCallback(async () => {
     try {
       await clearGameData();
       
-      localStorage.removeItem("scoutersList");
-      localStorage.removeItem("currentScouter");
-      localStorage.removeItem("scouterInitials");
+      localStorage.removeItem("scoutsList");
+      localStorage.removeItem("currentScout");
+      localStorage.removeItem("scoutName");
       
-      window.dispatchEvent(new CustomEvent('scouterDataCleared'));
+      window.dispatchEvent(new CustomEvent('scoutDataCleared'));
       
       await refreshData();
-      toast.success("Cleared all scouter profile data");
-      console.log("ClearDataPage - Scouter profile data cleared successfully");
+      toast.success("Cleared all scout profile data");
+      console.log("ClearDataPage - Scout profile data cleared successfully");
     } catch (error) {
-      console.error("Error clearing scouter profile data:", error);
-      toast.error("Failed to clear scouter profile data");
+      console.error("Error clearing scout profile data:", error);
+      toast.error("Failed to clear scout profile data");
     }
   }, [refreshData]);
 
@@ -105,7 +105,7 @@ export const useDataCleaning = (
       
       resetStats();
       
-      window.dispatchEvent(new CustomEvent('scouterDataCleared'));
+      window.dispatchEvent(new CustomEvent('scoutDataCleared'));
       window.dispatchEvent(new CustomEvent('allDataCleared'));
       
       toast.success("Cleared all data - complete clean slate", {
@@ -121,7 +121,7 @@ export const useDataCleaning = (
   return {
     handleClearScoutingData,
     handleClearPitScoutingData,
-    handleClearScouterGameData,
+    handleClearScoutGameData,
     handleClearMatchData,
     handleClearApiData,
     handleClearAllData,

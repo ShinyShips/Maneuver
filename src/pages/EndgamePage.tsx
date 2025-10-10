@@ -37,7 +37,7 @@ const EndgamePage = () => {
       const scoutingInputs = {
         matchNumber: states?.inputs?.matchNumber || "",
         alliance: states?.inputs?.alliance || "",
-        scouterInitials: states?.inputs?.scouterInitials || "",
+        scoutName: states?.inputs?.scoutName || "",
         selectTeam: states?.inputs?.selectTeam || "",
         eventName: states?.inputs?.eventName || localStorage.getItem("eventName") || "",
         startPoses: states?.inputs?.startPoses || [false, false, false, false, false, false],

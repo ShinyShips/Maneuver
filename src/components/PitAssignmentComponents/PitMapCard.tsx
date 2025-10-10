@@ -2,8 +2,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Map, CheckCircle } from 'lucide-react';
-import { PitScouterLegend } from './shared/PitScouterLegend';
-import { getScouterColorMap } from './shared/scouterUtils';
+import { PitScoutLegend } from './shared/PitScoutLegend';
+import { getScoutColorMap } from './shared/scoutUtils';
 import type { PitAssignment } from '@/lib/pitAssignmentTypes';
 import type { NexusPitMap } from '@/lib/nexusUtils';
 
@@ -42,14 +42,14 @@ interface PitMapCardProps {
   pitMapData: NexusPitMap;
   pitAddresses: { [teamNumber: string]: string } | null;
   assignments: PitAssignment[];
-  scoutersList: string[];
+  scoutsList: string[];
   assignmentMode: 'sequential' | 'spatial' | 'manual';
   assignmentsConfirmed: boolean;
-  selectedScouterForAssignment: string | null;
-  onScouterSelectionChange: (scouter: string | null) => void;
+  selectedScoutForAssignment: string | null;
+  onScoutSelectionChange: (scout: string | null) => void;
   onClearAllAssignments: () => void;
   onConfirmAssignments: () => void;
-  onManualAssignment: (teamNumber: number, scouterName: string) => void;
+  onManualAssignment: (teamNumber: number, scoutName: string) => void;
   onToggleCompleted: (assignmentId: string) => void;
 }
 
@@ -58,20 +58,20 @@ const PitMapCard: React.FC<PitMapCardProps> = ({
   pitMapData,
   pitAddresses,
   assignments,
-  scoutersList,
+  scoutsList,
   assignmentMode,
   assignmentsConfirmed,
-  selectedScouterForAssignment,
-  onScouterSelectionChange,
+  selectedScoutForAssignment,
+  onScoutSelectionChange,
   onClearAllAssignments,
   onConfirmAssignments,
   onManualAssignment,
   onToggleCompleted,
 }) => {
-  // Generate consistent colors for scouters
-  const scouterColors = React.useMemo(() => {
-    return getScouterColorMap(scoutersList);
-  }, [scoutersList]);
+  // Generate consistent colors for scouts
+  const scoutColors = React.useMemo(() => {
+    return getScoutColorMap(scoutsList);
+  }, [scoutsList]);
 
   // Calculate bounds from only the elements we're rendering (pits and areas)
   const calculateViewBox = () => {
@@ -235,27 +235,27 @@ const PitMapCard: React.FC<PitMapCardProps> = ({
             )}
           </div>
 
-          {/* Assignment Interface and Scouter Legend */}
+          {/* Assignment Interface and Scout Legend */}
           {assignmentMode === 'manual' && !assignmentsConfirmed && (
-            <PitScouterLegend
-              scoutersList={scoutersList}
+            <PitScoutLegend
+              scoutsList={scoutsList}
               assignments={assignments}
               assignmentMode={assignmentMode}
               assignmentsConfirmed={assignmentsConfirmed}
-              selectedScouterForAssignment={selectedScouterForAssignment}
-              onScouterSelectionChange={onScouterSelectionChange}
+              selectedScoutForAssignment={selectedScoutForAssignment}
+              onScoutSelectionChange={onScoutSelectionChange}
               onClearAllAssignments={onClearAllAssignments}
               onConfirmAssignments={onConfirmAssignments}
               hasAssignments={assignments.length > 0}
               showMobileActions={true}
-              helpText="Click on pit locations to assign teams to the selected scouter"
+              helpText="Click on pit locations to assign teams to the selected scout"
             />
           )}
           
           {/* Show legend for confirmed assignments */}
           {assignments.length > 0 && assignmentsConfirmed && (
-            <PitScouterLegend
-              scoutersList={scoutersList}
+            <PitScoutLegend
+              scoutsList={scoutsList}
               assignments={assignments}
               assignmentMode={assignmentMode}
               assignmentsConfirmed={assignmentsConfirmed}
@@ -330,7 +330,7 @@ const PitMapCard: React.FC<PitMapCardProps> = ({
                 const assignment = teamNumber ? assignments.find(a => a.teamNumber === teamNumber) : null;
                 const isAssigned = !!assignment;
                 const isCompleted = assignment?.completed || false;
-                const isClickableForAssignment = assignmentMode === 'manual' && !assignmentsConfirmed && selectedScouterForAssignment && teamNumber;
+                const isClickableForAssignment = assignmentMode === 'manual' && !assignmentsConfirmed && selectedScoutForAssignment && teamNumber;
                 const isClickableForCompletion = assignmentsConfirmed && isAssigned && teamNumber;
                 const isClickable = isClickableForAssignment || isClickableForCompletion;
                 
@@ -339,14 +339,14 @@ const PitMapCard: React.FC<PitMapCardProps> = ({
                 let strokeColor = "#9ca3af"; // Empty pit default
                 
                 if (teamNumber) {
-                  if (isAssigned && assignment.scouterName) {
-                    const scouterColor = scouterColors[assignment.scouterName];
-                    if (scouterColor) {
-                      fillColor = isCompleted ? scouterColor.bg : scouterColor.bg;
-                      strokeColor = scouterColor.border;
+                  if (isAssigned && assignment.scoutName) {
+                    const scoutColor = scoutColors[assignment.scoutName];
+                    if (scoutColor) {
+                      fillColor = isCompleted ? scoutColor.bg : scoutColor.bg;
+                      strokeColor = scoutColor.border;
                       // Add opacity for non-completed assignments
                       if (!isCompleted) {
-                        fillColor = scouterColor.bg + 'dd'; // Add transparency
+                        fillColor = scoutColor.bg + 'dd'; // Add transparency
                       }
                     }
                   } else {
@@ -367,7 +367,7 @@ const PitMapCard: React.FC<PitMapCardProps> = ({
                 
                 return (
                   <g key={pitId}>
-                    {/* Pit rectangle with scouter colors */}
+                    {/* Pit rectangle with scout colors */}
                     <rect
                       x={x}
                       y={y}
@@ -380,8 +380,8 @@ const PitMapCard: React.FC<PitMapCardProps> = ({
                       rx="4"
                       className={isClickable ? "cursor-pointer" : ""}
                       onClick={() => {
-                        if (isClickableForAssignment && selectedScouterForAssignment) {
-                          onManualAssignment(teamNumber, selectedScouterForAssignment);
+                        if (isClickableForAssignment && selectedScoutForAssignment) {
+                          onManualAssignment(teamNumber, selectedScoutForAssignment);
                         } else if (isClickableForCompletion && assignment) {
                           onToggleCompleted(assignment.id);
                         }
@@ -400,8 +400,8 @@ const PitMapCard: React.FC<PitMapCardProps> = ({
                           fontWeight="bold"
                           className={isClickable ? "cursor-pointer" : ""}
                           onClick={() => {
-                            if (isClickableForAssignment && selectedScouterForAssignment) {
-                              onManualAssignment(teamNumber, selectedScouterForAssignment);
+                            if (isClickableForAssignment && selectedScoutForAssignment) {
+                              onManualAssignment(teamNumber, selectedScoutForAssignment);
                             } else if (isClickableForCompletion && assignment) {
                               onToggleCompleted(assignment.id);
                             }
@@ -410,7 +410,7 @@ const PitMapCard: React.FC<PitMapCardProps> = ({
                           {teamNumber}
                         </text>
                         
-                        {/* Scouter name when assigned */}
+                        {/* Scout name when assigned */}
                         {isAssigned && (
                           <text
                             x={x + width/2}
@@ -420,7 +420,7 @@ const PitMapCard: React.FC<PitMapCardProps> = ({
                             fill="white"
                             fontWeight="500"
                           >
-                            {assignment.scouterName}
+                            {assignment.scoutName}
                           </text>
                         )}
                         

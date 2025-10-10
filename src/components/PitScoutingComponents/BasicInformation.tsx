@@ -48,7 +48,7 @@ export const BasicInformation = ({
           <div className="space-y-2">
             <Label htmlFor="scoutName">Scout Name *</Label>
             <Input
-              id="scouterName"
+              id="scoutName"
               placeholder="e.g., John Smith"
               value={scoutName}
               onChange={(e) => setScoutName(e.target.value)}

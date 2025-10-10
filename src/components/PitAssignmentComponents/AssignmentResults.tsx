@@ -15,8 +15,8 @@ import {
 } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import type { PitAssignment } from '@/lib/pitAssignmentTypes';
-import { getScouterColor } from './shared/scouterUtils';
-import { PitScouterLegend } from './shared/PitScouterLegend';
+import { getScoutColor } from './shared/scoutUtils';
+import { PitScoutLegend } from './shared/PitScoutLegend';
 import { PitAssignmentActionButtons } from './shared/PitAssignmentActionButtons';
 import { PitAssignmentProgressBar } from './shared/PitAssignmentProgressBar';
 
@@ -26,18 +26,18 @@ interface AssignmentResultsProps {
   onClearAllAssignments?: () => void;
   // Manual assignment props
   assignmentMode?: 'sequential' | 'spatial' | 'manual';
-  scoutersList?: string[];
-  onManualAssignment?: (teamNumber: number, scouterName: string) => void;
+  scoutsList?: string[];
+  onManualAssignment?: (teamNumber: number, scoutName: string) => void;
   onRemoveAssignment?: (teamNumber: number) => void;
-  selectedScouterForAssignment?: string | null;
-  onScouterSelectionChange?: (scouterName: string | null) => void;
+  selectedScoutForAssignment?: string | null;
+  onScoutSelectionChange?: (scoutName: string | null) => void;
   assignmentsConfirmed?: boolean;
   allTeams?: number[]; // All teams for the event (for unassigned teams)
   onConfirmAssignments?: () => void; // New prop for confirming manual assignments
   pitAddresses?: { [teamNumber: string]: string } | null;
 }
 
-type SortOption = 'team' | 'scouter' | 'status' | 'assigned';
+type SortOption = 'team' | 'scout' | 'status' | 'assigned';
 type FilterOption = 'all' | 'completed' | 'pending';
 
 export const AssignmentResults: React.FC<AssignmentResultsProps> = ({
@@ -45,11 +45,11 @@ export const AssignmentResults: React.FC<AssignmentResultsProps> = ({
   onToggleCompleted,
   onClearAllAssignments,
   assignmentMode = 'sequential',
-  scoutersList = [],
+  scoutsList = [],
   onManualAssignment,
   onRemoveAssignment,
-  selectedScouterForAssignment,
-  onScouterSelectionChange,
+  selectedScoutForAssignment,
+  onScoutSelectionChange,
   assignmentsConfirmed = false,
   allTeams = [],
   onConfirmAssignments,
@@ -70,7 +70,7 @@ export const AssignmentResults: React.FC<AssignmentResultsProps> = ({
       return {
         teamNumber,
         assignment,
-        scouterName: assignment?.scouterName || null,
+        scoutName: assignment?.scoutName || null,
         completed: assignment?.completed || false,
         assigned: !!assignment
       };
@@ -85,7 +85,7 @@ export const AssignmentResults: React.FC<AssignmentResultsProps> = ({
       // Search filter
       const searchMatch = searchFilter === '' || 
         item.teamNumber.toString().includes(searchFilter) ||
-        (item.scouterName && item.scouterName.toLowerCase().includes(searchFilter.toLowerCase()));
+        (item.scoutName && item.scoutName.toLowerCase().includes(searchFilter.toLowerCase()));
       
       // Status filter
       const statusMatch = statusFilter === 'all' ||
@@ -100,10 +100,10 @@ export const AssignmentResults: React.FC<AssignmentResultsProps> = ({
         case 'team':
           result = a.teamNumber - b.teamNumber;
           break;
-        case 'scouter': {
-          const scouterA = a.scouterName || '';
-          const scouterB = b.scouterName || '';
-          result = scouterA.localeCompare(scouterB);
+        case 'scout': {
+          const scoutA = a.scoutName || '';
+          const scoutB = b.scoutName || '';
+          result = scoutA.localeCompare(scoutB);
           break;
         }
         case 'status':
@@ -129,8 +129,8 @@ export const AssignmentResults: React.FC<AssignmentResultsProps> = ({
   };
 
   const handleTeamAssign = (teamNumber: number) => {
-    if (assignmentMode === 'manual' && selectedScouterForAssignment && onManualAssignment) {
-      onManualAssignment(teamNumber, selectedScouterForAssignment);
+    if (assignmentMode === 'manual' && selectedScoutForAssignment && onManualAssignment) {
+      onManualAssignment(teamNumber, selectedScoutForAssignment);
     }
   };
 
@@ -142,10 +142,10 @@ export const AssignmentResults: React.FC<AssignmentResultsProps> = ({
 
   const exportAssignments = () => {
     const csvContent = [
-      ['Team Number', 'Scouter', 'Status', 'Assigned At'],
+      ['Team Number', 'Scout', 'Status', 'Assigned At'],
       ...assignments.map(assignment => [
         assignment.teamNumber.toString(),
-        assignment.scouterName,
+        assignment.scoutName,
         assignment.completed ? 'Completed' : 'Pending',
         new Date(assignment.assignedAt).toLocaleDateString()
       ])
@@ -215,24 +215,24 @@ export const AssignmentResults: React.FC<AssignmentResultsProps> = ({
         </div>
       </CardHeader>
       <CardContent>
-        {/* Scouter Selection - Manual Mode Only */}
-        {assignmentMode === 'manual' && scoutersList.length > 0 && (
-          <PitScouterLegend
-            scoutersList={scoutersList}
+        {/* Scout Selection - Manual Mode Only */}
+        {assignmentMode === 'manual' && scoutsList.length > 0 && (
+          <PitScoutLegend
+            scoutsList={scoutsList}
             assignments={assignments}
             assignmentMode={assignmentMode}
             assignmentsConfirmed={assignmentsConfirmed}
-            selectedScouterForAssignment={selectedScouterForAssignment}
-            onScouterSelectionChange={onScouterSelectionChange}
+            selectedScoutForAssignment={selectedScoutForAssignment}
+            onScoutSelectionChange={onScoutSelectionChange}
             onClearAllAssignments={onClearAllAssignments}
             onConfirmAssignments={onConfirmAssignments}
             hasAssignments={assignments.length > 0}
             showMobileActions={true}
             helpText={
               !assignmentsConfirmed ? (
-                selectedScouterForAssignment
-                  ? `💡 Selected: ${selectedScouterForAssignment} - Click team rows below to assign`
-                  : 'Select a scouter above, then click team rows to assign them to that scouter'
+                selectedScoutForAssignment
+                  ? `💡 Selected: ${selectedScoutForAssignment} - Click team rows below to assign`
+                  : 'Select a scout above, then click team rows to assign them to that scout'
               ) : (
                 '💡 Click team rows to mark as completed • Auto-marked when pit data exists'
               )
@@ -240,8 +240,8 @@ export const AssignmentResults: React.FC<AssignmentResultsProps> = ({
           />
         )}
 
-        {/* Progress Bar - for non-manual modes or when no scouters */}
-        {(assignmentMode !== 'manual' || scoutersList.length === 0) && assignments.length > 0 && (
+        {/* Progress Bar - for non-manual modes or when no scouts */}
+        {(assignmentMode !== 'manual' || scoutsList.length === 0) && assignments.length > 0 && (
           <div className="mb-4 p-4 rounded-lg">
             <PitAssignmentProgressBar assignments={assignments} />
           </div>
@@ -252,7 +252,7 @@ export const AssignmentResults: React.FC<AssignmentResultsProps> = ({
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search teams or scouters..."
+              placeholder="Search teams or scouts..."
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
               className="pl-10 w-full"
@@ -299,10 +299,10 @@ export const AssignmentResults: React.FC<AssignmentResultsProps> = ({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => handleSort('scouter')}
+                onClick={() => handleSort('scout')}
                 className="justify-start h-auto p-0 font-medium"
               >
-                Scouter {getSortIcon('scouter')}
+                Scout {getSortIcon('scout')}
               </Button>
               <Button
                 variant="ghost"
@@ -348,8 +348,8 @@ export const AssignmentResults: React.FC<AssignmentResultsProps> = ({
           
           <div className="divide-y">
             {filteredAndSortedData.map((item) => {
-              const scouterIndex = item.scouterName ? scoutersList.indexOf(item.scouterName) : -1;
-              const canAssign = assignmentMode === 'manual' && selectedScouterForAssignment && !item.assigned && !assignmentsConfirmed;
+              const scoutIndex = item.scoutName ? scoutsList.indexOf(item.scoutName) : -1;
+              const canAssign = assignmentMode === 'manual' && selectedScoutForAssignment && !item.assigned && !assignmentsConfirmed;
               const canRemove = assignmentMode === 'manual' && item.assigned && !assignmentsConfirmed;
               const canToggleComplete = item.assigned && (assignmentsConfirmed || assignmentMode === 'sequential');
               
@@ -373,12 +373,12 @@ export const AssignmentResults: React.FC<AssignmentResultsProps> = ({
                       {canAssign && <UserPlus className="h-3 w-3 text-green-600" />}
                     </div>
                     <div className="text-sm flex items-center gap-2">
-                      {item.scouterName ? (
+                      {item.scoutName ? (
                         <Badge 
                           variant="outline" 
-                          className={scouterIndex >= 0 ? getScouterColor(scouterIndex) : ''}
+                          className={scoutIndex >= 0 ? getScoutColor(scoutIndex) : ''}
                         >
-                          {item.scouterName}
+                          {item.scoutName}
                         </Badge>
                       ) : (
                         <span className="text-muted-foreground italic">Not assigned</span>
@@ -478,13 +478,13 @@ export const AssignmentResults: React.FC<AssignmentResultsProps> = ({
                     
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">Scouter:</span>
-                        {item.scouterName ? (
+                        <span className="text-sm text-muted-foreground">Scout:</span>
+                        {item.scoutName ? (
                           <Badge 
                             variant="outline" 
-                            className={`text-xs ${scouterIndex >= 0 ? getScouterColor(scouterIndex) : ''}`}
+                            className={`text-xs ${scoutIndex >= 0 ? getScoutColor(scoutIndex) : ''}`}
                           >
-                            {item.scouterName}
+                            {item.scoutName}
                           </Badge>
                         ) : (
                           <span className="text-muted-foreground italic text-sm">Not assigned</span>

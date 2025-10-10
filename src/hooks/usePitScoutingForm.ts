@@ -94,7 +94,7 @@ export const usePitScoutingForm = (): PitScoutingFormState & {
 
   // Initialize form with saved data
   useEffect(() => {
-    const savedScoutName = localStorage.getItem("currentScouter") || localStorage.getItem("scouterInitials") || "";
+    const savedScoutName = localStorage.getItem("currentScout") || localStorage.getItem("scoutName") || "";
     const savedEventName = localStorage.getItem("eventName") || "";
     
     setScoutName(savedScoutName);

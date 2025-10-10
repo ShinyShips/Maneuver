@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/animate-ui/radix/tabs";
 import { AlertCircle, Users, BarChart3 } from 'lucide-react';
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useScouterManagement } from '@/hooks/useScouterManagement';
+import { useScoutManagement } from '@/hooks/useScoutManagement';
 import { getAllStoredEventTeams } from '@/lib/tbaUtils';
 import { getStoredNexusTeams, getStoredPitAddresses, getStoredPitData } from '@/lib/nexusUtils';
 import { loadPitScoutingEntry } from '@/lib/pitScoutingUtils';
-import { ScouterManagementSection } from '@/components/PitAssignmentComponents/ScouterManagementSection.tsx';
+import { ScoutManagementSection } from '@/components/PitAssignmentComponents/ScoutManagementSection.tsx';
 import { TeamDisplaySection } from '@/components/PitAssignmentComponents/TeamDisplaySection';
 import { AssignmentResults } from '@/components/PitAssignmentComponents/AssignmentResults';
 import EventInformationCard from '@/components/PitAssignmentComponents/EventInformationCard';
@@ -16,7 +16,7 @@ import type { PitAssignment } from '@/lib/pitAssignmentTypes';
 import type { NexusPitMap } from '@/lib/nexusUtils';
 
 const PitAssignmentsPage: React.FC = () => {
-  const { scoutersList } = useScouterManagement();
+  const { scoutsList } = useScoutManagement();
   const [selectedEvent, setSelectedEvent] = useState<string>('');
   const [currentTeams, setCurrentTeams] = useState<number[]>([]);
   const [teamDataSource, setTeamDataSource] = useState<'nexus' | 'tba' | null>(null);
@@ -25,7 +25,7 @@ const PitAssignmentsPage: React.FC = () => {
   const [assignments, setAssignments] = useState<PitAssignment[]>([]);
   const [assignmentMode, setAssignmentMode] = useState<'sequential' | 'spatial' | 'manual'>('sequential');
   const [activeTab, setActiveTab] = useState<string>('teams');
-  const [selectedScouterForAssignment, setSelectedScouterForAssignment] = useState<string | null>(null);
+  const [selectedScoutForAssignment, setSelectedScoutForAssignment] = useState<string | null>(null);
   const [assignmentsConfirmed, setAssignmentsConfirmed] = useState<boolean>(false);
 
   // Save assignments to localStorage whenever they change
@@ -240,12 +240,12 @@ const PitAssignmentsPage: React.FC = () => {
     return () => clearTimeout(timeoutId);
   }, [selectedEvent, assignments, hasRunInitialPitCheck]);
 
-  const hasValidData = currentTeams.length > 0 && scoutersList.length > 0;
+  const hasValidData = currentTeams.length > 0 && scoutsList.length > 0;
   const hasAssignments = assignments.length > 0;
 
   const handleAssignmentModeChange = (mode: 'sequential' | 'spatial' | 'manual') => {
     setAssignmentMode(mode);
-    setSelectedScouterForAssignment(null); // Clear selection when switching modes
+    setSelectedScoutForAssignment(null); // Clear selection when switching modes
     setAssignmentsConfirmed(false); // Reset confirmed state
   };
 
@@ -276,7 +276,7 @@ const PitAssignmentsPage: React.FC = () => {
     setAssignmentsConfirmed(confirmed);
   };
 
-  const handleManualAssignment = async (teamNumber: number, scouterName: string) => {
+  const handleManualAssignment = async (teamNumber: number, scoutName: string) => {
     const assignmentId = `${selectedEvent}-${teamNumber}`;
     
     // Check if team already has pit scouting data
@@ -299,7 +299,7 @@ const PitAssignmentsPage: React.FC = () => {
         id: assignmentId,
         eventKey: selectedEvent,
         teamNumber,
-        scouterName,
+        scoutName,
         assignedAt: Date.now(),
         completed
       }];
@@ -313,7 +313,7 @@ const PitAssignmentsPage: React.FC = () => {
   const handleClearAssignments = () => {
     setAssignments([]);
     setAssignmentsConfirmed(false);
-    setSelectedScouterForAssignment(null);
+    setSelectedScoutForAssignment(null);
     
     // Also clear from localStorage
     if (selectedEvent) {
@@ -324,7 +324,7 @@ const PitAssignmentsPage: React.FC = () => {
 
   const handleConfirmAssignments = () => {
     setAssignmentsConfirmed(true);
-    setSelectedScouterForAssignment(null);
+    setSelectedScoutForAssignment(null);
   };
 
   const handleToggleCompleted = (assignmentId: string) => {
@@ -342,7 +342,7 @@ const PitAssignmentsPage: React.FC = () => {
           <div>
             <h1 className="text-3xl font-bold">Pit Assignments</h1>
             <p className="text-muted-foreground">
-              Manage scouters and assign teams for pit scouting
+              Manage scouts and assign teams for pit scouting
             </p>
           </div>
           {/* Data source attribution */}
@@ -362,8 +362,8 @@ const PitAssignmentsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Scouter Management - Moved to top */}
-      <ScouterManagementSection />
+      {/* Scout Management - Moved to top */}
+      <ScoutManagementSection />
 
       {/* Event Information and Assignment Controls - Side by side */}
       <div className="flex flex-col lg:flex-row gap-6">
@@ -383,7 +383,7 @@ const PitAssignmentsPage: React.FC = () => {
             pitMapData={pitMapData}
             pitAddresses={pitAddresses}
             currentTeams={currentTeams}
-            scoutersList={scoutersList}
+            scoutsList={scoutsList}
             selectedEvent={selectedEvent}
             hasAssignments={hasAssignments}
             onAssignmentModeChange={handleAssignmentModeChange}
@@ -417,13 +417,13 @@ const PitAssignmentsPage: React.FC = () => {
                 eventKey={selectedEvent}
                 teams={currentTeams}
                 assignments={assignments}
-                scoutersList={scoutersList}
+                scoutsList={scoutsList}
                 onToggleCompleted={handleToggleCompleted}
                 assignmentMode={assignmentMode}
                 onManualAssignment={handleManualAssignment}
                 onRemoveAssignment={handleRemoveAssignment}
-                selectedScouterForAssignment={selectedScouterForAssignment}
-                onScouterSelectionChange={setSelectedScouterForAssignment}
+                selectedScoutForAssignment={selectedScoutForAssignment}
+                onScoutSelectionChange={setSelectedScoutForAssignment}
                 onConfirmAssignments={assignmentMode === 'manual' && !assignmentsConfirmed ? handleConfirmAssignments : undefined}
                 onClearAllAssignments={handleClearAssignments}
                 assignmentsConfirmed={assignmentsConfirmed}
@@ -441,11 +441,11 @@ const PitAssignmentsPage: React.FC = () => {
                 onToggleCompleted={handleToggleCompleted}
                 onClearAllAssignments={handleClearAssignments}
                 assignmentMode={assignmentMode}
-                scoutersList={scoutersList}
+                scoutsList={scoutsList}
                 onManualAssignment={handleManualAssignment}
                 onRemoveAssignment={handleRemoveAssignment}
-                selectedScouterForAssignment={selectedScouterForAssignment}
-                onScouterSelectionChange={setSelectedScouterForAssignment}
+                selectedScoutForAssignment={selectedScoutForAssignment}
+                onScoutSelectionChange={setSelectedScoutForAssignment}
                 assignmentsConfirmed={assignmentsConfirmed}
                 allTeams={currentTeams}
                 onConfirmAssignments={assignmentMode === 'manual' && !assignmentsConfirmed ? handleConfirmAssignments : undefined}
@@ -462,7 +462,7 @@ const PitAssignmentsPage: React.FC = () => {
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
             {currentTeams.length === 0 && "No team data found. Please load demo data from the home page or import teams from the TBA Data page."}
-            {scoutersList.length === 0 && " Please add scouters to create assignments."}
+            {scoutsList.length === 0 && " Please add scouts to create assignments."}
           </AlertDescription>
         </Alert>
       )}

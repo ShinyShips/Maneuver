@@ -2,7 +2,7 @@
   {
     "matchNumber": "53",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5895",
     "startPoses0": false,
     "startPoses1": false,
@@ -54,7 +54,7 @@
   {
     "matchNumber": "56",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5895",
     "startPoses0": false,
     "startPoses1": false,
@@ -106,7 +106,7 @@
   {
     "matchNumber": "60",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5895",
     "startPoses0": false,
     "startPoses1": false,
@@ -158,7 +158,7 @@
   {
     "matchNumber": "107",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5895",
     "startPoses0": false,
     "startPoses1": false,
@@ -210,7 +210,7 @@
   {
     "matchNumber": "115",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5895",
     "startPoses0": false,
     "startPoses1": false,
@@ -262,7 +262,7 @@
   {
     "matchNumber": "40",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "2539",
     "startPoses0": false,
     "startPoses1": false,
@@ -314,7 +314,7 @@
   {
     "matchNumber": "44",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "2539",
     "startPoses0": false,
     "startPoses1": false,
@@ -366,7 +366,7 @@
   {
     "matchNumber": "52",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "2539",
     "startPoses0": false,
     "startPoses1": false,
@@ -418,7 +418,7 @@
   {
     "matchNumber": "107",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "2539",
     "startPoses0": false,
     "startPoses1": false,
@@ -470,7 +470,7 @@
   {
     "matchNumber": "115",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "2539",
     "startPoses0": false,
     "startPoses1": false,
@@ -522,7 +522,7 @@
   {
     "matchNumber": "43",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "341",
     "startPoses0": false,
     "startPoses1": false,
@@ -574,7 +574,7 @@
   {
     "matchNumber": "46",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "341",
     "startPoses0": false,
     "startPoses1": true,
@@ -626,7 +626,7 @@
   {
     "matchNumber": "50",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "341",
     "startPoses0": false,
     "startPoses1": true,
@@ -678,7 +678,7 @@
   {
     "matchNumber": "107",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "341",
     "startPoses0": false,
     "startPoses1": true,
@@ -730,7 +730,7 @@
   {
     "matchNumber": "115",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "341",
     "startPoses0": false,
     "startPoses1": true,
@@ -782,7 +782,7 @@
   {
     "matchNumber": "42",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "4342",
     "startPoses0": false,
     "startPoses1": false,
@@ -834,7 +834,7 @@
   {
     "matchNumber": "45",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "4342",
     "startPoses0": false,
     "startPoses1": false,
@@ -886,7 +886,7 @@
   {
     "matchNumber": "49",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "4342",
     "startPoses0": false,
     "startPoses1": false,
@@ -938,7 +938,7 @@
   {
     "matchNumber": "107",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "4342",
     "startPoses0": false,
     "startPoses1": false,
@@ -990,7 +990,7 @@
   {
     "matchNumber": "112",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "4342",
     "startPoses0": false,
     "startPoses1": false,
@@ -1042,7 +1042,7 @@
   {
     "matchNumber": "42",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1168",
     "startPoses0": false,
     "startPoses1": true,
@@ -1094,7 +1094,7 @@
   {
     "matchNumber": "46",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1168",
     "startPoses0": false,
     "startPoses1": false,
@@ -1146,7 +1146,7 @@
   {
     "matchNumber": "49",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1168",
     "startPoses0": false,
     "startPoses1": true,
@@ -1198,7 +1198,7 @@
   {
     "matchNumber": "108",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1168",
     "startPoses0": false,
     "startPoses1": false,
@@ -1250,7 +1250,7 @@
   {
     "matchNumber": "115",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1168",
     "startPoses0": false,
     "startPoses1": false,
@@ -1302,7 +1302,7 @@
   {
     "matchNumber": "50",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "3142",
     "startPoses0": false,
     "startPoses1": true,
@@ -1354,7 +1354,7 @@
   {
     "matchNumber": "56",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "3142",
     "startPoses0": false,
     "startPoses1": false,
@@ -1406,7 +1406,7 @@
   {
     "matchNumber": "60",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "3142",
     "startPoses0": false,
     "startPoses1": false,
@@ -1458,7 +1458,7 @@
   {
     "matchNumber": "107",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "3142",
     "startPoses0": false,
     "startPoses1": false,
@@ -1510,7 +1510,7 @@
   {
     "matchNumber": "116",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "3142",
     "startPoses0": false,
     "startPoses1": false,
@@ -1562,7 +1562,7 @@
   {
     "matchNumber": "54",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "708",
     "startPoses0": false,
     "startPoses1": true,
@@ -1614,7 +1614,7 @@
   {
     "matchNumber": "61",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "708",
     "startPoses0": false,
     "startPoses1": false,
@@ -1666,7 +1666,7 @@
   {
     "matchNumber": "66",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "708",
     "startPoses0": false,
     "startPoses1": true,
@@ -1718,7 +1718,7 @@
   {
     "matchNumber": "102",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "708",
     "startPoses0": false,
     "startPoses1": true,
@@ -1770,7 +1770,7 @@
   {
     "matchNumber": "105",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "708",
     "startPoses0": false,
     "startPoses1": true,
@@ -1822,7 +1822,7 @@
   {
     "matchNumber": "51",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5992",
     "startPoses0": false,
     "startPoses1": false,
@@ -1874,7 +1874,7 @@
   {
     "matchNumber": "55",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5992",
     "startPoses0": false,
     "startPoses1": false,
@@ -1926,7 +1926,7 @@
   {
     "matchNumber": "61",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5992",
     "startPoses0": false,
     "startPoses1": false,
@@ -1978,7 +1978,7 @@
   {
     "matchNumber": "108",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5992",
     "startPoses0": false,
     "startPoses1": false,
@@ -2030,7 +2030,7 @@
   {
     "matchNumber": "113",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5992",
     "startPoses0": false,
     "startPoses1": false,
@@ -2082,7 +2082,7 @@
   {
     "matchNumber": "54",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "4653",
     "startPoses0": false,
     "startPoses1": false,
@@ -2134,7 +2134,7 @@
   {
     "matchNumber": "61",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "4653",
     "startPoses0": false,
     "startPoses1": false,
@@ -2186,7 +2186,7 @@
   {
     "matchNumber": "64",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "4653",
     "startPoses0": false,
     "startPoses1": false,
@@ -2238,7 +2238,7 @@
   {
     "matchNumber": "108",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "4653",
     "startPoses0": false,
     "startPoses1": false,
@@ -2290,7 +2290,7 @@
   {
     "matchNumber": "110",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "4653",
     "startPoses0": false,
     "startPoses1": false,
@@ -2342,7 +2342,7 @@
   {
     "matchNumber": "52",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "75",
     "startPoses0": false,
     "startPoses1": true,
@@ -2394,7 +2394,7 @@
   {
     "matchNumber": "55",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "75",
     "startPoses0": false,
     "startPoses1": true,
@@ -2446,7 +2446,7 @@
   {
     "matchNumber": "64",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "75",
     "startPoses0": false,
     "startPoses1": true,
@@ -2498,7 +2498,7 @@
   {
     "matchNumber": "107",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "75",
     "startPoses0": false,
     "startPoses1": true,
@@ -2550,7 +2550,7 @@
   {
     "matchNumber": "115",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "75",
     "startPoses0": false,
     "startPoses1": true,
@@ -2602,7 +2602,7 @@
   {
     "matchNumber": "55",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "272",
     "startPoses0": false,
     "startPoses1": false,
@@ -2654,7 +2654,7 @@
   {
     "matchNumber": "58",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "272",
     "startPoses0": false,
     "startPoses1": false,
@@ -2706,7 +2706,7 @@
   {
     "matchNumber": "62",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "272",
     "startPoses0": false,
     "startPoses1": false,
@@ -2758,7 +2758,7 @@
   {
     "matchNumber": "103",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "272",
     "startPoses0": false,
     "startPoses1": false,
@@ -2810,7 +2810,7 @@
   {
     "matchNumber": "106",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "272",
     "startPoses0": false,
     "startPoses1": false,

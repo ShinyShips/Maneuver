@@ -104,7 +104,7 @@ export const DataStatusCard: React.FC<DataStatusCardProps> = ({
       label: 'Prediction Processing',
       status: hasStakesAwarded ? 'loaded' : 'empty',
       count: stakesProcessedMatches,
-      details: hasStakesAwarded ? 'Stakes awarded to scouters' : 'No predictions processed yet',
+      details: hasStakesAwarded ? 'Stakes awarded to scouts' : 'No predictions processed yet',
       icon: CheckCircle
     },
     {

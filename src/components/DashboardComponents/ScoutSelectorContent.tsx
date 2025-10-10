@@ -11,27 +11,27 @@ import {
 } from "@/components/ui/command"
 import { Check, Plus, Trash2 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { AddScouterForm } from "./AddScouterForm"
+import { AddScoutForm } from "./AddScoutForm"
 
-interface ScouterSelectorContentProps {
-  currentScouter: string
-  scoutersList: string[]
-  onScouterSelect: (name: string) => Promise<void>
-  onScouterRemove: (name: string) => Promise<void>
+interface ScoutSelectorContentProps {
+  currentScout: string
+  scoutsList: string[]
+  onScoutSelect: (name: string) => Promise<void>
+  onScoutRemove: (name: string) => Promise<void>
   onClose?: () => void
 }
 
-export function ScouterSelectorContent({ 
-  currentScouter, 
-  scoutersList, 
-  onScouterSelect, 
-  onScouterRemove,
+export function ScoutSelectorContent({ 
+  currentScout, 
+  scoutsList, 
+  onScoutSelect, 
+  onScoutRemove,
   onClose
-}: ScouterSelectorContentProps) {
+}: ScoutSelectorContentProps) {
   const [showAddForm, setShowAddForm] = useState(false)
   const [searchValue, setSearchValue] = useState("")
 
-  const getScouterInitials = (name: string) => {
+  const getScoutName = (name: string) => {
     return name
       .split(' ')
       .map(word => word.charAt(0).toUpperCase())
@@ -39,14 +39,14 @@ export function ScouterSelectorContent({
       .slice(0, 3) // Limit to 3 characters
   }
 
-  const handleScouterSelect = async (name: string) => {
-    await onScouterSelect(name)
+  const handleScoutSelect = async (name: string) => {
+    await onScoutSelect(name)
     onClose?.()
     setShowAddForm(false)
   }
 
-  const handleAddScouter = async (name: string) => {
-    await onScouterSelect(name) // This will create and select the scouter
+  const handleAddScout = async (name: string) => {
+    await onScoutSelect(name) // This will create and select the scout
     onClose?.()
     setShowAddForm(false)
     setSearchValue("")
@@ -62,7 +62,7 @@ export function ScouterSelectorContent({
       {!showAddForm ? (
         <>
           <CommandInput 
-            placeholder="Search scouters..."
+            placeholder="Search scouts..."
             onInput={(e) => {
               const target = e.target as HTMLInputElement
               setSearchValue(target.value)
@@ -70,7 +70,7 @@ export function ScouterSelectorContent({
           />
           <CommandEmpty>
             <div className="text-center p-4">
-              <p className="text-sm text-muted-foreground mb-2">No scouters found</p>
+              <p className="text-sm text-muted-foreground mb-2">No scouts found</p>
               <Button
                 variant="outline"
                 size="sm"
@@ -82,33 +82,33 @@ export function ScouterSelectorContent({
                 className="w-full"
               >
                 <Plus className="h-4 w-4 mr-2" />
-                Add New Scouter
+                Add New Scout
               </Button>
             </div>
           </CommandEmpty>
           <CommandList>
             <CommandGroup>
-              {scoutersList.map((scouter) => (
+              {scoutsList.map((scout) => (
                 <CommandItem
-                  key={scouter}
-                  value={scouter}
-                  onSelect={() => handleScouterSelect(scouter)}
+                  key={scout}
+                  value={scout}
+                  onSelect={() => handleScoutSelect(scout)}
                   className="flex items-center justify-between"
                 >
                   <div className="flex items-center">
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        currentScouter === scouter ? "opacity-100" : "opacity-0"
+                        currentScout === scout ? "opacity-100" : "opacity-0"
                       )}
                     />
                     <div className="flex items-center gap-2">
                       <Avatar className="h-6 w-6">
                         <AvatarFallback className="text-xs bg-muted">
-                          {getScouterInitials(scouter)}
+                          {getScoutName(scout)}
                         </AvatarFallback>
                       </Avatar>
-                      {scouter}
+                      {scout}
                     </div>
                   </div>
                   <Button
@@ -116,7 +116,7 @@ export function ScouterSelectorContent({
                     size="sm"
                     onClick={async (e) => {
                       e.stopPropagation()
-                      await onScouterRemove(scouter)
+                      await onScoutRemove(scout)
                     }}
                     className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100"
                   >
@@ -126,7 +126,7 @@ export function ScouterSelectorContent({
               ))}
             </CommandGroup>
             
-            {scoutersList.length > 0 && (
+            {scoutsList.length > 0 && (
               <CommandGroup>
                 <div 
                   onClick={(e) => {
@@ -137,15 +137,15 @@ export function ScouterSelectorContent({
                   className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                 >
                   <Plus className="mr-2 h-4 w-4" />
-                  Add New Scouter
+                  Add New Scout
                 </div>
               </CommandGroup>
             )}
           </CommandList>
         </>
       ) : (
-        <AddScouterForm 
-          onAdd={handleAddScouter}
+        <AddScoutForm 
+          onAdd={handleAddScout}
           onCancel={handleCancelAdd}
           initialValue={searchValue}
         />

@@ -2,8 +2,8 @@ import Dexie, { type Table } from 'dexie';
 import type { ScoutingDataWithId } from './scoutingDataUtils';
 import type { PitScoutingEntry } from './pitScoutingTypes';
 
-// Scouter gamification types
-export interface Scouter {
+// Scout gamification types
+export interface Scout {
   name: string; // Primary key - matches the name from nav-user sidebar
   stakes: number; // Total stakes including bonuses from achievements
   stakesFromPredictions: number; // Stakes earned only from predictions/matches
@@ -17,7 +17,7 @@ export interface Scouter {
 
 export interface MatchPrediction {
   id: string;
-  scouterName: string;
+  scoutName: string;
   eventName: string;
   matchNumber: string;
   predictedWinner: 'red' | 'blue';
@@ -28,8 +28,8 @@ export interface MatchPrediction {
   verified: boolean;
 }
 
-export interface ScouterAchievement {
-  scouterName: string;
+export interface ScoutAchievement {
+  scoutName: string;
   achievementId: string;
   unlockedAt: number;
   progress?: number;
@@ -40,7 +40,7 @@ export interface ScoutingEntryDB {
   teamNumber?: string;
   matchNumber?: string;
   alliance?: string;
-  scouterInitials?: string;
+  scoutName?: string;
   eventName?: string;
   data: Record<string, unknown>;
   timestamp: number;
@@ -53,7 +53,7 @@ export class SimpleScoutingAppDB extends Dexie {
     super('SimpleScoutingDB');
     
     this.version(1).stores({
-      scoutingData: 'id, teamNumber, matchNumber, alliance, scouterInitials, eventName, timestamp'
+      scoutingData: 'id, teamNumber, matchNumber, alliance, scoutName, eventName, timestamp'
     });
   }
 }
@@ -65,34 +65,34 @@ export class PitScoutingDB extends Dexie {
     super('PitScoutingDB');
     
     this.version(1).stores({
-      pitScoutingData: 'id, teamNumber, eventName, scouterInitials, timestamp, [teamNumber+eventName]'
+      pitScoutingData: 'id, teamNumber, eventName, scoutName, timestamp, [teamNumber+eventName]'
     });
   }
 }
 
-export class ScouterProfileDB extends Dexie {
-  scouters!: Table<Scouter>;
+export class ScoutProfileDB extends Dexie {
+  scouts!: Table<Scout>;
   predictions!: Table<MatchPrediction>;
-  scouterAchievements!: Table<ScouterAchievement>;
+  scoutAchievements!: Table<ScoutAchievement>;
 
   constructor() {
-    super('ScouterProfileDB');
+    super('ScoutProfileDB');
     
     this.version(1).stores({
-      scouters: 'name, stakes, totalPredictions, correctPredictions, currentStreak, longestStreak, lastUpdated',
-      predictions: 'id, scouterName, eventName, matchNumber, predictedWinner, timestamp, verified, [scouterName+eventName+matchNumber]',
-      scouterAchievements: '[scouterName+achievementId], scouterName, achievementId, unlockedAt'
+      scouts: 'name, stakes, totalPredictions, correctPredictions, currentStreak, longestStreak, lastUpdated',
+      predictions: 'id, scoutName, eventName, matchNumber, predictedWinner, timestamp, verified, [scoutName+eventName+matchNumber]',
+      scoutAchievements: '[scoutName+achievementId], scoutName, achievementId, unlockedAt'
     });
 
     // Version 2: Add stakesFromPredictions field
     this.version(2).stores({
-      scouters: 'name, stakes, stakesFromPredictions, totalPredictions, correctPredictions, currentStreak, longestStreak, lastUpdated',
-      predictions: 'id, scouterName, eventName, matchNumber, predictedWinner, timestamp, verified, [scouterName+eventName+matchNumber]',
-      scouterAchievements: '[scouterName+achievementId], scouterName, achievementId, unlockedAt'
+      scouts: 'name, stakes, stakesFromPredictions, totalPredictions, correctPredictions, currentStreak, longestStreak, lastUpdated',
+      predictions: 'id, scoutName, eventName, matchNumber, predictedWinner, timestamp, verified, [scoutName+eventName+matchNumber]',
+      scoutAchievements: '[scoutName+achievementId], scoutName, achievementId, unlockedAt'
     }).upgrade(tx => {
-      // Add default stakesFromPredictions value for existing scouters
-      return tx.table('scouters').toCollection().modify(scouter => {
-        scouter.stakesFromPredictions = scouter.stakes || 0; // Assume current stakes are all from predictions for existing users
+      // Add default stakesFromPredictions value for existing scouts
+      return tx.table('scouts').toCollection().modify(scout => {
+        scout.stakesFromPredictions = scout.stakes || 0; // Assume current stakes are all from predictions for existing users
       });
     });
   }
@@ -100,7 +100,7 @@ export class ScouterProfileDB extends Dexie {
 
 export const db = new SimpleScoutingAppDB();
 export const pitDB = new PitScoutingDB();
-export const gameDB = new ScouterProfileDB();
+export const gameDB = new ScoutProfileDB();
 
 const safeStringify = (value: unknown): string | undefined => {
   if (value === null || value === undefined || value === '') {
@@ -122,7 +122,7 @@ const enhanceEntry = (entry: ScoutingDataWithId): ScoutingEntryDB => {
   
   const matchNumber = safeStringify(actualData?.matchNumber);
   const alliance = safeStringify(actualData?.alliance);
-  const scouterInitials = safeStringify(actualData?.scouterInitials);
+  const scoutName = safeStringify(actualData?.scoutName);
   const teamNumber = safeStringify(actualData?.selectTeam);
   const eventName = safeStringify(actualData?.eventName);
 
@@ -131,7 +131,7 @@ const enhanceEntry = (entry: ScoutingDataWithId): ScoutingEntryDB => {
     teamNumber,
     matchNumber,
     alliance,
-    scouterInitials,
+    scoutName,
     eventName,
     data: actualData || data,
     timestamp: entry.timestamp || Date.now()
@@ -190,7 +190,7 @@ export const getDBStats = async (): Promise<{
   totalEntries: number;
   teams: string[];
   matches: string[];
-  scouters: string[];
+  scouts: string[];
   events: string[];
   oldestEntry?: number;
   newestEntry?: number;
@@ -199,7 +199,7 @@ export const getDBStats = async (): Promise<{
   
   const teams = new Set<string>();
   const matches = new Set<string>();
-  const scouters = new Set<string>();
+  const scouts = new Set<string>();
   const events = new Set<string>();
   let oldestEntry: number | undefined;
   let newestEntry: number | undefined;
@@ -207,7 +207,7 @@ export const getDBStats = async (): Promise<{
   entries.forEach(entry => {
     if (entry.teamNumber) teams.add(entry.teamNumber);
     if (entry.matchNumber) matches.add(entry.matchNumber);
-    if (entry.scouterInitials) scouters.add(entry.scouterInitials);
+    if (entry.scoutName) scouts.add(entry.scoutName);
     if (entry.eventName) events.add(entry.eventName);
     
     if (!oldestEntry || entry.timestamp < oldestEntry) {
@@ -222,7 +222,7 @@ export const getDBStats = async (): Promise<{
     totalEntries: entries.length,
     teams: Array.from(teams).sort((a, b) => Number(a) - Number(b)),
     matches: Array.from(matches).sort((a, b) => Number(a) - Number(b)),
-    scouters: Array.from(scouters).sort(),
+    scouts: Array.from(scouts).sort(),
     events: Array.from(events).sort(),
     oldestEntry,
     newestEntry
@@ -365,7 +365,7 @@ export const queryScoutingEntries = async (filters: {
   matchNumbers?: string[];
   eventNames?: string[];
   alliances?: string[];
-  scouterInitials?: string[];
+  scoutName?: string[];
   dateRange?: { start: number; end: number };
 }): Promise<ScoutingEntryDB[]> => {
   let collection = db.scoutingData.toCollection();
@@ -401,9 +401,9 @@ export const queryScoutingEntries = async (filters: {
     );
   }
   
-  if (filters.scouterInitials && filters.scouterInitials.length > 0) {
+  if (filters.scoutName && filters.scoutName.length > 0) {
     collection = collection.filter(entry => 
-      Boolean(entry.scouterInitials && filters.scouterInitials!.includes(entry.scouterInitials))
+      Boolean(entry.scoutName && filters.scoutName!.includes(entry.scoutName))
     );
   }
   
@@ -415,7 +415,7 @@ export const getFilterOptions = async (): Promise<{
   matches: string[];
   events: string[];
   alliances: string[];
-  scouters: string[];
+  scouts: string[];
 }> => {
   const stats = await getDBStats();
   
@@ -427,7 +427,7 @@ export const getFilterOptions = async (): Promise<{
     matches: stats.matches,
     events: stats.events,
     alliances,
-    scouters: stats.scouters
+    scouts: stats.scouts
   };
 };
 
@@ -516,35 +516,35 @@ export const getPitScoutingStats = async (): Promise<{
   totalEntries: number;
   teams: string[];
   events: string[];
-  scouters: string[];
+  scouts: string[];
 }> => {
   const entries = await pitDB.pitScoutingData.toArray();
   
   const teams = [...new Set(entries.map(e => e.teamNumber))].sort((a, b) => Number(a) - Number(b));
   const events = [...new Set(entries.map(e => e.eventName))].sort();
-  const scouters = [...new Set(entries.map(e => e.scouterInitials))].sort();
+  const scouts = [...new Set(entries.map(e => e.scoutName))].sort();
   
   return {
     totalEntries: entries.length,
     teams,
     events,
-    scouters
+    scouts
   };
 };
 
-// Scouter gamification functions
-export const getOrCreateScouter = async (name: string): Promise<Scouter> => {
-  const existingScouter = await gameDB.scouters.get(name);
+// Scout gamification functions
+export const getOrCreateScout = async (name: string): Promise<Scout> => {
+  const existingScout = await gameDB.scouts.get(name);
   
-  if (existingScouter) {
+  if (existingScout) {
     // Update last updated time
-    existingScouter.lastUpdated = Date.now();
-    await gameDB.scouters.put(existingScouter);
-    return existingScouter;
+    existingScout.lastUpdated = Date.now();
+    await gameDB.scouts.put(existingScout);
+    return existingScout;
   }
   
-  // Create new scouter
-  const newScouter: Scouter = {
+  // Create new scout
+  const newScout: Scout = {
     name: name.trim(),
     stakes: 0,
     stakesFromPredictions: 0,
@@ -556,28 +556,28 @@ export const getOrCreateScouter = async (name: string): Promise<Scouter> => {
     lastUpdated: Date.now()
   };
   
-  await gameDB.scouters.put(newScouter);
-  return newScouter;
+  await gameDB.scouts.put(newScout);
+  return newScout;
 };
 
-export const getScouter = async (name: string): Promise<Scouter | undefined> => {
-  return await gameDB.scouters.get(name);
+export const getScout = async (name: string): Promise<Scout | undefined> => {
+  return await gameDB.scouts.get(name);
 };
 
-export const getAllScouters = async (): Promise<Scouter[]> => {
-  return await gameDB.scouters.orderBy('stakes').reverse().toArray();
+export const getAllScouts = async (): Promise<Scout[]> => {
+  return await gameDB.scouts.orderBy('stakes').reverse().toArray();
 };
 
-export const updateScouterPoints = async (name: string, pointsToAdd: number): Promise<void> => {
-  const scouter = await gameDB.scouters.get(name);
-  if (scouter) {
-    scouter.stakes += pointsToAdd;
-    scouter.lastUpdated = Date.now();
-    await gameDB.scouters.put(scouter);
+export const updateScoutPoints = async (name: string, pointsToAdd: number): Promise<void> => {
+  const scout = await gameDB.scouts.get(name);
+  if (scout) {
+    scout.stakes += pointsToAdd;
+    scout.lastUpdated = Date.now();
+    await gameDB.scouts.put(scout);
   }
 };
 
-export const updateScouterStats = async (
+export const updateScoutStats = async (
   name: string, 
   newStakes: number, 
   correctPredictions: number, 
@@ -586,33 +586,33 @@ export const updateScouterStats = async (
   longestStreak?: number,
   additionalStakesFromPredictions: number = 0
 ): Promise<void> => {
-  const scouter = await gameDB.scouters.get(name);
-  if (scouter) {
-    scouter.stakes = newStakes;
-    scouter.stakesFromPredictions += additionalStakesFromPredictions;
-    scouter.correctPredictions = correctPredictions;
-    scouter.totalPredictions = totalPredictions;
-    if (currentStreak !== undefined) scouter.currentStreak = currentStreak;
-    if (longestStreak !== undefined) scouter.longestStreak = longestStreak;
-    scouter.lastUpdated = Date.now();
-    await gameDB.scouters.put(scouter);
+  const scout = await gameDB.scouts.get(name);
+  if (scout) {
+    scout.stakes = newStakes;
+    scout.stakesFromPredictions += additionalStakesFromPredictions;
+    scout.correctPredictions = correctPredictions;
+    scout.totalPredictions = totalPredictions;
+    if (currentStreak !== undefined) scout.currentStreak = currentStreak;
+    if (longestStreak !== undefined) scout.longestStreak = longestStreak;
+    scout.lastUpdated = Date.now();
+    await gameDB.scouts.put(scout);
   }
 };
 
-// New function to update scouter with prediction result and handle streaks
-export const updateScouterWithPredictionResult = async (
+// New function to update scout with prediction result and handle streaks
+export const updateScoutWithPredictionResult = async (
   name: string,
   isCorrect: boolean,
   basePoints: number,
   eventName: string,
   matchNumber: string
 ): Promise<number> => {
-  const scouter = await gameDB.scouters.get(name);
-  if (!scouter) return 0;
+  const scout = await gameDB.scouts.get(name);
+  if (!scout) return 0;
 
   let pointsAwarded = 0;
-  let newCurrentStreak = scouter.currentStreak;
-  let newLongestStreak = scouter.longestStreak;
+  let newCurrentStreak = scout.currentStreak;
+  let newLongestStreak = scout.longestStreak;
 
   // Check if this match is sequential to the last verified prediction
   const isSequential = await isMatchSequential(name, eventName, matchNumber);
@@ -622,7 +622,7 @@ export const updateScouterWithPredictionResult = async (
     pointsAwarded += basePoints;
     
     // Only increment streak if the match is sequential OR this is the first prediction
-    if (isSequential || scouter.totalPredictions === 0) {
+    if (isSequential || scout.totalPredictions === 0) {
       newCurrentStreak += 1;
     } else {
       // Reset streak if there's a gap in matches
@@ -644,12 +644,12 @@ export const updateScouterWithPredictionResult = async (
     newCurrentStreak = 0;
   }
 
-  // Update scouter stats
-  await updateScouterStats(
+  // Update scout stats
+  await updateScoutStats(
     name,
-    scouter.stakes + pointsAwarded,
-    scouter.correctPredictions + (isCorrect ? 1 : 0),
-    scouter.totalPredictions + 1,
+    scout.stakes + pointsAwarded,
+    scout.correctPredictions + (isCorrect ? 1 : 0),
+    scout.totalPredictions + 1,
     newCurrentStreak,
     newLongestStreak,
     pointsAwarded // This tracks stakes earned from predictions
@@ -660,14 +660,14 @@ export const updateScouterWithPredictionResult = async (
 
 // Helper function to check if current match is sequential to last verified prediction
 const isMatchSequential = async (
-  scouterName: string,
+  scoutName: string,
   eventName: string,
   currentMatchNumber: string
 ): Promise<boolean> => {
-  // Get the most recent verified prediction for this scouter in this event
+  // Get the most recent verified prediction for this scout in this event
   const lastPrediction = await gameDB.predictions
-    .where('scouterName')
-    .equals(scouterName)
+    .where('scoutName')
+    .equals(scoutName)
     .and(prediction => prediction.eventName === eventName && prediction.verified)
     .reverse()
     .sortBy('timestamp');
@@ -687,14 +687,14 @@ const isMatchSequential = async (
 };
 
 export const createMatchPrediction = async (
-  scouterName: string,
+  scoutName: string,
   eventName: string,
   matchNumber: string,
   predictedWinner: 'red' | 'blue'
 ): Promise<MatchPrediction> => {
   const existingPrediction = await gameDB.predictions
-    .where('[scouterName+eventName+matchNumber]')
-    .equals([scouterName, eventName, matchNumber])
+    .where('[scoutName+eventName+matchNumber]')
+    .equals([scoutName, eventName, matchNumber])
     .first();
 
   if (existingPrediction) {
@@ -706,7 +706,7 @@ export const createMatchPrediction = async (
 
   const prediction: MatchPrediction = {
     id: `prediction_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-    scouterName,
+    scoutName,
     eventName,
     matchNumber,
     predictedWinner,
@@ -716,17 +716,17 @@ export const createMatchPrediction = async (
 
   await gameDB.predictions.put(prediction);
 
-  const scouter = await gameDB.scouters.get(scouterName);
-  if (scouter) {
-    scouter.totalPredictions += 1;
-    scouter.lastUpdated = Date.now();
-    await gameDB.scouters.put(scouter);
+  const scout = await gameDB.scouts.get(scoutName);
+  if (scout) {
+    scout.totalPredictions += 1;
+    scout.lastUpdated = Date.now();
+    await gameDB.scouts.put(scout);
     
     const { checkForNewAchievements } = await import('./achievementUtils');
-    const newAchievements = await checkForNewAchievements(scouterName);
+    const newAchievements = await checkForNewAchievements(scoutName);
     
     if (newAchievements.length > 0) {
-      console.log('🏆 New achievements unlocked for', scouterName, ':', newAchievements.map(a => a.name));
+      console.log('🏆 New achievements unlocked for', scoutName, ':', newAchievements.map(a => a.name));
     }
   }
 
@@ -734,20 +734,20 @@ export const createMatchPrediction = async (
 };
 
 export const getPredictionForMatch = async (
-  scouterName: string,
+  scoutName: string,
   eventName: string,
   matchNumber: string
 ): Promise<MatchPrediction | undefined> => {
   return await gameDB.predictions
-    .where('[scouterName+eventName+matchNumber]')
-    .equals([scouterName, eventName, matchNumber])
+    .where('[scoutName+eventName+matchNumber]')
+    .equals([scoutName, eventName, matchNumber])
     .first();
 };
 
-export const getAllPredictionsForScouter = async (scouterName: string): Promise<MatchPrediction[]> => {
+export const getAllPredictionsForScout = async (scoutName: string): Promise<MatchPrediction[]> => {
   return await gameDB.predictions
-    .where('scouterName')
-    .equals(scouterName)
+    .where('scoutName')
+    .equals(scoutName)
     .reverse()
     .toArray();
 };
@@ -767,11 +767,11 @@ export const markPredictionAsVerified = async (predictionId: string): Promise<vo
   await gameDB.predictions.update(predictionId, { verified: true });
 };
 
-export const deleteScouter = async (name: string): Promise<void> => {
-  await gameDB.scouters.delete(name);
+export const deleteScout = async (name: string): Promise<void> => {
+  await gameDB.scouts.delete(name);
 };
 
 export const clearGameData = async (): Promise<void> => {
-  await gameDB.scouters.clear();
+  await gameDB.scouts.clear();
   await gameDB.predictions.clear();
 };

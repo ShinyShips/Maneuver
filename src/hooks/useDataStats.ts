@@ -7,12 +7,12 @@ export interface DataStats {
   scoutingDataCount: number;
   pitScoutingDataCount: number;
   matchDataCount: number;
-  scouterGameDataCount: number;
+  scoutGameDataCount: number;
   apiDataCount: number;
   scoutingDataSize: string;
   pitScoutingDataSize: string;
   matchDataSize: string;
-  scouterGameDataSize: string;
+  scoutGameDataSize: string;
   apiDataSize: string;
 }
 
@@ -29,12 +29,12 @@ export const useDataStats = () => {
     scoutingDataCount: 0,
     pitScoutingDataCount: 0,
     matchDataCount: 0,
-    scouterGameDataCount: 0,
+    scoutGameDataCount: 0,
     apiDataCount: 0,
     scoutingDataSize: "0 B",
     pitScoutingDataSize: "0 B",
     matchDataSize: "0 B",
-    scouterGameDataSize: "0 B",
+    scoutGameDataSize: "0 B",
     apiDataSize: "0 B",
   });
 
@@ -80,28 +80,28 @@ export const useDataStats = () => {
     }
   }, []);
 
-  const loadScouterGameCount = useCallback(async () => {
+  const loadScoutGameCount = useCallback(async () => {
     try {
-      const scoutersCount = await gameDB.scouters.count();
+      const scoutsCount = await gameDB.scouts.count();
       const predictionsCount = await gameDB.predictions.count();
-      const totalEntries = scoutersCount + predictionsCount;
+      const totalEntries = scoutsCount + predictionsCount;
       
-      const scoutersData = await gameDB.scouters.toArray();
+      const scoutsData = await gameDB.scouts.toArray();
       const predictionsData = await gameDB.predictions.toArray();
-      const combinedData = { scouters: scoutersData, predictions: predictionsData };
+      const combinedData = { scouts: scoutsData, predictions: predictionsData };
       const gameDataSize = formatDataSize(JSON.stringify(combinedData));
       
       setStats(prev => ({
         ...prev,
-        scouterGameDataCount: totalEntries,
-        scouterGameDataSize: gameDataSize,
+        scoutGameDataCount: totalEntries,
+        scoutGameDataSize: gameDataSize,
       }));
     } catch (error) {
-      console.error("Error loading scouter game data:", error);
+      console.error("Error loading scout game data:", error);
       setStats(prev => ({
         ...prev,
-        scouterGameDataCount: 0,
-        scouterGameDataSize: "0 B",
+        scoutGameDataCount: 0,
+        scoutGameDataSize: "0 B",
       }));
     }
   }, []);
@@ -157,21 +157,21 @@ export const useDataStats = () => {
   const refreshData = useCallback(async () => {
     await loadScoutingCount();
     await loadPitScoutingCount();
-    await loadScouterGameCount();
+    await loadScoutGameCount();
     loadApiDataCount();
-  }, [loadScoutingCount, loadPitScoutingCount, loadScouterGameCount, loadApiDataCount]);
+  }, [loadScoutingCount, loadPitScoutingCount, loadScoutGameCount, loadApiDataCount]);
 
   const resetStats = useCallback(() => {
     setStats({
       scoutingDataCount: 0,
       pitScoutingDataCount: 0,
       matchDataCount: 0,
-      scouterGameDataCount: 0,
+      scoutGameDataCount: 0,
       apiDataCount: 0,
       scoutingDataSize: "0 B",
       pitScoutingDataSize: "0 B",
       matchDataSize: "0 B",
-      scouterGameDataSize: "0 B",
+      scoutGameDataSize: "0 B",
       apiDataSize: "0 B",
     });
   }, []);

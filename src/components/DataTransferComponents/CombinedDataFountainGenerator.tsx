@@ -14,16 +14,16 @@ const CombinedDataFountainGenerator = ({ onBack, onSwitchToScanner }: CombinedDa
       // Load scouting data
       const scoutingDataWithIds = await loadScoutingData();
       
-      // Load scouter profiles data
-      const scoutersData = await gameDB.scouters.toArray();
+      // Load scout profiles data
+      const scoutsData = await gameDB.scouts.toArray();
       const predictionsData = await gameDB.predictions.toArray();
       
       
       // Check if we have any meaningful data
       const hasScoutingData = scoutingDataWithIds.entries.length > 0;
-      const hasScouterData = scoutersData.length > 0 || predictionsData.length > 0;
+      const hasScoutData = scoutsData.length > 0 || predictionsData.length > 0;
       
-      if (!hasScoutingData && !hasScouterData) {
+      if (!hasScoutingData && !hasScoutData) {
         return null;
       }
       
@@ -33,15 +33,15 @@ const CombinedDataFountainGenerator = ({ onBack, onSwitchToScanner }: CombinedDa
         scoutingData: {
           entries: scoutingDataWithIds.entries
         },
-        scouterProfiles: {
-          scouters: scoutersData,
+        scoutProfiles: {
+          scouts: scoutsData,
           predictions: predictionsData
         },
         metadata: {
           exportedAt: new Date().toISOString(),
           version: "1.0",
           scoutingEntriesCount: scoutingDataWithIds.entries.length,
-          scoutersCount: scoutersData.length,
+          scoutsCount: scoutsData.length,
           predictionsCount: predictionsData.length
         }
       };
@@ -60,8 +60,8 @@ const CombinedDataFountainGenerator = ({ onBack, onSwitchToScanner }: CombinedDa
       dataType="combined"
       loadData={loadCombinedData}
       title="Generate Combined Data Fountain Codes"
-      description="Create multiple QR codes containing both scouting data and scouter profiles for complete data transfer"
-      noDataMessage="No scouting data or scouter profiles found. Create some data first before exporting."
+      description="Create multiple QR codes containing both scouting data and scout profiles for complete data transfer"
+      noDataMessage="No scouting data or scout profiles found. Create some data first before exporting."
     />
   );
 };

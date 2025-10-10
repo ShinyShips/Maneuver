@@ -149,8 +149,8 @@ const AutoStartPage = () => {
                   <span className="font-medium">{states.inputs.selectTeam}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Scouter:</span>
-                  <span className="font-medium">{states.inputs.scouterInitials}</span>
+                  <span className="text-muted-foreground">Scout:</span>
+                  <span className="font-medium">{states.inputs.scoutName}</span>
                 </div>
               </CardContent>
             </Card>

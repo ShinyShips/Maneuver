@@ -19,9 +19,9 @@ A comprehensive, mobile-first scouting application for FIRST Robotics Competitio
 - **Alliance Selection**: Drag-and-drop pick lists, desktop/mobile layouts, alliance initializer, and selection tables
 
 
-### 🏆 Scouter Profiles & Achievements
-- **Persistent Scouter Profiles**: Stake tracking, prediction scoring, and achievement system
-- **Achievements**: Unlockable badges and progress tracking for scouters
+### 🏆 Scout Profiles & Achievements
+- **Persistent Scout Profiles**: Stake tracking, prediction scoring, and achievement system
+- **Achievements**: Unlockable badges and progress tracking for scouts
 
 ### 🏗️ Pit Scouting & Assignments
 - **Full Pit Scouting UI**: Forms for robot specs, photos, auto/teleop/endgame, technical notes
@@ -66,8 +66,8 @@ A comprehensive, mobile-first scouting application for FIRST Robotics Competitio
 **Strategy Planning**: Dashboard overview → Interactive charts → Column configuration → Event filtering
 
 **Alliance Selection**: Create pick lists → Research teams → Drag-and-drop ordering → Export/share
-**Pit Scouting**: Assign scouters → Fill out pit forms → Visualize pit map → Export pit data
-**Achievements**: Track scouter progress, unlock badges, and view leaderboard
+**Pit Scouting**: Assign scouts → Fill out pit forms → Visualize pit map → Export pit data
+**Achievements**: Track scout progress, unlock badges, and view leaderboard
 
 ## 🏗️ Project Structure
 
@@ -125,7 +125,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - **FIRST Robotics Competition** for inspiring this project
-- **VihaanChhabria** and the [VScouter project](https://github.com/VihaanChhabria/VScouter) for providing the initial foundation and inspiration for this application
+- **VihaanChhabria** and the [VScout project](https://github.com/VihaanChhabria/VScout) for providing the initial foundation and inspiration for this application
 - **The Blue Alliance** for providing match data APIs
 - **shadcn/ui** for the excellent component library
 - **Luby Transform** library for robust data transfer capabilities

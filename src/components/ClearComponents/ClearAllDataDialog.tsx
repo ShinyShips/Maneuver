@@ -15,7 +15,7 @@ interface ClearAllDataDialogProps {
   onConfirm: () => void;
   scoutingDataCount: number;
   pitScoutingDataCount: number;
-  scouterGameDataCount: number;
+  scoutGameDataCount: number;
   apiDataCount: number;
   matchDataCount: number;
 }
@@ -26,7 +26,7 @@ export const ClearAllDataDialog = ({
   onConfirm,
   scoutingDataCount,
   pitScoutingDataCount,
-  scouterGameDataCount,
+  scoutGameDataCount,
   apiDataCount,
   matchDataCount,
 }: ClearAllDataDialogProps) => {
@@ -51,7 +51,7 @@ export const ClearAllDataDialog = ({
               <ul className="text-sm space-y-1 ml-4">
                 <li>• {scoutingDataCount} scouting entries</li>
                 <li>• {pitScoutingDataCount} pit scouting entries</li>
-                <li>• {scouterGameDataCount} scouter profile entries</li>
+                <li>• {scoutGameDataCount} scout profile entries</li>
                 <li>• {apiDataCount} API data items</li>
                 <li>• {matchDataCount} match schedule entries</li>
                 <li>• All settings and preferences</li>

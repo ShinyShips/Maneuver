@@ -1,17 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sigma, TrendingUpDown, Award, Target } from "lucide-react";
-import { calculateAccuracy } from '@/lib/scouterGameUtils';
-import type { Scouter } from '@/lib/dexieDB';
+import { calculateAccuracy } from '@/lib/scoutGameUtils';
+import type { Scout } from '@/lib/dexieDB';
 
 interface ScoutStatsSummaryProps {
-  scouters: Scouter[];
+  scouts: Scout[];
 }
 
-export function ScoutStatsSummary({ scouters }: ScoutStatsSummaryProps) {
-  const totalPredictions = scouters.reduce((sum, s) => sum + s.totalPredictions, 0);
-  const totalStakes = scouters.reduce((sum, s) => sum + s.stakes, 0);
-  const avgAccuracy = scouters.length > 0 
-    ? Math.round(scouters.reduce((sum, s) => sum + calculateAccuracy(s), 0) / scouters.length)
+export function ScoutStatsSummary({ scouts }: ScoutStatsSummaryProps) {
+  const totalPredictions = scouts.reduce((sum, s) => sum + s.totalPredictions, 0);
+  const totalStakes = scouts.reduce((sum, s) => sum + s.stakes, 0);
+  const avgAccuracy = scouts.length > 0 
+    ? Math.round(scouts.reduce((sum, s) => sum + calculateAccuracy(s), 0) / scouts.length)
     : 0;
 
   return (
@@ -22,7 +22,7 @@ export function ScoutStatsSummary({ scouters }: ScoutStatsSummaryProps) {
           <Sigma className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{scouters.length}</div>
+          <div className="text-2xl font-bold">{scouts.length}</div>
         </CardContent>
       </Card>
 

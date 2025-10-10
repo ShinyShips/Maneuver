@@ -3,8 +3,8 @@ import { GenericSelector } from "@/components/ui/generic-selector";
 import { Trophy, Target, TrendingUp, Award } from "lucide-react";
 import { ScoutChart } from "./ScoutChart";
 import { ScoutTable } from "./ScoutTable";
-import type { ScouterMetric, ScouterChartData } from '@/hooks/useScoutDashboard';
-import type { Scouter } from '@/lib/dexieDB';
+import type { ScoutMetric, ScoutChartData } from '@/hooks/useScoutDashboard';
+import type { Scout } from '@/lib/dexieDB';
 
 const iconMap = {
   Trophy,
@@ -15,11 +15,11 @@ const iconMap = {
 
 interface ScoutChartSectionProps {
   loading: boolean;
-  chartData: ScouterChartData[];
-  lineChartData: Array<{ matchNumber: number; [scouterName: string]: number }>;
-  scouters: Scouter[];
-  chartMetric: ScouterMetric;
-  setChartMetric: (metric: ScouterMetric) => void;
+  chartData: ScoutChartData[];
+  lineChartData: Array<{ matchNumber: number; [scoutName: string]: number }>;
+  scouts: Scout[];
+  chartMetric: ScoutMetric;
+  setChartMetric: (metric: ScoutMetric) => void;
   chartType: "bar" | "line" | "table";
   setChartType: (type: "bar" | "line" | "table") => void;
   metricOptions: Array<{ key: string; label: string; icon: string }>;
@@ -29,7 +29,7 @@ export function ScoutChartSection({
   loading,
   chartData,
   lineChartData,
-  scouters,
+  scouts,
   chartMetric,
   setChartMetric,
   chartType,
@@ -62,7 +62,7 @@ export function ScoutChartSection({
                 label="Select Metric"
                 value={chartMetric}
                 availableOptions={metricOptions.map(opt => opt.key)}
-                onValueChange={(value) => setChartMetric(value as ScouterMetric)}
+                onValueChange={(value) => setChartMetric(value as ScoutMetric)}
                 placeholder="Select metric"
                 displayFormat={(key) => metricOptions.find(opt => opt.key === key)?.label || key}
                 className="w-auto max-w-40"
@@ -119,7 +119,7 @@ export function ScoutChartSection({
                 chartType={chartType}
                 chartData={chartData}
                 lineChartData={lineChartData}
-                scouters={scouters}
+                scouts={scouts}
                 chartMetric={chartMetric}
                 selectedMetricLabel={selectedMetricInfo?.label || "Value"}
               />

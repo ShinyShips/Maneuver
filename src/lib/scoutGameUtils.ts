@@ -1,17 +1,17 @@
-import type { Scouter } from './dexieDB';
+import type { Scout } from './dexieDB';
 import { 
-  getOrCreateScouter,
-  getScouter, 
-  getAllScouters,
-  updateScouterPoints,
-  updateScouterStats,
-  updateScouterWithPredictionResult,
+  getOrCreateScout,
+  getScout, 
+  getAllScouts,
+  updateScoutPoints,
+  updateScoutStats,
+  updateScoutWithPredictionResult,
   createMatchPrediction,
   getPredictionForMatch,
-  getAllPredictionsForScouter,
+  getAllPredictionsForScout,
   getAllPredictionsForMatch,
   markPredictionAsVerified,
-  deleteScouter,
+  deleteScout,
   clearGameData
 } from './dexieDB';
 import { checkForNewAchievements } from './achievementUtils';
@@ -31,24 +31,24 @@ export const calculateStreakBonus = (streakLength: number): number => {
   return STAKE_VALUES.STREAK_BONUS_BASE * (streakLength - 1);
 };
 
-// Get or create a scouter by name (linked to sidebar selection)
-export const getOrCreateScouterByName = async (name: string): Promise<Scouter> => {
-  return await getOrCreateScouter(name);
+// Get or create a scout by name (linked to sidebar selection)
+export const getOrCreateScoutByName = async (name: string): Promise<Scout> => {
+  return await getOrCreateScout(name);
 };
 
-// Calculate scouter accuracy percentage
-export const calculateAccuracy = (scouter: Scouter): number => {
-  if (scouter.totalPredictions === 0) return 0;
-  return Math.round((scouter.correctPredictions / scouter.totalPredictions) * 100);
+// Calculate scout accuracy percentage
+export const calculateAccuracy = (scout: Scout): number => {
+  if (scout.totalPredictions === 0) return 0;
+  return Math.round((scout.correctPredictions / scout.totalPredictions) * 100);
 };
 
 // Get leaderboard
-export const getLeaderboard = async (): Promise<Scouter[]> => {
-  return await getAllScouters();
+export const getLeaderboard = async (): Promise<Scout[]> => {
+  return await getAllScouts();
 };
 
-// Wrapper function to update scouter stats with achievement checking
-export const updateScouterStatsWithAchievements = async (
+// Wrapper function to update scout stats with achievement checking
+export const updateScoutStatsWithAchievements = async (
   name: string, 
   newStakes: number, 
   correctPredictions: number, 
@@ -57,7 +57,7 @@ export const updateScouterStatsWithAchievements = async (
   longestStreak?: number
 ): Promise<{ newAchievements: Achievement[] }> => {
   // Update the stats first
-  await updateScouterStats(name, newStakes, correctPredictions, totalPredictions, currentStreak, longestStreak);
+  await updateScoutStats(name, newStakes, correctPredictions, totalPredictions, currentStreak, longestStreak);
   
   // Check for new achievements
   const newAchievements = await checkForNewAchievements(name);
@@ -65,8 +65,8 @@ export const updateScouterStatsWithAchievements = async (
   return { newAchievements };
 };
 
-// Wrapper function to update scouter with prediction result and achievement checking
-export const updateScouterWithPredictionAndAchievements = async (
+// Wrapper function to update scout with prediction result and achievement checking
+export const updateScoutWithPredictionAndAchievements = async (
   name: string,
   isCorrect: boolean,
   basePoints: number,
@@ -74,7 +74,7 @@ export const updateScouterWithPredictionAndAchievements = async (
   matchNumber: string
 ): Promise<{ newAchievements: Achievement[] }> => {
   // Update with prediction result first
-  await updateScouterWithPredictionResult(name, isCorrect, basePoints, eventName, matchNumber);
+  await updateScoutWithPredictionResult(name, isCorrect, basePoints, eventName, matchNumber);
   
   // Check for new achievements
   const newAchievements = await checkForNewAchievements(name);
@@ -83,16 +83,16 @@ export const updateScouterWithPredictionAndAchievements = async (
 };
 
 export {
-  getScouter,
-  getAllScouters,
-  updateScouterPoints,
-  updateScouterStats,
-  updateScouterWithPredictionResult,
+  getScout,
+  getAllScouts,
+  updateScoutPoints,
+  updateScoutStats,
+  updateScoutWithPredictionResult,
   createMatchPrediction,
   getPredictionForMatch,
-  getAllPredictionsForScouter,
+  getAllPredictionsForScout,
   getAllPredictionsForMatch,
   markPredictionAsVerified,
-  deleteScouter,
+  deleteScout,
   clearGameData
 };

@@ -3,7 +3,7 @@
     {
       "teamNumber": "737",
       "eventName": "2025casd",
-      "scouterInitials": "AK",
+      "scoutName": "AK",
       "weight": 105,
       "drivetrain": "Mecanum",
       "programmingLanguage": "LabVIEW",
@@ -74,7 +74,7 @@
     {
       "teamNumber": "840",
       "eventName": "2025casd",
-      "scouterInitials": "RW",
+      "scoutName": "RW",
       "weight": 122,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "LabVIEW",
@@ -145,7 +145,7 @@
     {
       "teamNumber": "727",
       "eventName": "2025mrcmp",
-      "scouterInitials": "KL",
+      "scoutName": "KL",
       "weight": 114,
       "drivetrain": "Mecanum",
       "programmingLanguage": "LabVIEW",
@@ -216,7 +216,7 @@
     {
       "teamNumber": "829",
       "eventName": "2025mrcmp",
-      "scouterInitials": "KL",
+      "scoutName": "KL",
       "weight": 85,
       "drivetrain": "Mecanum",
       "programmingLanguage": "LabVIEW",
@@ -287,7 +287,7 @@
     {
       "teamNumber": "486",
       "eventName": "2025ontor",
-      "scouterInitials": "AK",
+      "scoutName": "AK",
       "weight": 103,
       "drivetrain": "Swerve",
       "programmingLanguage": "Java",
@@ -358,7 +358,7 @@
     {
       "teamNumber": "275",
       "eventName": "2025njfla",
-      "scouterInitials": "ET",
+      "scoutName": "ET",
       "weight": 83,
       "drivetrain": "H-Drive",
       "programmingLanguage": "Java",
@@ -429,7 +429,7 @@
     {
       "teamNumber": "446",
       "eventName": "2025casd",
-      "scouterInitials": "AK",
+      "scoutName": "AK",
       "weight": 116,
       "drivetrain": "West Coast",
       "programmingLanguage": "Python",
@@ -500,7 +500,7 @@
     {
       "teamNumber": "618",
       "eventName": "2025mrcmp",
-      "scouterInitials": "ET",
+      "scoutName": "ET",
       "weight": 111,
       "drivetrain": "Swerve",
       "programmingLanguage": "Java",
@@ -571,7 +571,7 @@
     {
       "teamNumber": "606",
       "eventName": "2025pawar",
-      "scouterInitials": "KL",
+      "scoutName": "KL",
       "weight": 91,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "LabVIEW",
@@ -642,7 +642,7 @@
     {
       "teamNumber": "325",
       "eventName": "2025casd",
-      "scouterInitials": "MR",
+      "scoutName": "MR",
       "weight": 118,
       "drivetrain": "West Coast",
       "programmingLanguage": "Java",
@@ -713,7 +713,7 @@
     {
       "teamNumber": "121",
       "eventName": "2025ontor",
-      "scouterInitials": "MR",
+      "scoutName": "MR",
       "weight": 83,
       "drivetrain": "Mecanum",
       "programmingLanguage": "Python",
@@ -784,7 +784,7 @@
     {
       "teamNumber": "972",
       "eventName": "2025pawar",
-      "scouterInitials": "BH",
+      "scoutName": "BH",
       "weight": 83,
       "drivetrain": "Swerve",
       "programmingLanguage": "C++",
@@ -855,7 +855,7 @@
     {
       "teamNumber": "240",
       "eventName": "2025mrcmp",
-      "scouterInitials": "ET",
+      "scoutName": "ET",
       "weight": 88,
       "drivetrain": "Swerve",
       "programmingLanguage": "Java",
@@ -926,7 +926,7 @@
     {
       "teamNumber": "294",
       "eventName": "2025ontor",
-      "scouterInitials": "AK",
+      "scoutName": "AK",
       "weight": 123,
       "drivetrain": "H-Drive",
       "programmingLanguage": "Python",
@@ -997,7 +997,7 @@
     {
       "teamNumber": "588",
       "eventName": "2025ontor",
-      "scouterInitials": "TM",
+      "scoutName": "TM",
       "weight": 121,
       "drivetrain": "West Coast",
       "programmingLanguage": "Python",
@@ -1068,7 +1068,7 @@
     {
       "teamNumber": "916",
       "eventName": "2025mrcmp",
-      "scouterInitials": "RW",
+      "scoutName": "RW",
       "weight": 114,
       "drivetrain": "West Coast",
       "programmingLanguage": "Python",
@@ -1139,7 +1139,7 @@
     {
       "teamNumber": "721",
       "eventName": "2025njfla",
-      "scouterInitials": "BH",
+      "scoutName": "BH",
       "weight": 113,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "Java",
@@ -1210,7 +1210,7 @@
     {
       "teamNumber": "812",
       "eventName": "2025mrcmp",
-      "scouterInitials": "SC",
+      "scoutName": "SC",
       "weight": 114,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "Python",
@@ -1281,7 +1281,7 @@
     {
       "teamNumber": "384",
       "eventName": "2025pawar",
-      "scouterInitials": "ET",
+      "scoutName": "ET",
       "weight": 118,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "C++",
@@ -1352,7 +1352,7 @@
     {
       "teamNumber": "369",
       "eventName": "2025mrcmp",
-      "scouterInitials": "RW",
+      "scoutName": "RW",
       "weight": 93,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "LabVIEW",
@@ -1423,7 +1423,7 @@
     {
       "teamNumber": "1582",
       "eventName": "2025pawar",
-      "scouterInitials": "BH",
+      "scoutName": "BH",
       "weight": 114,
       "drivetrain": "Swerve",
       "programmingLanguage": "C++",
@@ -1494,7 +1494,7 @@
     {
       "teamNumber": "5108",
       "eventName": "2025ontor",
-      "scouterInitials": "AK",
+      "scoutName": "AK",
       "weight": 100,
       "drivetrain": "West Coast",
       "programmingLanguage": "Java",
@@ -1565,7 +1565,7 @@
     {
       "teamNumber": "8814",
       "eventName": "2025casd",
-      "scouterInitials": "SC",
+      "scoutName": "SC",
       "weight": 80,
       "drivetrain": "Swerve",
       "programmingLanguage": "Java",
@@ -1636,7 +1636,7 @@
     {
       "teamNumber": "2788",
       "eventName": "2025ontor",
-      "scouterInitials": "BH",
+      "scoutName": "BH",
       "weight": 119,
       "drivetrain": "West Coast",
       "programmingLanguage": "C++",
@@ -1707,7 +1707,7 @@
     {
       "teamNumber": "5136",
       "eventName": "2025ontor",
-      "scouterInitials": "SC",
+      "scoutName": "SC",
       "weight": 108,
       "drivetrain": "Swerve",
       "programmingLanguage": "Python",
@@ -1778,7 +1778,7 @@
     {
       "teamNumber": "4549",
       "eventName": "2025casd",
-      "scouterInitials": "ET",
+      "scoutName": "ET",
       "weight": 104,
       "drivetrain": "Swerve",
       "programmingLanguage": "C++",
@@ -1849,7 +1849,7 @@
     {
       "teamNumber": "8612",
       "eventName": "2025njfla",
-      "scouterInitials": "SC",
+      "scoutName": "SC",
       "weight": 113,
       "drivetrain": "Swerve",
       "programmingLanguage": "Java",
@@ -1920,7 +1920,7 @@
     {
       "teamNumber": "5774",
       "eventName": "2025ontor",
-      "scouterInitials": "RW",
+      "scoutName": "RW",
       "weight": 106,
       "drivetrain": "H-Drive",
       "programmingLanguage": "C++",
@@ -1991,7 +1991,7 @@
     {
       "teamNumber": "2723",
       "eventName": "2025ontor",
-      "scouterInitials": "JD",
+      "scoutName": "JD",
       "weight": 109,
       "drivetrain": "H-Drive",
       "programmingLanguage": "Java",
@@ -2062,7 +2062,7 @@
     {
       "teamNumber": "3968",
       "eventName": "2025njfla",
-      "scouterInitials": "TM",
+      "scoutName": "TM",
       "weight": 95,
       "drivetrain": "West Coast",
       "programmingLanguage": "LabVIEW",
@@ -2133,7 +2133,7 @@
     {
       "teamNumber": "5399",
       "eventName": "2025ontor",
-      "scouterInitials": "RW",
+      "scoutName": "RW",
       "weight": 85,
       "drivetrain": "Swerve",
       "programmingLanguage": "LabVIEW",
@@ -2204,7 +2204,7 @@
     {
       "teamNumber": "3592",
       "eventName": "2025ontor",
-      "scouterInitials": "TM",
+      "scoutName": "TM",
       "weight": 108,
       "drivetrain": "Swerve",
       "programmingLanguage": "LabVIEW",
@@ -2275,7 +2275,7 @@
     {
       "teamNumber": "4248",
       "eventName": "2025pawar",
-      "scouterInitials": "ET",
+      "scoutName": "ET",
       "weight": 97,
       "drivetrain": "Swerve",
       "programmingLanguage": "C++",
@@ -2346,7 +2346,7 @@
     {
       "teamNumber": "6753",
       "eventName": "2025casd",
-      "scouterInitials": "MR",
+      "scoutName": "MR",
       "weight": 94,
       "drivetrain": "H-Drive",
       "programmingLanguage": "LabVIEW",
@@ -2417,7 +2417,7 @@
     {
       "teamNumber": "3915",
       "eventName": "2025mrcmp",
-      "scouterInitials": "RW",
+      "scoutName": "RW",
       "weight": 83,
       "drivetrain": "H-Drive",
       "programmingLanguage": "LabVIEW",
@@ -2488,7 +2488,7 @@
     {
       "teamNumber": "1510",
       "eventName": "2025pawar",
-      "scouterInitials": "KL",
+      "scoutName": "KL",
       "weight": 108,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "Python",
@@ -2559,7 +2559,7 @@
     {
       "teamNumber": "7152",
       "eventName": "2025njfla",
-      "scouterInitials": "MR",
+      "scoutName": "MR",
       "weight": 123,
       "drivetrain": "Swerve",
       "programmingLanguage": "LabVIEW",
@@ -2630,7 +2630,7 @@
     {
       "teamNumber": "1798",
       "eventName": "2025mrcmp",
-      "scouterInitials": "MR",
+      "scoutName": "MR",
       "weight": 102,
       "drivetrain": "H-Drive",
       "programmingLanguage": "LabVIEW",
@@ -2701,7 +2701,7 @@
     {
       "teamNumber": "2075",
       "eventName": "2025njfla",
-      "scouterInitials": "ET",
+      "scoutName": "ET",
       "weight": 94,
       "drivetrain": "H-Drive",
       "programmingLanguage": "LabVIEW",
@@ -2772,7 +2772,7 @@
     {
       "teamNumber": "6776",
       "eventName": "2025mrcmp",
-      "scouterInitials": "BH",
+      "scoutName": "BH",
       "weight": 84,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "Java",
@@ -2843,7 +2843,7 @@
     {
       "teamNumber": "7746",
       "eventName": "2025pawar",
-      "scouterInitials": "SC",
+      "scoutName": "SC",
       "weight": 89,
       "drivetrain": "West Coast",
       "programmingLanguage": "Java",
@@ -2914,7 +2914,7 @@
     {
       "teamNumber": "1740",
       "eventName": "2025mrcmp",
-      "scouterInitials": "TM",
+      "scoutName": "TM",
       "weight": 93,
       "drivetrain": "H-Drive",
       "programmingLanguage": "Python",
@@ -2985,7 +2985,7 @@
     {
       "teamNumber": "6669",
       "eventName": "2025ontor",
-      "scouterInitials": "JD",
+      "scoutName": "JD",
       "weight": 94,
       "drivetrain": "Mecanum",
       "programmingLanguage": "Python",
@@ -3056,7 +3056,7 @@
     {
       "teamNumber": "6485",
       "eventName": "2025ontor",
-      "scouterInitials": "SC",
+      "scoutName": "SC",
       "weight": 101,
       "drivetrain": "H-Drive",
       "programmingLanguage": "Python",
@@ -3127,7 +3127,7 @@
     {
       "teamNumber": "2734",
       "eventName": "2025pawar",
-      "scouterInitials": "KL",
+      "scoutName": "KL",
       "weight": 102,
       "drivetrain": "H-Drive",
       "programmingLanguage": "Java",
@@ -3198,7 +3198,7 @@
     {
       "teamNumber": "7621",
       "eventName": "2025pawar",
-      "scouterInitials": "MR",
+      "scoutName": "MR",
       "weight": 103,
       "drivetrain": "Swerve",
       "programmingLanguage": "LabVIEW",
@@ -3269,7 +3269,7 @@
     {
       "teamNumber": "7477",
       "eventName": "2025njfla",
-      "scouterInitials": "TM",
+      "scoutName": "TM",
       "weight": 83,
       "drivetrain": "H-Drive",
       "programmingLanguage": "Java",
@@ -3340,7 +3340,7 @@
     {
       "teamNumber": "6977",
       "eventName": "2025pawar",
-      "scouterInitials": "RW",
+      "scoutName": "RW",
       "weight": 117,
       "drivetrain": "West Coast",
       "programmingLanguage": "Python",
@@ -3411,7 +3411,7 @@
     {
       "teamNumber": "5049",
       "eventName": "2025casd",
-      "scouterInitials": "AK",
+      "scoutName": "AK",
       "weight": 92,
       "drivetrain": "Mecanum",
       "programmingLanguage": "LabVIEW",
@@ -3482,7 +3482,7 @@
     {
       "teamNumber": "4405",
       "eventName": "2025pawar",
-      "scouterInitials": "MR",
+      "scoutName": "MR",
       "weight": 95,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "Python",
@@ -3553,7 +3553,7 @@
     {
       "teamNumber": "7128",
       "eventName": "2025ontor",
-      "scouterInitials": "SC",
+      "scoutName": "SC",
       "weight": 90,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "Python",
@@ -3624,7 +3624,7 @@
     {
       "teamNumber": "8416",
       "eventName": "2025ontor",
-      "scouterInitials": "SC",
+      "scoutName": "SC",
       "weight": 89,
       "drivetrain": "H-Drive",
       "programmingLanguage": "LabVIEW",
@@ -3695,7 +3695,7 @@
     {
       "teamNumber": "8044",
       "eventName": "2025ontor",
-      "scouterInitials": "SC",
+      "scoutName": "SC",
       "weight": 88,
       "drivetrain": "Swerve",
       "programmingLanguage": "Python",
@@ -3766,7 +3766,7 @@
     {
       "teamNumber": "3246",
       "eventName": "2025njfla",
-      "scouterInitials": "TM",
+      "scoutName": "TM",
       "weight": 109,
       "drivetrain": "H-Drive",
       "programmingLanguage": "Python",
@@ -3837,7 +3837,7 @@
     {
       "teamNumber": "7477",
       "eventName": "2025ontor",
-      "scouterInitials": "ET",
+      "scoutName": "ET",
       "weight": 90,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "C++",
@@ -3908,7 +3908,7 @@
     {
       "teamNumber": "3558",
       "eventName": "2025njfla",
-      "scouterInitials": "KL",
+      "scoutName": "KL",
       "weight": 85,
       "drivetrain": "H-Drive",
       "programmingLanguage": "Java",
@@ -3979,7 +3979,7 @@
     {
       "teamNumber": "8995",
       "eventName": "2025ontor",
-      "scouterInitials": "TM",
+      "scoutName": "TM",
       "weight": 92,
       "drivetrain": "H-Drive",
       "programmingLanguage": "Java",
@@ -4050,7 +4050,7 @@
     {
       "teamNumber": "2791",
       "eventName": "2025casd",
-      "scouterInitials": "BH",
+      "scoutName": "BH",
       "weight": 96,
       "drivetrain": "West Coast",
       "programmingLanguage": "Python",
@@ -4121,7 +4121,7 @@
     {
       "teamNumber": "2821",
       "eventName": "2025ontor",
-      "scouterInitials": "AN",
+      "scoutName": "AN",
       "weight": 93,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "C++",
@@ -4192,7 +4192,7 @@
     {
       "teamNumber": "4532",
       "eventName": "2025casd",
-      "scouterInitials": "RW",
+      "scoutName": "RW",
       "weight": 96,
       "drivetrain": "Mecanum",
       "programmingLanguage": "C++",
@@ -4263,7 +4263,7 @@
     {
       "teamNumber": "3362",
       "eventName": "2025casd",
-      "scouterInitials": "AN",
+      "scoutName": "AN",
       "weight": 115,
       "drivetrain": "West Coast",
       "programmingLanguage": "C++",
@@ -4334,7 +4334,7 @@
     {
       "teamNumber": "8863",
       "eventName": "2025pawar",
-      "scouterInitials": "RW",
+      "scoutName": "RW",
       "weight": 94,
       "drivetrain": "Mecanum",
       "programmingLanguage": "C++",
@@ -4405,7 +4405,7 @@
     {
       "teamNumber": "3509",
       "eventName": "2025njfla",
-      "scouterInitials": "ET",
+      "scoutName": "ET",
       "weight": 94,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "C++",
@@ -4476,7 +4476,7 @@
     {
       "teamNumber": "5993",
       "eventName": "2025pawar",
-      "scouterInitials": "BH",
+      "scoutName": "BH",
       "weight": 91,
       "drivetrain": "Mecanum",
       "programmingLanguage": "C++",
@@ -4547,7 +4547,7 @@
     {
       "teamNumber": "4352",
       "eventName": "2025mrcmp",
-      "scouterInitials": "AN",
+      "scoutName": "AN",
       "weight": 118,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "Python",
@@ -4618,7 +4618,7 @@
     {
       "teamNumber": "2417",
       "eventName": "2025ontor",
-      "scouterInitials": "JD",
+      "scoutName": "JD",
       "weight": 101,
       "drivetrain": "Mecanum",
       "programmingLanguage": "Python",
@@ -4689,7 +4689,7 @@
     {
       "teamNumber": "4244",
       "eventName": "2025pawar",
-      "scouterInitials": "KL",
+      "scoutName": "KL",
       "weight": 107,
       "drivetrain": "Swerve",
       "programmingLanguage": "C++",
@@ -4760,7 +4760,7 @@
     {
       "teamNumber": "7781",
       "eventName": "2025njfla",
-      "scouterInitials": "AK",
+      "scoutName": "AK",
       "weight": 109,
       "drivetrain": "Swerve",
       "programmingLanguage": "LabVIEW",
@@ -4831,7 +4831,7 @@
     {
       "teamNumber": "7858",
       "eventName": "2025ontor",
-      "scouterInitials": "KL",
+      "scoutName": "KL",
       "weight": 109,
       "drivetrain": "H-Drive",
       "programmingLanguage": "C++",
@@ -4902,7 +4902,7 @@
     {
       "teamNumber": "8394",
       "eventName": "2025mrcmp",
-      "scouterInitials": "AK",
+      "scoutName": "AK",
       "weight": 120,
       "drivetrain": "West Coast",
       "programmingLanguage": "Python",
@@ -4973,7 +4973,7 @@
     {
       "teamNumber": "4190",
       "eventName": "2025casd",
-      "scouterInitials": "KL",
+      "scoutName": "KL",
       "weight": 123,
       "drivetrain": "Swerve",
       "programmingLanguage": "Python",
@@ -5044,7 +5044,7 @@
     {
       "teamNumber": "1376",
       "eventName": "2025njfla",
-      "scouterInitials": "BH",
+      "scoutName": "BH",
       "weight": 101,
       "drivetrain": "Mecanum",
       "programmingLanguage": "LabVIEW",
@@ -5115,7 +5115,7 @@
     {
       "teamNumber": "5731",
       "eventName": "2025pawar",
-      "scouterInitials": "BH",
+      "scoutName": "BH",
       "weight": 117,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "LabVIEW",
@@ -5186,7 +5186,7 @@
     {
       "teamNumber": "3572",
       "eventName": "2025ontor",
-      "scouterInitials": "MR",
+      "scoutName": "MR",
       "weight": 109,
       "drivetrain": "H-Drive",
       "programmingLanguage": "LabVIEW",
@@ -5257,7 +5257,7 @@
     {
       "teamNumber": "7856",
       "eventName": "2025njfla",
-      "scouterInitials": "KL",
+      "scoutName": "KL",
       "weight": 100,
       "drivetrain": "Mecanum",
       "programmingLanguage": "Java",
@@ -5328,7 +5328,7 @@
     {
       "teamNumber": "8329",
       "eventName": "2025ontor",
-      "scouterInitials": "BH",
+      "scoutName": "BH",
       "weight": 95,
       "drivetrain": "H-Drive",
       "programmingLanguage": "C++",
@@ -5399,7 +5399,7 @@
     {
       "teamNumber": "6076",
       "eventName": "2025ontor",
-      "scouterInitials": "AK",
+      "scoutName": "AK",
       "weight": 82,
       "drivetrain": "Tank Drive",
       "programmingLanguage": "Python",
@@ -5470,7 +5470,7 @@
     {
       "teamNumber": "2854",
       "eventName": "2025pawar",
-      "scouterInitials": "SC",
+      "scoutName": "SC",
       "weight": 108,
       "drivetrain": "West Coast",
       "programmingLanguage": "Python",
@@ -5541,7 +5541,7 @@
     {
       "teamNumber": "5041",
       "eventName": "2025njfla",
-      "scouterInitials": "BH",
+      "scoutName": "BH",
       "weight": 104,
       "drivetrain": "H-Drive",
       "programmingLanguage": "C++",
@@ -5612,7 +5612,7 @@
     {
       "teamNumber": "7459",
       "eventName": "2025pawar",
-      "scouterInitials": "MR",
+      "scoutName": "MR",
       "weight": 115,
       "drivetrain": "Swerve",
       "programmingLanguage": "LabVIEW",
@@ -5683,7 +5683,7 @@
     {
       "teamNumber": "4340",
       "eventName": "2025casd",
-      "scouterInitials": "TM",
+      "scoutName": "TM",
       "weight": 104,
       "drivetrain": "West Coast",
       "programmingLanguage": "Java",
@@ -5754,7 +5754,7 @@
     {
       "teamNumber": "6748",
       "eventName": "2025njfla",
-      "scouterInitials": "AN",
+      "scoutName": "AN",
       "weight": 87,
       "drivetrain": "Swerve",
       "programmingLanguage": "C++",
@@ -5825,7 +5825,7 @@
     {
       "teamNumber": "7979",
       "eventName": "2025pawar",
-      "scouterInitials": "AN",
+      "scoutName": "AN",
       "weight": 89,
       "drivetrain": "Swerve",
       "programmingLanguage": "Python",
@@ -5896,7 +5896,7 @@
     {
       "teamNumber": "7376",
       "eventName": "2025njfla",
-      "scouterInitials": "RW",
+      "scoutName": "RW",
       "weight": 86,
       "drivetrain": "Mecanum",
       "programmingLanguage": "C++",
@@ -5967,7 +5967,7 @@
     {
       "teamNumber": "3803",
       "eventName": "2025ontor",
-      "scouterInitials": "RW",
+      "scoutName": "RW",
       "weight": 80,
       "drivetrain": "Swerve",
       "programmingLanguage": "LabVIEW",

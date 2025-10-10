@@ -35,7 +35,7 @@ export const initializeDB = (): Promise<IDBDatabase> => {
         store.createIndex('matchNumber', 'matchNumber', { unique: false });
         store.createIndex('alliance', 'alliance', { unique: false });
         store.createIndex('timestamp', 'timestamp', { unique: false });
-        store.createIndex('scouterInitials', 'scouterInitials', { unique: false });
+        store.createIndex('scoutName', 'scoutName', { unique: false });
         store.createIndex('eventName', 'eventName', { unique: false });
       } else {
         const transaction = (event.target as IDBOpenDBRequest).transaction;
@@ -55,7 +55,7 @@ export interface ScoutingEntryDB {
   teamNumber?: string;
   matchNumber?: string;
   alliance?: string;
-  scouterInitials?: string;
+  scoutName?: string;
   eventName?: string;
   data: Record<string, unknown>;
   timestamp: number;
@@ -83,7 +83,7 @@ const enhanceEntry = (entry: ScoutingDataWithId): ScoutingEntryDB => {
   
   const matchNumber = safeStringify(actualData?.matchNumber);
   const alliance = safeStringify(actualData?.alliance);
-  const scouterInitials = safeStringify(actualData?.scouterInitials);
+  const scoutName = safeStringify(actualData?.scoutName);
   const teamNumber = safeStringify(actualData?.selectTeam); // Team number is stored in selectTeam field
   const eventName = safeStringify(actualData?.eventName);
 
@@ -92,7 +92,7 @@ const enhanceEntry = (entry: ScoutingDataWithId): ScoutingEntryDB => {
     teamNumber,
     matchNumber,
     alliance,
-    scouterInitials,
+    scoutName,
     eventName,
     data: actualData || data, // Use the actual data, fallback to original
     timestamp: entry.timestamp || Date.now()
@@ -315,7 +315,7 @@ export const getDBStats = async (): Promise<{
   totalEntries: number;
   teams: string[];
   matches: string[];
-  scouters: string[];
+  scouts: string[];
   events: string[];
   oldestEntry?: number;
   newestEntry?: number;
@@ -324,7 +324,7 @@ export const getDBStats = async (): Promise<{
   
   const teams = new Set<string>();
   const matches = new Set<string>();
-  const scouters = new Set<string>();
+  const scouts = new Set<string>();
   const events = new Set<string>();
   let oldestEntry: number | undefined;
   let newestEntry: number | undefined;
@@ -332,7 +332,7 @@ export const getDBStats = async (): Promise<{
   entries.forEach(entry => {
     if (entry.teamNumber) teams.add(entry.teamNumber);
     if (entry.matchNumber) matches.add(entry.matchNumber);
-    if (entry.scouterInitials) scouters.add(entry.scouterInitials);
+    if (entry.scoutName) scouts.add(entry.scoutName);
     if (entry.eventName) events.add(entry.eventName);
     
     if (!oldestEntry || entry.timestamp < oldestEntry) {
@@ -347,7 +347,7 @@ export const getDBStats = async (): Promise<{
     totalEntries: entries.length,
     teams: Array.from(teams).sort((a, b) => Number(a) - Number(b)),
     matches: Array.from(matches).sort((a, b) => Number(a) - Number(b)),
-    scouters: Array.from(scouters).sort(),
+    scouts: Array.from(scouts).sort(),
     events: Array.from(events).sort(),
     oldestEntry,
     newestEntry

@@ -1,11 +1,11 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { calculateAccuracy } from '@/lib/scouterGameUtils';
-import type { ScouterChartData, ScouterMetric } from '@/hooks/useScoutDashboard';
+import { calculateAccuracy } from '@/lib/scoutGameUtils';
+import type { ScoutChartData, ScoutMetric } from '@/hooks/useScoutDashboard';
 
 interface ScoutTableProps {
-  chartData: ScouterChartData[];
-  chartMetric: ScouterMetric;
+  chartData: ScoutChartData[];
+  chartMetric: ScoutMetric;
   selectedMetricLabel: string;
 }
 
@@ -42,10 +42,10 @@ export function ScoutTable({ chartData, chartMetric, selectedMetricLabel }: Scou
         </TableHeader>
         <TableBody>
           {chartData.map((data, index) => {
-            const scouter = data.scouter;
-            const accuracy = calculateAccuracy(scouter);
+            const scout = data.scout;
+            const accuracy = calculateAccuracy(scout);
             return (
-              <TableRow key={scouter.name}>
+              <TableRow key={scout.name}>
                 <TableCell className="font-medium">
                   <Badge 
                     variant={index >= 3 ? "secondary" : "default"}
@@ -59,18 +59,18 @@ export function ScoutTable({ chartData, chartMetric, selectedMetricLabel }: Scou
                     {index + 1}
                   </Badge>
                 </TableCell>
-                <TableCell className="font-medium">{scouter.name}</TableCell>
+                <TableCell className="font-medium">{scout.name}</TableCell>
                 <TableCell className="text-right font-bold text-primary">
                   {chartMetric === "accuracy" ? `${data.value}%` : data.value}
                 </TableCell>
                 {chartMetric !== "stakes" && chartMetric !== "totalStakes" && (
-                  <TableCell className="text-right">{scouter.stakes}</TableCell>
+                  <TableCell className="text-right">{scout.stakes}</TableCell>
                 )}
                 {chartMetric !== "totalPredictions" && (
-                  <TableCell className="text-right">{scouter.totalPredictions}</TableCell>
+                  <TableCell className="text-right">{scout.totalPredictions}</TableCell>
                 )}
                 {chartMetric !== "correctPredictions" && (
-                  <TableCell className="text-right">{scouter.correctPredictions}</TableCell>
+                  <TableCell className="text-right">{scout.correctPredictions}</TableCell>
                 )}
                 {chartMetric !== "accuracy" && (
                   <TableCell className="text-right">
@@ -82,10 +82,10 @@ export function ScoutTable({ chartData, chartMetric, selectedMetricLabel }: Scou
                   </TableCell>
                 )}
                 {chartMetric !== "currentStreak" && (
-                  <TableCell className="text-right">{scouter.currentStreak}</TableCell>
+                  <TableCell className="text-right">{scout.currentStreak}</TableCell>
                 )}
                 {chartMetric !== "longestStreak" && (
-                  <TableCell className="text-right">{scouter.longestStreak}</TableCell>
+                  <TableCell className="text-right">{scout.longestStreak}</TableCell>
                 )}
               </TableRow>
             );

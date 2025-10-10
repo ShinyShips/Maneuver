@@ -1,12 +1,12 @@
 // Function to detect data type from JSON content
-export const detectDataType = (jsonData: unknown): 'scouting' | 'scouterProfiles' | 'pitScouting' | 'pitScoutingImagesOnly' | null => {
+export const detectDataType = (jsonData: unknown): 'scouting' | 'scoutProfiles' | 'pitScouting' | 'pitScoutingImagesOnly' | null => {
   if (!jsonData || typeof jsonData !== 'object') return null;
 
   const data = jsonData as Record<string, unknown>;
 
-  // Check for scouter profiles format
-  if ('scouters' in data && 'predictions' in data) {
-    return 'scouterProfiles';
+  // Check for scout profiles format
+  if ('scouts' in data && 'predictions' in data) {
+    return 'scoutProfiles';
   }
 
   // Check for pit scouting images-only format
@@ -19,7 +19,7 @@ export const detectDataType = (jsonData: unknown): 'scouting' | 'scouterProfiles
     const entries = data.entries as unknown[];
     if (entries.length > 0 && typeof entries[0] === 'object' && entries[0] !== null) {
       const entry = entries[0] as Record<string, unknown>;
-      if (entry.teamNumber && entry.scouterInitials && 
+      if (entry.teamNumber && entry.scoutName && 
           (entry.drivetrain !== undefined || entry.weight !== undefined || 
            entry.reportedAutoScoring !== undefined || entry.reportedTeleopScoring !== undefined)) {
         return 'pitScouting';

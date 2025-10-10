@@ -12,7 +12,7 @@ import {
 
 // Generate unique ID for pit scouting entries
 export const generatePitScoutingId = (entry: Omit<PitScoutingEntry, 'id' | 'timestamp'>): string => {
-  const baseString = `${entry.teamNumber}-${entry.eventName}-${entry.scouterInitials}`;
+  const baseString = `${entry.teamNumber}-${entry.eventName}-${entry.scoutName}`;
   const timestamp = Date.now();
   const random = Math.random().toString(36).substring(2, 8);
   return `pit-${baseString}-${timestamp}-${random}`;
@@ -108,7 +108,7 @@ export const getPitScoutingStats = async (): Promise<{
   totalEntries: number;
   teams: string[];
   events: string[];
-  scouters: string[];
+  scouts: string[];
 }> => {
   try {
     return await dbGetPitScoutingStats();
@@ -118,7 +118,7 @@ export const getPitScoutingStats = async (): Promise<{
       totalEntries: 0,
       teams: [],
       events: [],
-      scouters: []
+      scouts: []
     };
   }
 };
@@ -239,7 +239,7 @@ export const exportPitScoutingToCSV = async (): Promise<string> => {
   const data = await loadPitScoutingData();
   
   const headers = [
-    'ID', 'Team Number', 'Event Name', 'Scouter', 'Timestamp',
+    'ID', 'Team Number', 'Event Name', 'Scout', 'Timestamp',
     'Weight', 'Drivetrain', 'Programming Language',
     'Coral Ground Pickup', 'Algae Ground Pickup',
     'Auto Pos0 Coral L1', 'Auto Pos0 Coral L2', 'Auto Pos0 Coral L3', 'Auto Pos0 Coral L4', 'Auto Pos0 Algae Net', 'Auto Pos0 Algae Processor',
@@ -256,7 +256,7 @@ export const exportPitScoutingToCSV = async (): Promise<string> => {
     entry.id,
     entry.teamNumber,
     entry.eventName,
-    entry.scouterInitials,
+    entry.scoutName,
     new Date(entry.timestamp).toISOString(),
     entry.weight || '',
     entry.drivetrain || '',

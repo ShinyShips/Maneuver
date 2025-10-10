@@ -4,12 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/animate-ui/radix/tabs";
 import { AchievementCard } from './AchievementCard';
-import { getScouterAchievements, getAchievementStats, backfillAchievementsForAllScouters } from '@/lib/achievementUtils';
+import { getScoutAchievements, getAchievementStats, backfillAchievementsForAllScouts } from '@/lib/achievementUtils';
 import { getAchievementsByCategory, type Achievement } from '@/lib/achievementTypes';
 import { Trophy, Target, Star, Users, Clock, TrendingUp, Zap, RefreshCw } from 'lucide-react';
 
 interface AchievementsSectionProps {
-  scouterName: string;
+  scoutName: string;
 }
 
 interface AchievementStats {
@@ -20,7 +20,7 @@ interface AchievementStats {
   recentAchievements: Array<Achievement & { unlockedAt: number }>;
 }
 
-export const AchievementsSection: React.FC<AchievementsSectionProps> = ({ scouterName }) => {
+export const AchievementsSection: React.FC<AchievementsSectionProps> = ({ scoutName }) => {
   const [unlocked, setUnlocked] = useState<Array<Achievement & { unlockedAt: number }>>([]);
   const [available, setAvailable] = useState<Array<Achievement & { progress: number }>>([]);
   const [stats, setStats] = useState<AchievementStats | null>(null);
@@ -31,11 +31,11 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({ scoute
   const handleBackfillAchievements = async () => {
     setBackfillLoading(true);
     try {
-      await backfillAchievementsForAllScouters();
+      await backfillAchievementsForAllScouts();
       
       // Reload achievement data
-      const achievements = await getScouterAchievements(scouterName);
-      const achievementStats = await getAchievementStats(scouterName);
+      const achievements = await getScoutAchievements(scoutName);
+      const achievementStats = await getAchievementStats(scoutName);
       
       setUnlocked(achievements.unlocked);
       setAvailable(achievements.available);
@@ -49,12 +49,12 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({ scoute
 
   useEffect(() => {
     const loadAchievements = async () => {
-      if (!scouterName) return;
+      if (!scoutName) return;
       
       setLoading(true);
       try {
-        const achievements = await getScouterAchievements(scouterName);
-        const achievementStats = await getAchievementStats(scouterName);
+        const achievements = await getScoutAchievements(scoutName);
+        const achievementStats = await getAchievementStats(scoutName);
         
         setUnlocked(achievements.unlocked);
         setAvailable(achievements.available);
@@ -67,7 +67,7 @@ export const AchievementsSection: React.FC<AchievementsSectionProps> = ({ scoute
     };
 
     loadAchievements();
-  }, [scouterName]);
+  }, [scoutName]);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {

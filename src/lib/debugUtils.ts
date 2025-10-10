@@ -5,7 +5,7 @@ export interface DebugTeamInfo {
   teamNumber: number;
   coordinates?: { x: number; y: number };
   cluster?: number;
-  scouter?: string;
+  scout?: string;
 }
 
 // Set up debug functions for development
@@ -105,7 +105,7 @@ export function debugTeamAssignments(
       console.log(`Team ${teamNumber}:`, {
         coordinates: team.coordinates,
         cluster: team.cluster,
-        scouter: team.scouter
+        scout: team.scout
       });
     } else {
       console.log(`Team ${teamNumber}: Not found`);
@@ -118,15 +118,15 @@ export function logSpatialStats(
   totalTeams: number,
   teamsWithPositions: number,
   clusterSizes: number[],
-  scouterNames: string[]
+  scoutNames: string[]
 ): void {
   console.log('Spatial assignment completed:', {
     totalTeamsRequested: totalTeams,
     totalTeamsWithPositions: teamsWithPositions,
     missingPositions: totalTeams - teamsWithPositions,
     clusterSizes,
-    scouterAssignments: scouterNames.map((name, index) => ({
-      scouter: name,
+    scoutAssignments: scoutNames.map((name, index) => ({
+      scout: name,
       teams: clusterSizes[index] || 0
     }))
   });
