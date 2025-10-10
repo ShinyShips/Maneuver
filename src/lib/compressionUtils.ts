@@ -13,8 +13,8 @@ export type { ScoutingEntry, ScoutingDataEntry, ScoutingDataCollection };
 export interface CompressedEntry {
   id?: string;
   a?: number; // alliance
-  s?: number; // scouter (dictionary index)
-  sf?: string; // scouter (fallback full string)
+  s?: number; // scout (dictionary index)
+  sf?: string; // scout (fallback full string)
   e?: number; // event (dictionary index)
   ef?: string; // event (fallback full string)
   m?: string; // matchNumber
@@ -41,7 +41,7 @@ interface CompressedData {
   meta: {
     compressed: boolean;
     version: string;
-    scouterDict: string[];
+    scoutDict: string[];
   };
   entries: CompressedEntry[];
 }
@@ -56,9 +56,9 @@ const ALLIANCE_DICT = {
 // This scales to hundreds of events without maintenance burden
 
 // Dictionary interfaces for type safety
-interface ScouterDictionaries {
-  scouterDict: { [key: string]: number };
-  scouterReverse: string[];
+interface ScoutDictionaries {
+  scoutDict: { [key: string]: number };
+  scoutReverse: string[];
 }
 
 interface EventDictionaries {
@@ -85,37 +85,37 @@ export function isScoutingDataCollection(data: unknown): data is ScoutingDataCol
 }
 
 /**
- * Build dynamic scouter dictionary from data
+ * Build dynamic scout dictionary from data
  */
-function buildScouterDict(data: ScoutingDataEntry[]): ScouterDictionaries {
-  const scouters = new Set<string>();
+function buildScoutDict(data: ScoutingDataEntry[]): ScoutDictionaries {
+  const scouts = new Set<string>();
   
-  // Collect all unique scouter initials from entries
+  // Collect all unique scout initials from entries
   data.forEach(entry => {
     const scoutingData = extractScoutingData(entry);
-    if (scoutingData.scouterInitials && typeof scoutingData.scouterInitials === 'string') {
-      scouters.add(scoutingData.scouterInitials);
+    if (scoutingData.scoutName && typeof scoutingData.scoutName === 'string') {
+      scouts.add(scoutingData.scoutName);
     }
   });
   
   // Build dictionary
-  const scouterDict: { [key: string]: number } = {};
-  const scouterReverse: string[] = Array.from(scouters);
-  scouterReverse.forEach((scouter, index) => {
-    scouterDict[scouter] = index;
+  const scoutDict: { [key: string]: number } = {};
+  const scoutReverse: string[] = Array.from(scouts);
+  scoutReverse.forEach((scout, index) => {
+    scoutDict[scout] = index;
   });
   
   if (import.meta.env.DEV) {
     const previewCount = 5;
-    const preview = scouterReverse.slice(0, previewCount);
+    const preview = scoutReverse.slice(0, previewCount);
     console.log(
-      `📊 Built scouter dictionary: ${scouterReverse.length} unique scouters. First ${preview.length}:`,
+      `📊 Built scout dictionary: ${scoutReverse.length} unique scouts. First ${preview.length}:`,
       preview,
-      scouterReverse.length > previewCount ? '...' : ''
+      scoutReverse.length > previewCount ? '...' : ''
     );
   }
   
-  return { scouterDict, scouterReverse };
+  return { scoutDict, scoutReverse };
 }
 
 /**
@@ -190,7 +190,7 @@ export function compressScoutingData(data: ScoutingDataCollection | ScoutingData
   }
   
   // Build dynamic dictionaries from data
-  const { scouterDict, scouterReverse } = buildScouterDict(entries);
+  const { scoutDict, scoutReverse } = buildScoutDict(entries);
   const { eventDict, eventReverse } = buildEventDict(entries);
   
   // Compress entries using smart JSON optimization
@@ -216,10 +216,10 @@ export function compressScoutingData(data: ScoutingDataCollection | ScoutingData
     
     // Use dictionary compression for categorical fields
     if (scoutingData.alliance) optimized.a = ALLIANCE_DICT[scoutingData.alliance as keyof typeof ALLIANCE_DICT];
-    if (scoutingData.scouterInitials && scouterDict[scoutingData.scouterInitials] !== undefined) {
-      optimized.s = scouterDict[scoutingData.scouterInitials];
-    } else if (scoutingData.scouterInitials) {
-      optimized.sf = scoutingData.scouterInitials; // fallback to full string
+    if (scoutingData.scoutName && scoutDict[scoutingData.scoutName] !== undefined) {
+      optimized.s = scoutDict[scoutingData.scoutName];
+    } else if (scoutingData.scoutName) {
+      optimized.sf = scoutingData.scoutName; // fallback to full string
     }
     // Use dynamic event dictionary (scales to hundreds of events)
     if (scoutingData.eventName) {
@@ -302,7 +302,7 @@ export function compressScoutingData(data: ScoutingDataCollection | ScoutingData
     meta: {
       compressed: true,
       version: '1.0',
-      scouterDict: scouterReverse,
+      scoutDict: scoutReverse,
       eventDict: eventReverse // Include dynamic event dictionary
     },
     entries: compressedEntries

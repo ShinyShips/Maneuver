@@ -23,7 +23,7 @@ interface AssignmentControlsCardProps {
   pitMapData: NexusPitMap | null;
   pitAddresses: { [teamNumber: string]: string } | null;
   currentTeams: number[];
-  scoutersList: string[];
+  scoutsList: string[];
   selectedEvent: string;
   hasAssignments: boolean;
   onAssignmentModeChange: (mode: 'sequential' | 'spatial' | 'manual') => void;
@@ -35,7 +35,7 @@ const AssignmentControlsCard: React.FC<AssignmentControlsCardProps> = ({
   pitMapData,
   pitAddresses,
   currentTeams,
-  scoutersList,
+  scoutsList,
   selectedEvent,
   hasAssignments,
   onAssignmentModeChange,
@@ -46,7 +46,7 @@ const AssignmentControlsCard: React.FC<AssignmentControlsCardProps> = ({
   };
 
   const handleGenerateAssignments = () => {
-    if (scoutersList.length === 0) {
+    if (scoutsList.length === 0) {
       return;
     }
 
@@ -56,18 +56,18 @@ const AssignmentControlsCard: React.FC<AssignmentControlsCardProps> = ({
       // Sort teams numerically first
       const sortedTeams = [...currentTeams].sort((a, b) => a - b);
       const totalTeams = sortedTeams.length;
-      const totalScouters = scoutersList.length;
+      const totalScouts = scoutsList.length;
       
-      // Calculate block size for each scouter
-      const baseBlockSize = Math.floor(totalTeams / totalScouters);
-      const remainder = totalTeams % totalScouters;
+      // Calculate block size for each scout
+      const baseBlockSize = Math.floor(totalTeams / totalScouts);
+      const remainder = totalTeams % totalScouts;
       
       let teamIndex = 0;
       
-      // Assign blocks to each scouter
-      scoutersList.forEach((scouterName, scouterIndex) => {
-        // First 'remainder' scouters get one extra team
-        const blockSize = scouterIndex < remainder ? baseBlockSize + 1 : baseBlockSize;
+      // Assign blocks to each scout
+      scoutsList.forEach((scoutName, scoutIndex) => {
+        // First 'remainder' scouts get one extra team
+        const blockSize = scoutIndex < remainder ? baseBlockSize + 1 : baseBlockSize;
         
         for (let i = 0; i < blockSize && teamIndex < totalTeams; i++) {
           const teamNumber = sortedTeams[teamIndex];
@@ -75,7 +75,7 @@ const AssignmentControlsCard: React.FC<AssignmentControlsCardProps> = ({
             id: `${selectedEvent}-${teamNumber}`,
             eventKey: selectedEvent,
             teamNumber,
-            scouterName,
+            scoutName,
             assignedAt: Date.now(),
             completed: false
           });
@@ -138,7 +138,7 @@ const AssignmentControlsCard: React.FC<AssignmentControlsCardProps> = ({
       }
 
       // Simple spatial clustering: sort by Y coordinate first, then X coordinate
-      // This creates horizontal strips that are easier for scouters to navigate
+      // This creates horizontal strips that are easier for scouts to navigate
       teamPositions.sort((a, b) => {
         // Primary sort by Y coordinate (top to bottom)
         if (Math.abs(a.y - b.y) > 50) { // Group teams within 50 units vertically
@@ -149,18 +149,18 @@ const AssignmentControlsCard: React.FC<AssignmentControlsCardProps> = ({
       });
 
       // Advanced spatial clustering: Create compact regions that minimize walking
-      const spatialClusters = createSpatialClusters(teamPositions, scoutersList.length);
+      const spatialClusters = createSpatialClusters(teamPositions, scoutsList.length);
       
-      // Assign clusters to scouters
+      // Assign clusters to scouts
       spatialClusters.forEach((cluster: TeamPosition[], index: number) => {
-        const scouterName = scoutersList[index % scoutersList.length];
+        const scoutName = scoutsList[index % scoutsList.length];
         
         cluster.forEach((teamPosition: TeamPosition) => {
           newAssignments.push({
             id: `${selectedEvent}-${teamPosition.teamNumber}`,
             eventKey: selectedEvent,
             teamNumber: teamPosition.teamNumber,
-            scouterName,
+            scoutName,
             assignedAt: Date.now(),
             completed: false
           });
@@ -213,10 +213,10 @@ const AssignmentControlsCard: React.FC<AssignmentControlsCardProps> = ({
             </div>
             <p className="text-xs text-muted-foreground mt-1">
               {assignmentMode === 'sequential' 
-                ? `Block Assignment: Teams are divided into consecutive blocks, with each scouter getting ~${Math.ceil(currentTeams.length / scoutersList.length)} teams in sequence`
+                ? `Block Assignment: Teams are divided into consecutive blocks, with each scout getting ~${Math.ceil(currentTeams.length / scoutsList.length)} teams in sequence`
                 : assignmentMode === 'spatial'
-                ? 'Spatial Assignment: Teams are assigned based on their physical proximity in the pit map, creating geographic zones for each scouter'
-                : 'Manual Assignment: Click on team cards to assign them to specific scouters one by one'
+                ? 'Spatial Assignment: Teams are assigned based on their physical proximity in the pit map, creating geographic zones for each scout'
+                : 'Manual Assignment: Click on team cards to assign them to specific scouts one by one'
               }
             </p>
           </div>

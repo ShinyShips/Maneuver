@@ -85,6 +85,14 @@ export const createColumns = (
         // Percentage columns
         return `${typeof value === 'number' ? Math.round(value) : 0}%`;
       },
+      filterFn: col.key === "teamNumber" 
+        ? (row, columnId, filterValue) => {
+            const value = row.getValue(columnId);
+            const teamNumber = String(value);
+            const searchValue = String(filterValue).toLowerCase();
+            return teamNumber.includes(searchValue);
+          }
+        : undefined,
       enableSorting: true,
       enableHiding: true,
     }));

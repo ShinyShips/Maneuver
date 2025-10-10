@@ -28,7 +28,7 @@ console.log('');
 console.log('3. **Dictionary Compression**');
 console.log('   • Alliance: "redAlliance"/"blueAlliance" → 0/1 (1 byte)');
 console.log('   • Event names: "2025pawar" → 0, "2025mrcmp" → 1 (1 byte)');
-console.log('   • Scouter initials: Built dynamically, indexed by frequency');
+console.log('   • Scout initials: Built dynamically, indexed by frequency');
 console.log('   • ~15-25% additional reduction for categorical data');
 console.log('');
 

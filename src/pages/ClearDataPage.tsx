@@ -15,7 +15,7 @@ const ClearDataPage = () => {
   const {
     handleClearScoutingData,
     handleClearPitScoutingData,
-    handleClearScouterGameData,
+    handleClearScoutGameData,
     handleClearMatchData,
     handleClearApiData,
     handleClearAllData,
@@ -66,13 +66,13 @@ const ClearDataPage = () => {
           />
 
           <DataClearCard
-            title="Scouter Profile Data"
-            description="Scouter predictions, stakes, and leaderboard data"
-            entryCount={stats.scouterGameDataCount}
+            title="Scout Profile Data"
+            description="Scout predictions, stakes, and leaderboard data"
+            entryCount={stats.scoutGameDataCount}
             entryLabel="entries"
-            storageSize={stats.scouterGameDataSize}
-            onClear={handleClearScouterGameData}
-            warningMessage={`This will permanently delete ${stats.scouterGameDataCount} scouter game entries (scouters and predictions).`}
+            storageSize={stats.scoutGameDataSize}
+            onClear={handleClearScoutGameData}
+            warningMessage={`This will permanently delete ${stats.scoutGameDataCount} scout game entries (scouts and predictions).`}
           />
 
           <DataClearCard
@@ -102,7 +102,7 @@ const ClearDataPage = () => {
         onConfirm={handleClearAllData}
         scoutingDataCount={stats.scoutingDataCount}
         pitScoutingDataCount={stats.pitScoutingDataCount}
-        scouterGameDataCount={stats.scouterGameDataCount}
+        scoutGameDataCount={stats.scoutGameDataCount}
         apiDataCount={stats.apiDataCount}
         matchDataCount={stats.matchDataCount}
       />

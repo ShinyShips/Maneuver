@@ -11,8 +11,8 @@ export interface Achievement {
   hidden?: boolean; // Hidden until unlocked
 }
 
-export interface ScouterAchievement {
-  scouterName: string;
+export interface ScoutAchievement {
+  scoutName: string;
   achievementId: string;
   unlockedAt: number;
   progress?: number; // For tracking progress toward achievement
@@ -32,12 +32,12 @@ export type AchievementTier = 'bronze' | 'silver' | 'gold' | 'platinum' | 'legen
 export interface AchievementRequirement {
   type: 'exact' | 'minimum' | 'percentage' | 'streak' | 'special' | 'custom';
   value: number;
-  property?: keyof Scouter | 'custom';
-  customCheck?: (scouter: Scouter) => boolean;
+  property?: keyof Scout | 'custom';
+  customCheck?: (scout: Scout) => boolean;
 }
 
-// Import scouter type
-import type { Scouter } from './dexieDB';
+// Import scout type
+import type { Scout } from './dexieDB';
 
 // Achievement definitions
 export const ACHIEVEMENT_DEFINITIONS: Achievement[] = [
@@ -114,7 +114,7 @@ export const ACHIEVEMENT_DEFINITIONS: Achievement[] = [
     requirements: { 
       type: 'custom', 
       value: 60,
-      customCheck: (scouter) => scouter.totalPredictions >= 10 && (scouter.correctPredictions / scouter.totalPredictions * 100) >= 60
+      customCheck: (scout) => scout.totalPredictions >= 10 && (scout.correctPredictions / scout.totalPredictions * 100) >= 60
     },
     stakesReward: 20
   },
@@ -128,7 +128,7 @@ export const ACHIEVEMENT_DEFINITIONS: Achievement[] = [
     requirements: { 
       type: 'custom', 
       value: 70,
-      customCheck: (scouter) => scouter.totalPredictions >= 20 && (scouter.correctPredictions / scouter.totalPredictions * 100) >= 70
+      customCheck: (scout) => scout.totalPredictions >= 20 && (scout.correctPredictions / scout.totalPredictions * 100) >= 70
     },
     stakesReward: 40
   },
@@ -142,7 +142,7 @@ export const ACHIEVEMENT_DEFINITIONS: Achievement[] = [
     requirements: { 
       type: 'custom', 
       value: 80,
-      customCheck: (scouter) => scouter.totalPredictions >= 30 && (scouter.correctPredictions / scouter.totalPredictions * 100) >= 80
+      customCheck: (scout) => scout.totalPredictions >= 30 && (scout.correctPredictions / scout.totalPredictions * 100) >= 80
     },
     stakesReward: 75
   },
@@ -156,7 +156,7 @@ export const ACHIEVEMENT_DEFINITIONS: Achievement[] = [
     requirements: { 
       type: 'custom', 
       value: 85,
-      customCheck: (scouter) => scouter.totalPredictions >= 50 && (scouter.correctPredictions / scouter.totalPredictions * 100) >= 85
+      customCheck: (scout) => scout.totalPredictions >= 50 && (scout.correctPredictions / scout.totalPredictions * 100) >= 85
     },
     stakesReward: 150
   },
@@ -296,7 +296,7 @@ export const ACHIEVEMENT_DEFINITIONS: Achievement[] = [
     requirements: { 
       type: 'custom',
       value: 75,
-      customCheck: (scouter) => scouter.totalPredictions >= 40 && (scouter.correctPredictions / scouter.totalPredictions * 100) >= 75
+      customCheck: (scout) => scout.totalPredictions >= 40 && (scout.correctPredictions / scout.totalPredictions * 100) >= 75
     },
     stakesReward: 75,
     hidden: true
@@ -304,32 +304,32 @@ export const ACHIEVEMENT_DEFINITIONS: Achievement[] = [
 ];
 
 // Helper functions for achievement checking
-export const checkAchievement = (achievement: Achievement, scouter: Scouter): boolean => {
+export const checkAchievement = (achievement: Achievement, scout: Scout): boolean => {
   const { requirements } = achievement;
   
   switch (requirements.type) {
     case 'minimum':
-      if (requirements.property && requirements.property in scouter) {
-        return (scouter[requirements.property as keyof Scouter] as number) >= requirements.value;
+      if (requirements.property && requirements.property in scout) {
+        return (scout[requirements.property as keyof Scout] as number) >= requirements.value;
       }
       return false;
       
     case 'exact':
-      if (requirements.property && requirements.property in scouter) {
-        return (scouter[requirements.property as keyof Scouter] as number) === requirements.value;
+      if (requirements.property && requirements.property in scout) {
+        return (scout[requirements.property as keyof Scout] as number) === requirements.value;
       }
       return false;
       
     case 'percentage':
-      if (requirements.property && requirements.property in scouter) {
-        const value = scouter[requirements.property as keyof Scouter] as number;
-        const total = scouter.totalPredictions;
+      if (requirements.property && requirements.property in scout) {
+        const value = scout[requirements.property as keyof Scout] as number;
+        const total = scout.totalPredictions;
         return total > 0 && (value / total * 100) >= requirements.value;
       }
       return false;
       
     case 'custom':
-      return requirements.customCheck ? requirements.customCheck(scouter) : false;
+      return requirements.customCheck ? requirements.customCheck(scout) : false;
       
     case 'special':
       // Special achievements need custom logic in the achievement system
@@ -340,22 +340,22 @@ export const checkAchievement = (achievement: Achievement, scouter: Scouter): bo
   }
 };
 
-export const getAchievementProgress = (achievement: Achievement, scouter: Scouter): number => {
+export const getAchievementProgress = (achievement: Achievement, scout: Scout): number => {
   const { requirements } = achievement;
   
   switch (requirements.type) {
     case 'minimum':
     case 'exact':
-      if (requirements.property && requirements.property in scouter) {
-        const current = scouter[requirements.property as keyof Scouter] as number;
+      if (requirements.property && requirements.property in scout) {
+        const current = scout[requirements.property as keyof Scout] as number;
         return Math.min(100, (current / requirements.value) * 100);
       }
       return 0;
       
     case 'percentage':
-      if (requirements.property && requirements.property in scouter) {
-        const value = scouter[requirements.property as keyof Scouter] as number;
-        const total = scouter.totalPredictions;
+      if (requirements.property && requirements.property in scout) {
+        const value = scout[requirements.property as keyof Scout] as number;
+        const total = scout.totalPredictions;
         if (total === 0) return 0;
         const currentPercentage = (value / total) * 100;
         return Math.min(100, (currentPercentage / requirements.value) * 100);
@@ -364,7 +364,7 @@ export const getAchievementProgress = (achievement: Achievement, scouter: Scoute
       
     case 'custom':
       // Custom achievements can define their own progress calculation
-      if (checkAchievement(achievement, scouter)) return 100;
+      if (checkAchievement(achievement, scout)) return 100;
       // For custom achievements, we'll need specific progress logic
       return 0;
       

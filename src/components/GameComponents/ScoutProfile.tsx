@@ -3,14 +3,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Trophy, Target, TrendingUp, User, Flame, Award } from 'lucide-react';
-import { useCurrentScouter } from '../../hooks/useCurrentScouter';
+import { useCurrentScout } from '../../hooks/useCurrentScout';
 
-export const ScouterProfile: React.FC = () => {
-  const { currentScouter, isLoading, refreshScouter } = useCurrentScouter();
+export const ScoutProfile: React.FC = () => {
+  const { currentScout, isLoading, refreshScout } = useCurrentScout();
 
   const calculateAccuracy = () => {
-    if (!currentScouter || currentScouter.totalPredictions === 0) return 0;
-    return Math.round((currentScouter.correctPredictions / currentScouter.totalPredictions) * 100);
+    if (!currentScout || currentScout.totalPredictions === 0) return 0;
+    return Math.round((currentScout.correctPredictions / currentScout.totalPredictions) * 100);
   };
 
   if (isLoading) {
@@ -23,16 +23,16 @@ export const ScouterProfile: React.FC = () => {
     );
   }
 
-  if (!currentScouter) {
+  if (!currentScout) {
     return (
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
-            No Scouter Selected
+            No Scout Selected
           </CardTitle>
           <CardDescription>
-            Select a scouter from the sidebar to view their game stats
+            Select a scout from the sidebar to view their game stats
           </CardDescription>
         </CardHeader>
       </Card>
@@ -44,7 +44,7 @@ export const ScouterProfile: React.FC = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <User className="h-5 w-5 text-blue-500" />
-          {currentScouter.name}
+          {currentScout.name}
         </CardTitle>
         <CardDescription>
           Scouting Game Stats
@@ -58,7 +58,7 @@ export const ScouterProfile: React.FC = () => {
             <span className="font-medium">Stakes</span>
           </div>
           <Badge variant="secondary" className="text-lg font-bold">
-            {currentScouter.stakes}
+            {currentScout.stakes}
           </Badge>
         </div>
 
@@ -70,7 +70,7 @@ export const ScouterProfile: React.FC = () => {
               <span className="text-sm font-medium text-blue-600">Total</span>
             </div>
             <div className="text-2xl font-bold text-blue-600">
-              {currentScouter.totalPredictions}
+              {currentScout.totalPredictions}
             </div>
           </div>
           
@@ -93,7 +93,7 @@ export const ScouterProfile: React.FC = () => {
               <span className="text-sm font-medium text-orange-600">Current</span>
             </div>
             <div className="text-2xl font-bold text-orange-600">
-              {currentScouter.currentStreak}
+              {currentScout.currentStreak}
             </div>
           </div>
           
@@ -103,7 +103,7 @@ export const ScouterProfile: React.FC = () => {
               <span className="text-sm font-medium text-purple-600">Best</span>
             </div>
             <div className="text-2xl font-bold text-purple-600">
-              {currentScouter.longestStreak}
+              {currentScout.longestStreak}
             </div>
           </div>
         </div>
@@ -114,21 +114,21 @@ export const ScouterProfile: React.FC = () => {
             Correct Predictions
           </div>
           <div className="text-xl font-bold">
-            {currentScouter.correctPredictions} / {currentScouter.totalPredictions}
+            {currentScout.correctPredictions} / {currentScout.totalPredictions}
           </div>
         </div>
 
         {/* Timestamps */}
         <div className="text-xs text-gray-500 space-y-1">
-          <div>Created: {new Date(currentScouter.createdAt).toLocaleDateString()}</div>
-          <div>Last Updated: {new Date(currentScouter.lastUpdated).toLocaleDateString()}</div>
-          {currentScouter.totalPredictions > 0 && (
-            <div>Predictions Made: {currentScouter.totalPredictions}</div>
+          <div>Created: {new Date(currentScout.createdAt).toLocaleDateString()}</div>
+          <div>Last Updated: {new Date(currentScout.lastUpdated).toLocaleDateString()}</div>
+          {currentScout.totalPredictions > 0 && (
+            <div>Predictions Made: {currentScout.totalPredictions}</div>
           )}
         </div>
 
         {/* Refresh Button */}
-        <Button variant="outline" onClick={refreshScouter} className="w-full">
+        <Button variant="outline" onClick={refreshScout} className="w-full">
           Refresh Stats
         </Button>
       </CardContent>

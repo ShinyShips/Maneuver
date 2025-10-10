@@ -1,20 +1,20 @@
 import React from 'react';
-import { ScouterProfileWithSelector } from '../components/GameComponents/ScouterProfileWithSelector';
+import { ScoutProfileWithSelector } from '../components/GameComponents/ScoutProfileWithSelector';
 import { AchievementOverview } from '../components/ScoutManagementComponents/AchievementOverview';
 import { ScoutChartSection } from '../components/ScoutManagementComponents/ScoutChartSection';
 import { ScoutStatsSummary } from '../components/ScoutManagementComponents/ScoutStatsSummary';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trophy } from "lucide-react";
-import { useCurrentScouter } from '@/hooks/useCurrentScouter';
+import { useCurrentScout } from '@/hooks/useCurrentScout';
 import { useNavigate } from 'react-router-dom';
 import { useScoutDashboard } from '@/hooks/useScoutDashboard';
 
 const ScoutManagementDashboardPage: React.FC = () => {
-  const { currentScouter } = useCurrentScouter();
+  const { currentScout } = useCurrentScout();
   const navigate = useNavigate();
   
   const {
-    scouters,
+    scouts,
     loading,
     chartMetric,
     setChartMetric,
@@ -44,7 +44,7 @@ const ScoutManagementDashboardPage: React.FC = () => {
         loading={loading}
         chartData={chartData}
         lineChartData={lineChartData}
-        scouters={scouters}
+        scouts={scouts}
         chartMetric={chartMetric}
         setChartMetric={setChartMetric}
         chartType={chartType}
@@ -56,14 +56,14 @@ const ScoutManagementDashboardPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
         {/* Profile Section - Takes 2 columns on large screens */}
         <div className="lg:col-span-2 flex justify-center lg:justify-start">
-          <ScouterProfileWithSelector />
+          <ScoutProfileWithSelector />
         </div>
 
         {/* Achievement Overview - Takes 2 columns on large screens */}
         <div className="lg:col-span-2">
-          {currentScouter ? (
+          {currentScout ? (
             <AchievementOverview 
-              scouterName={currentScouter.name} 
+              scoutName={currentScout.name} 
               onViewAll={() => navigate('/achievements')}
               onDataRefresh={loadScoutData}
             />
@@ -86,7 +86,7 @@ const ScoutManagementDashboardPage: React.FC = () => {
         </div>
 
         {/* Stats Summary - Takes 3 columns on large screens, stacked on smaller */}
-        <ScoutStatsSummary scouters={scouters} />
+        <ScoutStatsSummary scouts={scouts} />
       </div>
     </div>
   );

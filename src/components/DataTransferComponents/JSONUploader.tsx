@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { detectDataType } from "@/lib/uploadHandlers/dataTypeDetector";
 import { handleScoutingDataUpload, type UploadMode } from "@/lib/uploadHandlers/scoutingDataUploadHandler";
-import { handleScouterProfilesUpload } from "@/lib/uploadHandlers/scouterProfilesUploadHandler";
+import { handleScoutProfilesUpload } from "@/lib/uploadHandlers/scoutProfilesUploadHandler";
 import { handlePitScoutingUpload } from "@/lib/uploadHandlers/pitScoutingUploadHandler";
 import { handlePitScoutingImagesUpload } from "@/lib/uploadHandlers/pitScoutingImagesUploadHandler";
 
@@ -15,7 +15,7 @@ type JSONUploaderProps = {
 
 const JSONUploader: React.FC<JSONUploaderProps> = ({ onBack }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [detectedDataType, setDetectedDataType] = useState<'scouting' | 'scouterProfiles' | 'pitScouting' | 'pitScoutingImagesOnly' | null>(null);
+  const [detectedDataType, setDetectedDataType] = useState<'scouting' | 'scoutProfiles' | 'pitScouting' | 'pitScoutingImagesOnly' | null>(null);
 
   type FileSelectEvent = React.ChangeEvent<HTMLInputElement>
 
@@ -43,7 +43,7 @@ const JSONUploader: React.FC<JSONUploaderProps> = ({ onBack }) => {
       
       const dataTypeNames = {
         scouting: 'Scouting Data',
-        scouterProfiles: 'Scouter Profiles',
+        scoutProfiles: 'Scout Profiles',
         pitScouting: 'Pit Scouting Data',
         pitScoutingImagesOnly: 'Pit Scouting Images Only'
       };
@@ -67,8 +67,8 @@ const JSONUploader: React.FC<JSONUploaderProps> = ({ onBack }) => {
 
       if (detectedDataType === 'scouting') {
         await handleScoutingDataUpload(jsonData, mode);
-      } else if (detectedDataType === 'scouterProfiles') {
-        await handleScouterProfilesUpload(jsonData, mode);
+      } else if (detectedDataType === 'scoutProfiles') {
+        await handleScoutProfilesUpload(jsonData, mode);
       } else if (detectedDataType === 'pitScouting') {
         await handlePitScoutingUpload(jsonData, mode);
       } else if (detectedDataType === 'pitScoutingImagesOnly') {
@@ -106,7 +106,7 @@ const JSONUploader: React.FC<JSONUploaderProps> = ({ onBack }) => {
           <CardHeader>
             <CardTitle className="text-center">Upload JSON Data</CardTitle>
             <CardDescription className="text-center">
-              Upload JSON data files to import scouting data, scouter profiles, or pit scouting data. The system will automatically detect the data type.
+              Upload JSON data files to import scouting data, scout profiles, or pit scouting data. The system will automatically detect the data type.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -128,7 +128,7 @@ const JSONUploader: React.FC<JSONUploaderProps> = ({ onBack }) => {
               className="w-full min-h-16 text-xl whitespace-normal text-wrap py-3 px-4"
             >
               {selectedFile 
-                ? `Selected: ${selectedFile.name}${detectedDataType ? ` (${detectedDataType === 'scouting' ? 'Scouting Data' : detectedDataType === 'scouterProfiles' ? 'Scouter Profiles' : detectedDataType === 'pitScouting' ? 'Pit Scouting Data' : 'Pit Scouting Images Only'})` : ''}`
+                ? `Selected: ${selectedFile.name}${detectedDataType ? ` (${detectedDataType === 'scouting' ? 'Scouting Data' : detectedDataType === 'scoutProfiles' ? 'Scout Profiles' : detectedDataType === 'pitScouting' ? 'Pit Scouting Data' : 'Pit Scouting Images Only'})` : ''}`
                 : "Select JSON Data File"
               }
             </Button>

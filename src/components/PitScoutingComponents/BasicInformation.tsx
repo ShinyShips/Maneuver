@@ -7,8 +7,8 @@ interface BasicInformationProps {
   setTeamNumber: (value: string) => void;
   eventName: string;
   setEventName: (value: string) => void;
-  scouterInitials: string;
-  setScouterInitials: (value: string) => void;
+  scoutName: string;
+  setScoutName: (value: string) => void;
 }
 
 export const BasicInformation = ({
@@ -16,8 +16,8 @@ export const BasicInformation = ({
   setTeamNumber,
   eventName,
   setEventName,
-  scouterInitials,
-  setScouterInitials,
+  scoutName,
+  setScoutName,
 }: BasicInformationProps) => {
   return (
     <Card>
@@ -46,12 +46,12 @@ export const BasicInformation = ({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="scouterInitials">Scouter Initials *</Label>
+            <Label htmlFor="scoutName">Scout Name *</Label>
             <Input
-              id="scouterInitials"
-              placeholder="e.g., JS"
-              value={scouterInitials}
-              onChange={(e) => setScouterInitials(e.target.value)}
+              id="scoutName"
+              placeholder="e.g., John Smith"
+              value={scoutName}
+              onChange={(e) => setScoutName(e.target.value)}
             />
           </div>
         </div>

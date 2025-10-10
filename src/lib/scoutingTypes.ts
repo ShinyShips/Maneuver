@@ -6,7 +6,7 @@
 export interface ScoutingEntry {
   matchNumber: string;
   alliance: string;
-  scouterInitials: string;
+  scoutName: string;
   selectTeam: string;
   eventName: string;
   startPoses0: boolean;

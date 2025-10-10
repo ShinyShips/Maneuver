@@ -1,7 +1,7 @@
-import { gameDB, type Scouter, type MatchPrediction } from "@/lib/dexieDB";
+import { gameDB, type Scout, type MatchPrediction } from "@/lib/dexieDB";
 import { loadScoutingData, saveScoutingData, mergeScoutingData, type ScoutingDataWithId } from "@/lib/scoutingDataUtils";
 import UniversalFountainScanner from "./UniversalFountainScanner";
-import ScouterAddConfirmDialog from "./ScouterAddConfirmDialog";
+import ScoutAddConfirmDialog from "./ScoutAddConfirmDialog";
 import { toast } from "sonner";
 import { useState } from "react";
 
@@ -15,25 +15,25 @@ interface CombinedDataStructure {
   scoutingData: {
     entries: ScoutingDataWithId[];
   };
-  scouterProfiles: {
-    scouters: Scouter[];
+  scoutProfiles: {
+    scouts: Scout[];
     predictions: MatchPrediction[];
   };
   metadata: {
     exportedAt: string;
     version: string;
     scoutingEntriesCount: number;
-    scoutersCount: number;
+    scoutsCount: number;
     predictionsCount: number;
   };
 }
 
 const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDataFountainScannerProps) => {
-  const [showScouterAddDialog, setShowScouterAddDialog] = useState(false);
-  const [pendingScouterNames, setPendingScouterNames] = useState<string[]>([]);
+  const [showScoutAddDialog, setShowScoutAddDialog] = useState(false);
+  const [pendingScoutNames, setPendingScoutNames] = useState<string[]>([]);
   const [pendingImportData, setPendingImportData] = useState<{
     scoutingData: ScoutingDataWithId[];
-    scoutersToImport: Scouter[];
+    scoutsToImport: Scout[];
     predictionsToImport: MatchPrediction[];
   } | null>(null);
   const saveCombinedData = async (data: unknown) => {
@@ -50,12 +50,12 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
         throw new Error('Data is not a combined export format');
       }
       
-      if (!combinedData.scoutingData || !combinedData.scouterProfiles || !combinedData.metadata) {
+      if (!combinedData.scoutingData || !combinedData.scoutProfiles || !combinedData.metadata) {
         throw new Error('Missing required data sections in combined export');
       }
       
       let scoutingResults = { added: 0, existing: 0, duplicates: 0 };
-      const scouterResults = { scoutersAdded: 0, scoutersUpdated: 0, predictionsAdded: 0, predictionsSkipped: 0 };
+      const scoutResults = { scoutsAdded: 0, scoutsUpdated: 0, predictionsAdded: 0, predictionsSkipped: 0 };
       
       // Process scouting data if present
       if (combinedData.scoutingData.entries && combinedData.scoutingData.entries.length > 0) {
@@ -79,45 +79,45 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
         };
       }
       
-      // Process scouter profiles data if present
-      if (combinedData.scouterProfiles.scouters || combinedData.scouterProfiles.predictions) {
-        const scoutersToImport = combinedData.scouterProfiles.scouters || [];
-        const predictionsToImport = combinedData.scouterProfiles.predictions || [];
+      // Process scout profiles data if present
+      if (combinedData.scoutProfiles.scouts || combinedData.scoutProfiles.predictions) {
+        const scoutsToImport = combinedData.scoutProfiles.scouts || [];
+        const predictionsToImport = combinedData.scoutProfiles.predictions || [];
         
-        // Check which scouters would be new to the selectable list
-        const existingScoutersList = localStorage.getItem("scoutersList");
-        let scoutersListArray: string[] = [];
+        // Check which scouts would be new to the selectable list
+        const existingScoutsList = localStorage.getItem("scoutsList");
+        let scoutsListArray: string[] = [];
         
-        if (existingScoutersList) {
+        if (existingScoutsList) {
           try {
-            scoutersListArray = JSON.parse(existingScoutersList);
+            scoutsListArray = JSON.parse(existingScoutsList);
           } catch {
-            scoutersListArray = [];
+            scoutsListArray = [];
           }
         }
         
-        const newScouterNames = scoutersToImport
+        const newScoutNames = scoutsToImport
           .map(s => s.name)
-          .filter(name => !scoutersListArray.includes(name));
+          .filter(name => !scoutsListArray.includes(name));
         
-        // If there are new scouters, ask the user if they want to add them to selectable list
-        if (newScouterNames.length > 0) {
-          setPendingScouterNames(newScouterNames);
+        // If there are new scouts, ask the user if they want to add them to selectable list
+        if (newScoutNames.length > 0) {
+          setPendingScoutNames(newScoutNames);
           setPendingImportData({ 
             scoutingData: combinedData.scoutingData.entries,
-            scoutersToImport, 
+            scoutsToImport, 
             predictionsToImport 
           });
-          setShowScouterAddDialog(true);
+          setShowScoutAddDialog(true);
           return; // Wait for user decision
         }
         
-        // If no new scouters, proceed with import without updating selectable list
-        const scouterImportResult = await performScouterImport(scoutersToImport, predictionsToImport, false);
-        scouterResults.scoutersAdded = scouterImportResult.scoutersAdded;
-        scouterResults.scoutersUpdated = scouterImportResult.scoutersUpdated;
-        scouterResults.predictionsAdded = scouterImportResult.predictionsAdded;
-        scouterResults.predictionsSkipped = scouterImportResult.predictionsSkipped;
+        // If no new scouts, proceed with import without updating selectable list
+        const scoutImportResult = await performScoutImport(scoutsToImport, predictionsToImport, false);
+        scoutResults.scoutsAdded = scoutImportResult.scoutsAdded;
+        scoutResults.scoutsUpdated = scoutImportResult.scoutsUpdated;
+        scoutResults.predictionsAdded = scoutImportResult.predictionsAdded;
+        scoutResults.predictionsSkipped = scoutImportResult.predictionsSkipped;
       }
       
       // Show comprehensive summary to user
@@ -125,11 +125,11 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
         ? `Scouting: ${scoutingResults.added} new entries added, ${scoutingResults.existing} existing entries found${scoutingResults.duplicates > 0 ? `, ${scoutingResults.duplicates} duplicates skipped` : ''}. `
         : '';
         
-      const scouterMessage = scouterResults.scoutersAdded > 0 || scouterResults.scoutersUpdated > 0 || scouterResults.predictionsAdded > 0
-        ? `Profiles: ${scouterResults.scoutersAdded} new scouters, ${scouterResults.scoutersUpdated} updated scouters, ${scouterResults.predictionsAdded} predictions imported.`
+      const scoutMessage = scoutResults.scoutsAdded > 0 || scoutResults.scoutsUpdated > 0 || scoutResults.predictionsAdded > 0
+        ? `Profiles: ${scoutResults.scoutsAdded} new scouts, ${scoutResults.scoutsUpdated} updated scouts, ${scoutResults.predictionsAdded} predictions imported.`
         : '';
       
-      const fullMessage = `Combined import complete! ${scoutingMessage}${scouterMessage}`;
+      const fullMessage = `Combined import complete! ${scoutingMessage}${scoutMessage}`;
       toast.success(fullMessage);
       
     } catch (error) {
@@ -139,39 +139,39 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
     }
   };
 
-  const performScouterImport = async (scoutersToImport: Scouter[], predictionsToImport: MatchPrediction[], addToSelectableList: boolean) => {
-    const results = { scoutersAdded: 0, scoutersUpdated: 0, predictionsAdded: 0, predictionsSkipped: 0 };
+  const performScoutImport = async (scoutsToImport: Scout[], predictionsToImport: MatchPrediction[], addToSelectableList: boolean) => {
+    const results = { scoutsAdded: 0, scoutsUpdated: 0, predictionsAdded: 0, predictionsSkipped: 0 };
     
     // Get existing data to merge intelligently
-    const existingScouters = await gameDB.scouters.toArray();
+    const existingScouts = await gameDB.scouts.toArray();
     const existingPredictions = await gameDB.predictions.toArray();
     
-    // Process scouters - merge or update based on name
-    for (const scouter of scoutersToImport) {
-      const existing = existingScouters.find(s => s.name === scouter.name);
+    // Process scouts - merge or update based on name
+    for (const scout of scoutsToImport) {
+      const existing = existingScouts.find(s => s.name === scout.name);
       
       if (existing) {
-        // Update existing scouter with higher values or newer timestamp
+        // Update existing scout with higher values or newer timestamp
         const shouldUpdate = 
-          scouter.lastUpdated > existing.lastUpdated ||
-          scouter.stakes > existing.stakes ||
-          scouter.totalPredictions > existing.totalPredictions;
+          scout.lastUpdated > existing.lastUpdated ||
+          scout.stakes > existing.stakes ||
+          scout.totalPredictions > existing.totalPredictions;
           
         if (shouldUpdate) {
-          await gameDB.scouters.update(scouter.name, {
-            stakes: Math.max(scouter.stakes, existing.stakes),
-            totalPredictions: Math.max(scouter.totalPredictions, existing.totalPredictions),
-            correctPredictions: Math.max(scouter.correctPredictions, existing.correctPredictions),
-            currentStreak: scouter.lastUpdated > existing.lastUpdated ? scouter.currentStreak : existing.currentStreak,
-            longestStreak: Math.max(scouter.longestStreak, existing.longestStreak),
-            lastUpdated: Math.max(scouter.lastUpdated, existing.lastUpdated)
+          await gameDB.scouts.update(scout.name, {
+            stakes: Math.max(scout.stakes, existing.stakes),
+            totalPredictions: Math.max(scout.totalPredictions, existing.totalPredictions),
+            correctPredictions: Math.max(scout.correctPredictions, existing.correctPredictions),
+            currentStreak: scout.lastUpdated > existing.lastUpdated ? scout.currentStreak : existing.currentStreak,
+            longestStreak: Math.max(scout.longestStreak, existing.longestStreak),
+            lastUpdated: Math.max(scout.lastUpdated, existing.lastUpdated)
           });
-          results.scoutersUpdated++;
+          results.scoutsUpdated++;
         }
       } else {
-        // Add new scouter
-        await gameDB.scouters.add(scouter);
-        results.scoutersAdded++;
+        // Add new scout
+        await gameDB.scouts.add(scout);
+        results.scoutsAdded++;
       }
     }
     
@@ -193,29 +193,29 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
       }
     }
     
-    // Only update localStorage scouter list if user chose to add to selectable list
-    if (addToSelectableList && scoutersToImport.length > 0) {
-      const allScouterNames = scoutersToImport.map(s => s.name);
-      const existingScoutersList = localStorage.getItem("scoutersList");
-      let scoutersListArray: string[] = [];
+    // Only update localStorage scout list if user chose to add to selectable list
+    if (addToSelectableList && scoutsToImport.length > 0) {
+      const allScoutNames = scoutsToImport.map(s => s.name);
+      const existingScoutsList = localStorage.getItem("scoutsList");
+      let scoutsListArray: string[] = [];
       
-      if (existingScoutersList) {
+      if (existingScoutsList) {
         try {
-          scoutersListArray = JSON.parse(existingScoutersList);
+          scoutsListArray = JSON.parse(existingScoutsList);
         } catch {
-          scoutersListArray = [];
+          scoutsListArray = [];
         }
       }
       
       // Merge and deduplicate
-      const mergedScouters = [...new Set([...scoutersListArray, ...allScouterNames])].sort();
-      localStorage.setItem("scoutersList", JSON.stringify(mergedScouters));
+      const mergedScouts = [...new Set([...scoutsListArray, ...allScoutNames])].sort();
+      localStorage.setItem("scoutsList", JSON.stringify(mergedScouts));
     }
     
     return results;
   };
 
-  const performCombinedImport = async (scoutingData: ScoutingDataWithId[], scoutersToImport: Scouter[], predictionsToImport: MatchPrediction[], addToSelectableList: boolean) => {
+  const performCombinedImport = async (scoutingData: ScoutingDataWithId[], scoutsToImport: Scout[], predictionsToImport: MatchPrediction[], addToSelectableList: boolean) => {
     let scoutingResults = { added: 0, existing: 0, duplicates: 0 };
     
     // Process scouting data if present
@@ -239,37 +239,37 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
       };
     }
     
-    // Process scouter profiles data
-    const scouterResults = await performScouterImport(scoutersToImport, predictionsToImport, addToSelectableList);
+    // Process scout profiles data
+    const scoutResults = await performScoutImport(scoutsToImport, predictionsToImport, addToSelectableList);
     
     // Show comprehensive summary to user
     const scoutingMessage = scoutingResults.added > 0 || scoutingResults.existing > 0 
       ? `Scouting: ${scoutingResults.added} new entries added, ${scoutingResults.existing} existing entries found${scoutingResults.duplicates > 0 ? `, ${scoutingResults.duplicates} duplicates skipped` : ''}. `
       : '';
       
-    const scouterMessage = scouterResults.scoutersAdded > 0 || scouterResults.scoutersUpdated > 0 || scouterResults.predictionsAdded > 0
-      ? `Profiles: ${scouterResults.scoutersAdded} new scouters, ${scouterResults.scoutersUpdated} updated scouters, ${scouterResults.predictionsAdded} predictions imported.`
+    const scoutMessage = scoutResults.scoutsAdded > 0 || scoutResults.scoutsUpdated > 0 || scoutResults.predictionsAdded > 0
+      ? `Profiles: ${scoutResults.scoutsAdded} new scouts, ${scoutResults.scoutsUpdated} updated scouts, ${scoutResults.predictionsAdded} predictions imported.`
       : '';
     
-    const addedToSelectableMessage = addToSelectableList ? " Scouters added to selectable list." : "";
-    const fullMessage = `Combined import complete! ${scoutingMessage}${scouterMessage}${addedToSelectableMessage}`;
+    const addedToSelectableMessage = addToSelectableList ? " Scouts added to selectable list." : "";
+    const fullMessage = `Combined import complete! ${scoutingMessage}${scoutMessage}${addedToSelectableMessage}`;
     toast.success(fullMessage);
     
-    // Notify other components that scouter data has been updated
-    window.dispatchEvent(new CustomEvent('scouterDataUpdated'));
+    // Notify other components that scout data has been updated
+    window.dispatchEvent(new CustomEvent('scoutDataUpdated'));
   };
 
-  const handleAddScoutersToSelectable = async () => {
+  const handleAddScoutsToSelectable = async () => {
     if (pendingImportData) {
       await performCombinedImport(
         pendingImportData.scoutingData, 
-        pendingImportData.scoutersToImport, 
+        pendingImportData.scoutsToImport, 
         pendingImportData.predictionsToImport, 
         true
       );
-      setShowScouterAddDialog(false);
+      setShowScoutAddDialog(false);
       setPendingImportData(null);
-      setPendingScouterNames([]);
+      setPendingScoutNames([]);
     }
   };
 
@@ -277,13 +277,13 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
     if (pendingImportData) {
       await performCombinedImport(
         pendingImportData.scoutingData, 
-        pendingImportData.scoutersToImport, 
+        pendingImportData.scoutsToImport, 
         pendingImportData.predictionsToImport, 
         false
       );
-      setShowScouterAddDialog(false);
+      setShowScoutAddDialog(false);
       setPendingImportData(null);
-      setPendingScouterNames([]);
+      setPendingScoutNames([]);
     }
   };
 
@@ -296,14 +296,14 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
     if (combinedData.type !== 'combined_export') return false;
     
     // Must have at least the basic structure
-    if (!combinedData.scoutingData || !combinedData.scouterProfiles || !combinedData.metadata) return false;
+    if (!combinedData.scoutingData || !combinedData.scoutProfiles || !combinedData.metadata) return false;
     
     // Validate that we have some meaningful data
     const hasScoutingData = combinedData.scoutingData.entries && Array.isArray(combinedData.scoutingData.entries) && combinedData.scoutingData.entries.length > 0;
-    const hasScouterData = (combinedData.scouterProfiles.scouters && combinedData.scouterProfiles.scouters.length > 0) || 
-                          (combinedData.scouterProfiles.predictions && combinedData.scouterProfiles.predictions.length > 0);
+    const hasScoutData = (combinedData.scoutProfiles.scouts && combinedData.scoutProfiles.scouts.length > 0) || 
+                          (combinedData.scoutProfiles.predictions && combinedData.scoutProfiles.predictions.length > 0);
     
-    return hasScoutingData || hasScouterData;
+    return hasScoutingData || hasScoutData;
   };
 
   const getCombinedDataSummary = (data: unknown): string => {
@@ -314,12 +314,12 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
     if (!combinedData.metadata) return 'Invalid data';
     
     const scoutingCount = combinedData.metadata.scoutingEntriesCount || 0;
-    const scoutersCount = combinedData.metadata.scoutersCount || 0;
+    const scoutsCount = combinedData.metadata.scoutsCount || 0;
     const predictionsCount = combinedData.metadata.predictionsCount || 0;
     
     const parts = [];
     if (scoutingCount > 0) parts.push(`${scoutingCount} scouting entries`);
-    if (scoutersCount > 0) parts.push(`${scoutersCount} scouters`);
+    if (scoutsCount > 0) parts.push(`${scoutsCount} scouts`);
     if (predictionsCount > 0) parts.push(`${predictionsCount} predictions`);
     
     return parts.length > 0 ? parts.join(', ') : 'No data';
@@ -336,15 +336,15 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
         validateData={validateCombinedData}
         getDataSummary={getCombinedDataSummary}
         title="Scan Combined Data Fountain Codes"
-        description="Point your camera at the QR codes to receive both scouting data and scouter profiles"
+        description="Point your camera at the QR codes to receive both scouting data and scout profiles"
         completionMessage="Combined data has been successfully reconstructed and imported"
       />
       
-      <ScouterAddConfirmDialog
-        open={showScouterAddDialog}
-        onOpenChange={setShowScouterAddDialog}
-        pendingScouterNames={pendingScouterNames}
-        onAddToSelectable={handleAddScoutersToSelectable}
+      <ScoutAddConfirmDialog
+        open={showScoutAddDialog}
+        onOpenChange={setShowScoutAddDialog}
+        pendingScoutNames={pendingScoutNames}
+        onAddToSelectable={handleAddScoutsToSelectable}
         onImportOnly={handleImportWithoutAdding}
       />
     </>

@@ -46,7 +46,7 @@ const PitScoutingFountainScanner = ({ onBack, onSwitchToGenerator }: PitScouting
     if (!firstEntry) return true; // Empty array is valid
     
     // Validate pit scouting entry structure
-    const requiredFields = ['teamNumber', 'eventName', 'scouterInitials'];
+    const requiredFields = ['teamNumber', 'eventName', 'scoutName'];
     return requiredFields.every(field => field in firstEntry);
   };
 

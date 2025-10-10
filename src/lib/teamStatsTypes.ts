@@ -1,5 +1,6 @@
 // Import centralized ScoutingEntry type
 export type { ScoutingEntry } from './scoutingTypes';
+import type { ScoutingEntry } from './scoutingTypes';
 
 export interface TeamStats {
   matchesPlayed: number;
@@ -56,4 +57,5 @@ export interface MatchResult {
   brokeDown: boolean;
   startPosition: number;
   comment: string;
+  fullEntry?: ScoutingEntry; // Full ScoutingEntry for detailed stats
 }

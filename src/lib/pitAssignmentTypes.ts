@@ -4,13 +4,13 @@ export interface PitAssignment {
   id: string;
   eventKey: string;
   teamNumber: number;
-  scouterName: string;
+  scoutName: string;
   assignedAt: number;
   completed: boolean;
   notes?: string;
 }
 
-export interface PitAssignmentScouter {
+export interface PitAssignmentScout {
   name: string;
   addedAt: number;
 }

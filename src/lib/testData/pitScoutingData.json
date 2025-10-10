@@ -2,7 +2,7 @@
   {
     "teamNumber": "2539",
     "eventName": "2025pawar", 
-    "scouterInitials": "Sarah Chen",
+    "scoutName": "Sarah Chen",
     "weight": 95,
     "drivetrain": "Swerve",
     "programmingLanguage": "Java",
@@ -36,7 +36,7 @@
   {
     "teamNumber": "5895",
     "eventName": "2025pawar",
-    "scouterInitials": "Marcus Rodriguez", 
+    "scoutName": "Marcus Rodriguez", 
     "weight": 110,
     "drivetrain": "Tank Drive",
     "programmingLanguage": "C++",
@@ -70,7 +70,7 @@
   {
     "teamNumber": "341",
     "eventName": "2025mrcmp",
-    "scouterInitials": "Alex Kim",
+    "scoutName": "Alex Kim",
     "weight": 88,
     "drivetrain": "Mecanum",
     "programmingLanguage": "Python",
@@ -104,7 +104,7 @@
   {
     "teamNumber": "1168",
     "eventName": "2025pawar",
-    "scouterInitials": "Emma Thompson",
+    "scoutName": "Emma Thompson",
     "weight": 102,
     "drivetrain": "West Coast",
     "programmingLanguage": "Java",
@@ -138,7 +138,7 @@
   {
     "teamNumber": "3142",
     "eventName": "2025mrcmp",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "weight": 118,
     "drivetrain": "Swerve",
     "programmingLanguage": "C++",

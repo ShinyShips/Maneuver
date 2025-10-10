@@ -52,7 +52,7 @@ estimatedBinaryEntrySize += 2 + (sampleEntry.comment?.length || 0);      // comm
 
 // Fixed size fields
 estimatedBinaryEntrySize += 1; // alliance (dictionary compressed)
-estimatedBinaryEntrySize += 1; // scouter initials (dictionary compressed)
+estimatedBinaryEntrySize += 1; // scout initials (dictionary compressed)
 estimatedBinaryEntrySize += 1; // start poses (6 booleans packed into 1 byte)
 estimatedBinaryEntrySize += 20; // numeric counts (20 uint8 fields)
 estimatedBinaryEntrySize += 1; // endgame booleans (6 booleans packed into 1 byte)

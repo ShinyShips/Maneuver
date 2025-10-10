@@ -18,8 +18,8 @@ const HomePage = () => {
     const checkExistingData = async () => {
       try {
         const existingData = await loadLegacyScoutingData();
-        const existingScouters = await gameDB.scouters.count();
-        if (existingData.length > 0 || existingScouters > 0) {
+        const existingScouts = await gameDB.scouts.count();
+        if (existingData.length > 0 || existingScouts > 0) {
           setIsLoaded(true);
         }
       } catch (error) {
@@ -61,12 +61,12 @@ const HomePage = () => {
       localStorage.setItem('eventsList', JSON.stringify(eventsList));
       localStorage.setItem('eventName', '2025mrcmp'); // Set default event
 
-      // Also add the scouter names to the selectable list in localStorage
-      const scouterNames = [
+      // Also add the scout names to the selectable list in localStorage
+      const scoutNames = [
         "Sarah Chen", "Marcus Rodriguez", "Emma Thompson", "Alex Kim", 
         "Jordan Smith", "Riley Davis", "Casey Park", "Taylor Wilson"
       ];
-      localStorage.setItem("scoutersList", JSON.stringify(scouterNames.sort()));
+      localStorage.setItem("scoutsList", JSON.stringify(scoutNames.sort()));
 
       const verifyData = await loadScoutingData();
       console.log("HomePage - Verification: loaded", verifyData.entries.length, "entries from IndexedDB");
@@ -98,9 +98,9 @@ const HomePage = () => {
       await clearAllTestData();
       
       // Clear additional items from localStorage
-      localStorage.removeItem("scoutersList");
-      localStorage.removeItem("currentScouter");
-      localStorage.removeItem("scouterInitials");
+      localStorage.removeItem("scoutsList");
+      localStorage.removeItem("currentScout");
+      localStorage.removeItem("scoutName");
       localStorage.removeItem("eventName");
       localStorage.removeItem("eventsList");
       
@@ -110,9 +110,9 @@ const HomePage = () => {
       console.error("Error clearing data:", error);
       // Clear localStorage as fallback and update UI anyway
       localStorage.removeItem("scoutingData");
-      localStorage.removeItem("scoutersList");
-      localStorage.removeItem("currentScouter");
-      localStorage.removeItem("scouterInitials");
+      localStorage.removeItem("scoutsList");
+      localStorage.removeItem("currentScout");
+      localStorage.removeItem("scoutName");
       localStorage.removeItem("matchData");
       localStorage.removeItem("eventName");
       localStorage.removeItem("eventsList");
@@ -154,7 +154,7 @@ const HomePage = () => {
           />
           <div className="text-center space-y-2">
             <p>
-              <strong>Version</strong>: 2025.1.2
+              <strong>Version</strong>: 2025.1.3
             </p>
             <DataAttribution sources={['tba', 'nexus']} variant="compact" />
           </div>
@@ -166,7 +166,7 @@ const HomePage = () => {
             <div className="text-center space-y-4">
               <h2 className="text-lg font-semibold">Demo Data</h2>
               <p className="text-sm text-muted-foreground">
-                Load sample scouting data, scouter profiles, pit scouting data, and match schedule from 2025mrcmp to explore the app's features
+                Load sample scouting data, scout profiles, pit scouting data, and match schedule from 2025mrcmp to explore the app's features
               </p>
 
               {!isLoaded ? (
@@ -196,7 +196,7 @@ const HomePage = () => {
                     Demo data loaded successfully!
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    120 matches • 60 teams • 8 scouters • 5 pit entries • 2025mrcmp event
+                    120 matches • 60 teams • 8 scouts • 5 pit entries • 2025mrcmp event
                   </p>
                   <Button
                     onClick={clearData}

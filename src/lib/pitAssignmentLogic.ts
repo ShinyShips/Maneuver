@@ -8,7 +8,7 @@ import { createSpatialClusters } from './spatialClustering';
 export interface AssignmentOptions {
   assignmentMode: 'sequential' | 'spatial' | 'manual';
   selectedEvent: string;
-  scoutersList: string[];
+  scoutsList: string[];
   teams: number[];
   pitAddresses?: { [teamNumber: string]: string } | null;
   pitMapData?: NexusPitMap | null;
@@ -17,23 +17,23 @@ export interface AssignmentOptions {
 
 // Sequential assignment - divide teams into blocks
 export function createSequentialAssignments(options: AssignmentOptions): PitAssignment[] {
-  const { selectedEvent, scoutersList, teams } = options;
+  const { selectedEvent, scoutsList, teams } = options;
   const newAssignments: PitAssignment[] = [];
   
   // Sort teams numerically first
   const sortedTeams = [...teams].sort((a, b) => a - b);
   const totalTeams = sortedTeams.length;
-  const totalScouters = scoutersList.length;
+  const totalScouts = scoutsList.length;
   
-  // Calculate block size for each scouter
-  const baseBlockSize = Math.floor(totalTeams / totalScouters);
-  const remainder = totalTeams % totalScouters;
+  // Calculate block size for each scout
+  const baseBlockSize = Math.floor(totalTeams / totalScouts);
+  const remainder = totalTeams % totalScouts;
   
   let teamIndex = 0;
   
-  // Assign blocks to each scouter
-  scoutersList.forEach((scouterName, scouterIndex) => {
-    const blockSize = scouterIndex < remainder ? baseBlockSize + 1 : baseBlockSize;
+  // Assign blocks to each scout
+  scoutsList.forEach((scoutName, scoutIndex) => {
+    const blockSize = scoutIndex < remainder ? baseBlockSize + 1 : baseBlockSize;
     
     for (let i = 0; i < blockSize && teamIndex < totalTeams; i++) {
       const teamNumber = sortedTeams[teamIndex];
@@ -41,7 +41,7 @@ export function createSequentialAssignments(options: AssignmentOptions): PitAssi
         id: `${selectedEvent}-${teamNumber}`,
         eventKey: selectedEvent,
         teamNumber,
-        scouterName,
+        scoutName,
         assignedAt: Date.now(),
         completed: false
       });
@@ -134,7 +134,7 @@ export function extractTeamPositions(
 
 // Spatial assignment using clustering algorithm
 export function createSpatialAssignments(options: AssignmentOptions): PitAssignment[] {
-  const { selectedEvent, scoutersList, teams, pitAddresses, pitMapData, enableDebugLogging = false } = options;
+  const { selectedEvent, scoutsList, teams, pitAddresses, pitMapData, enableDebugLogging = false } = options;
   
   // Extract team positions
   const teamPositions = extractTeamPositions(teams, pitAddresses || null, pitMapData || null, enableDebugLogging);
@@ -157,20 +157,20 @@ export function createSpatialAssignments(options: AssignmentOptions): PitAssignm
   }
 
   // Perform spatial clustering
-  const spatialClusters = createSpatialClusters(teamPositions, scoutersList.length);
+  const spatialClusters = createSpatialClusters(teamPositions, scoutsList.length);
   
-  // Assign clusters to scouters
+  // Assign clusters to scouts
   const newAssignments: PitAssignment[] = [];
   
   if (enableDebugLogging) {
-    console.log('\n=== Cluster to Scouter Assignment ===');
+    console.log('\n=== Cluster to Scout Assignment ===');
   }
   
   spatialClusters.forEach((cluster: TeamPosition[], index: number) => {
-    const scouterName = scoutersList[index % scoutersList.length];
+    const scoutName = scoutsList[index % scoutsList.length];
     
     if (enableDebugLogging) {
-      console.log(`Cluster ${index} → ${scouterName}:`, cluster.map((t: TeamPosition) => t.teamNumber).sort((a: number, b: number) => a - b));
+      console.log(`Cluster ${index} → ${scoutName}:`, cluster.map((t: TeamPosition) => t.teamNumber).sort((a: number, b: number) => a - b));
     }
     
     cluster.forEach((teamPosition: TeamPosition) => {
@@ -178,7 +178,7 @@ export function createSpatialAssignments(options: AssignmentOptions): PitAssignm
         id: `${selectedEvent}-${teamPosition.teamNumber}`,
         eventKey: selectedEvent,
         teamNumber: teamPosition.teamNumber,
-        scouterName,
+        scoutName,
         assignedAt: Date.now(),
         completed: false
       });
@@ -190,9 +190,9 @@ export function createSpatialAssignments(options: AssignmentOptions): PitAssignm
       totalTeamsWithPositions: teamPositions.length,
       totalTeamsRequested: teams.length,
       assignments: newAssignments.length,
-      scouterCounts: scoutersList.map(name => ({
-        scouter: name,
-        teams: newAssignments.filter(a => a.scouterName === name).length
+      scoutCounts: scoutsList.map(name => ({
+        scout: name,
+        teams: newAssignments.filter(a => a.scoutName === name).length
       }))
     });
   }
@@ -220,7 +220,7 @@ export function createPitAssignments(options: AssignmentOptions): PitAssignment[
 export function addManualAssignment(
   currentAssignments: PitAssignment[],
   teamNumber: number,
-  scouterName: string,
+  scoutName: string,
   selectedEvent: string
 ): PitAssignment[] {
   const assignmentId = `${selectedEvent}-${teamNumber}`;
@@ -233,7 +233,7 @@ export function addManualAssignment(
     id: assignmentId,
     eventKey: selectedEvent,
     teamNumber,
-    scouterName,
+    scoutName,
     assignedAt: Date.now(),
     completed: false
   }];

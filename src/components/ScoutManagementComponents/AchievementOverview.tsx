@@ -4,11 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Trophy, Star, Target, ChevronRight, RefreshCw } from 'lucide-react';
-import { getAchievementStats, getNextAchievements, backfillAchievementsForAllScouters } from '@/lib/achievementUtils';
+import { getAchievementStats, getNextAchievements, backfillAchievementsForAllScouts } from '@/lib/achievementUtils';
 import { ACHIEVEMENT_TIERS, type Achievement } from '@/lib/achievementTypes';
 
 interface AchievementOverviewProps {
-  scouterName: string;
+  scoutName: string;
   onViewAll?: () => void;
   onDataRefresh?: () => void;
 }
@@ -22,7 +22,7 @@ interface AchievementStats {
 }
 
 export const AchievementOverview: React.FC<AchievementOverviewProps> = ({ 
-  scouterName, 
+  scoutName, 
   onViewAll,
   onDataRefresh
 }) => {
@@ -34,12 +34,12 @@ export const AchievementOverview: React.FC<AchievementOverviewProps> = ({
   const handleBackfillAchievements = async () => {
     setBackfillLoading(true);
     try {
-      await backfillAchievementsForAllScouters();
+      await backfillAchievementsForAllScouts();
       
       // Reload achievement data
       const [achievementStats, upcomingAchievements] = await Promise.all([
-        getAchievementStats(scouterName),
-        getNextAchievements(scouterName, 2)
+        getAchievementStats(scoutName),
+        getNextAchievements(scoutName, 2)
       ]);
       
       setStats(achievementStats);
@@ -58,13 +58,13 @@ export const AchievementOverview: React.FC<AchievementOverviewProps> = ({
 
   useEffect(() => {
     const loadOverview = async () => {
-      if (!scouterName) return;
+      if (!scoutName) return;
       
       setLoading(true);
       try {
         const [achievementStats, upcomingAchievements] = await Promise.all([
-          getAchievementStats(scouterName),
-          getNextAchievements(scouterName, 2)
+          getAchievementStats(scoutName),
+          getNextAchievements(scoutName, 2)
         ]);
         
         setStats(achievementStats);
@@ -77,7 +77,7 @@ export const AchievementOverview: React.FC<AchievementOverviewProps> = ({
     };
 
     loadOverview();
-  }, [scouterName]);
+  }, [scoutName]);
 
   if (loading || !stats) {
     return (

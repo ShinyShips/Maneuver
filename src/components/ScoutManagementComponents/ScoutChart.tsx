@@ -1,15 +1,15 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Cell, LineChart, Line, Legend } from "recharts";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
-import { calculateAccuracy } from '@/lib/scouterGameUtils';
-import type { ScouterChartData, ScouterMetric } from '@/hooks/useScoutDashboard';
-import type { Scouter } from '@/lib/dexieDB';
+import { calculateAccuracy } from '@/lib/scoutGameUtils';
+import type { ScoutChartData, ScoutMetric } from '@/hooks/useScoutDashboard';
+import type { Scout } from '@/lib/dexieDB';
 
 interface ScoutChartProps {
   chartType: "bar" | "line";
-  chartData: ScouterChartData[];
-  lineChartData: Array<{ matchNumber: number; [scouterName: string]: number }>;
-  scouters: Scouter[];
-  chartMetric: ScouterMetric;
+  chartData: ScoutChartData[];
+  lineChartData: Array<{ matchNumber: number; [scoutName: string]: number }>;
+  scouts: Scout[];
+  chartMetric: ScoutMetric;
   selectedMetricLabel: string;
 }
 
@@ -17,7 +17,7 @@ export function ScoutChart({
   chartType, 
   chartData, 
   lineChartData, 
-  scouters, 
+  scouts, 
   chartMetric, 
   selectedMetricLabel 
 }: ScoutChartProps) {
@@ -44,22 +44,22 @@ export function ScoutChart({
           <ChartTooltip 
             content={({ active, payload }) => {
               if (active && payload && payload.length) {
-                const data = payload[0].payload as ScouterChartData;
-                const scouter = data.scouter;
-                const accuracy = calculateAccuracy(scouter);
+                const data = payload[0].payload as ScoutChartData;
+                const scout = data.scout;
+                const accuracy = calculateAccuracy(scout);
                 
                 return (
                   <div className="bg-white dark:bg-gray-800 p-3 border rounded shadow-lg">
-                    <p className="font-semibold">{scouter.name}</p>
+                    <p className="font-semibold">{scout.name}</p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       {selectedMetricLabel}: {data.value}{chartMetric === "accuracy" ? "%" : ""}
                     </p>
                     <div className="mt-2 text-xs space-y-1">
-                      <p>Stakes: {scouter.stakes}</p>
-                      <p>Predictions: {scouter.totalPredictions}</p>
+                      <p>Stakes: {scout.stakes}</p>
+                      <p>Predictions: {scout.totalPredictions}</p>
                       <p>Accuracy: {accuracy}%</p>
-                      <p>Current Streak: {scouter.currentStreak}</p>
-                      <p>Best Streak: {scouter.longestStreak}</p>
+                      <p>Current Streak: {scout.currentStreak}</p>
+                      <p>Best Streak: {scout.longestStreak}</p>
                     </div>
                   </div>
                 );
@@ -112,11 +112,11 @@ export function ScoutChart({
           height={36}
           wrapperStyle={{ paddingBottom: '10px' }}
         />
-        {scouters.slice(0, 6).map((scouter, index) => (
+        {scouts.slice(0, 6).map((scout, index) => (
           <Line 
-            key={scouter.name}
+            key={scout.name}
             type="monotone" 
-            dataKey={scouter.name} 
+            dataKey={scout.name} 
             stroke={`hsl(${210 + index * 50}, 70%, 50%)`}
             strokeWidth={2}
             dot={{ r: 3 }}

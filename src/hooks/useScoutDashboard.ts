@@ -1,22 +1,22 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getAllScouters, calculateAccuracy } from '@/lib/scouterGameUtils';
+import { getAllScouts, calculateAccuracy } from '@/lib/scoutGameUtils';
 import { getAchievementStats } from '@/lib/achievementUtils';
-import type { Scouter } from '@/lib/dexieDB';
+import type { Scout } from '@/lib/dexieDB';
 import { analytics } from '@/lib/analytics';
 
-export type ScouterMetric = "stakes" | "totalStakes" | "totalPredictions" | "correctPredictions" | "accuracy" | "currentStreak" | "longestStreak";
+export type ScoutMetric = "stakes" | "totalStakes" | "totalPredictions" | "correctPredictions" | "accuracy" | "currentStreak" | "longestStreak";
 
-export interface ScouterChartData {
+export interface ScoutChartData {
   name: string;
   value: number;
-  scouter: Scouter;
+  scout: Scout;
 }
 
 export function useScoutDashboard() {
-  const [scouters, setScouters] = useState<Scouter[]>([]);
+  const [scouts, setScouts] = useState<Scout[]>([]);
   const [achievementStakes, setAchievementStakes] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
-  const [chartMetric, setChartMetric] = useState<ScouterMetric>("totalStakes");
+  const [chartMetric, setChartMetric] = useState<ScoutMetric>("totalStakes");
   const [chartType, setChartType] = useState<"bar" | "line" | "table">("bar");
 
   const metricOptions = [
@@ -32,18 +32,18 @@ export function useScoutDashboard() {
   const loadScoutData = async () => {
     setLoading(true);
     try {
-      const scoutData = await getAllScouters();
-      setScouters(scoutData);
+      const scoutData = await getAllScouts();
+      setScouts(scoutData);
       
-      // Load achievement stakes for each scouter
+      // Load achievement stakes for each scout
       const achievementStakesMap: Record<string, number> = {};
-      for (const scouter of scoutData) {
+      for (const scout of scoutData) {
         try {
-          const stats = await getAchievementStats(scouter.name);
-          achievementStakesMap[scouter.name] = stats.totalStakesFromAchievements;
+          const stats = await getAchievementStats(scout.name);
+          achievementStakesMap[scout.name] = stats.totalStakesFromAchievements;
         } catch (error) {
-          console.error(`Error loading achievement stats for ${scouter.name}:`, error);
-          achievementStakesMap[scouter.name] = 0;
+          console.error(`Error loading achievement stats for ${scout.name}:`, error);
+          achievementStakesMap[scout.name] = 0;
         }
       }
       setAchievementStakes(achievementStakesMap);
@@ -61,21 +61,21 @@ export function useScoutDashboard() {
   }, []);
 
   const chartData = useMemo(() => {
-    return scouters
-      .map(scouter => {
+    return scouts
+      .map(scout => {
         let value: number;
         switch (chartMetric) {
           case "accuracy":
-            value = calculateAccuracy(scouter);
+            value = calculateAccuracy(scout);
             break;
           case "totalStakes": {
             // Total stakes = prediction stakes + achievement stakes
-            const predictionStakes = scouter.stakes;
-            const achievementStakesValue = achievementStakes[scouter.name] || 0;
+            const predictionStakes = scout.stakes;
+            const achievementStakesValue = achievementStakes[scout.name] || 0;
             value = predictionStakes + achievementStakesValue;
             
             // Debug logging for Riley Davis
-            if (scouter.name === "Riley Davis") {
+            if (scout.name === "Riley Davis") {
               console.log(`🔍 Riley Davis Stakes Debug:`, {
                 predictionStakes,
                 achievementStakesValue,
@@ -86,74 +86,74 @@ export function useScoutDashboard() {
             break;
           }
           default:
-            value = scouter[chartMetric] as number;
+            value = scout[chartMetric] as number;
         }
         
         return {
-          name: scouter.name,
+          name: scout.name,
           value,
-          scouter
+          scout
         };
       })
       .sort((a, b) => b.value - a.value)
       .slice(0, 12);
-  }, [scouters, chartMetric, achievementStakes]);
+  }, [scouts, chartMetric, achievementStakes]);
 
   // Line chart data - shows progression over number of matches
   const lineChartData = useMemo(() => {
-    if (chartType !== "line" || scouters.length === 0) return [];
+    if (chartType !== "line" || scouts.length === 0) return [];
     
     // For line chart, we'll simulate progression data
     // In a real implementation, you'd fetch historical prediction data
-    const maxMatches = Math.max(...scouters.map(s => s.totalPredictions));
-    const dataPoints: Array<{ matchNumber: number; [scouterName: string]: number }> = [];
+    const maxMatches = Math.max(...scouts.map(s => s.totalPredictions));
+    const dataPoints: Array<{ matchNumber: number; [scoutName: string]: number }> = [];
     
     // Create data points for each match number
     for (let matchNum = 1; matchNum <= Math.min(maxMatches, 20); matchNum++) {
-      const point: { matchNumber: number; [scouterName: string]: number } = { matchNumber: matchNum };
+      const point: { matchNumber: number; [scoutName: string]: number } = { matchNumber: matchNum };
       
       // For each scout, calculate their metric value at this point in time
-      scouters.slice(0, 6).forEach((scouter) => {
-        if (scouter.totalPredictions >= matchNum) {
+      scouts.slice(0, 6).forEach((scout) => {
+        if (scout.totalPredictions >= matchNum) {
           let value: number;
           switch (chartMetric) {
             case "accuracy":
               // Simulate accuracy progression (in real app, calculate from historical data)
-              value = Math.min(100, (scouter.correctPredictions / matchNum) * 100);
+              value = Math.min(100, (scout.correctPredictions / matchNum) * 100);
               break;
             case "stakes":
               // Simulate stakes progression
-              value = Math.floor((scouter.stakes / scouter.totalPredictions) * matchNum);
+              value = Math.floor((scout.stakes / scout.totalPredictions) * matchNum);
               break;
             case "totalStakes": {
               // For total stakes, add achievement stakes to prediction stakes progression
-              const predictionStakesProgression = Math.floor((scouter.stakes / scouter.totalPredictions) * matchNum);
-              const achievementStakesForScouter = achievementStakes[scouter.name] || 0;
-              value = predictionStakesProgression + achievementStakesForScouter;
+              const predictionStakesProgression = Math.floor((scout.stakes / scout.totalPredictions) * matchNum);
+              const achievementStakesForScout = achievementStakes[scout.name] || 0;
+              value = predictionStakesProgression + achievementStakesForScout;
               break;
             }
             case "currentStreak":
               // For streaks, just show current value after they reach that point
-              value = matchNum === scouter.totalPredictions ? scouter.currentStreak : 0;
+              value = matchNum === scout.totalPredictions ? scout.currentStreak : 0;
               break;
             case "longestStreak":
               // Simulate longest streak growth
-              value = Math.floor((scouter.longestStreak / scouter.totalPredictions) * matchNum);
+              value = Math.floor((scout.longestStreak / scout.totalPredictions) * matchNum);
               break;
             default:
-              value = Math.floor((scouter[chartMetric] as number / scouter.totalPredictions) * matchNum);
+              value = Math.floor((scout[chartMetric] as number / scout.totalPredictions) * matchNum);
           }
-          point[scouter.name] = value;
+          point[scout.name] = value;
         }
       });
       dataPoints.push(point);
     }
     
     return dataPoints;
-  }, [scouters, chartMetric, chartType, achievementStakes]);
+  }, [scouts, chartMetric, chartType, achievementStakes]);
 
   return {
-    scouters,
+    scouts,
     achievementStakes,
     loading,
     chartMetric,

@@ -4,38 +4,38 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { GenericSelector } from '../ui/generic-selector';
 import { Trophy, Target, TrendingUp, User, Flame, Award, Users, Star } from 'lucide-react';
-import { useCurrentScouter } from '../../hooks/useCurrentScouter';
-import { getAllScouters } from '../../lib/scouterGameUtils';
+import { useCurrentScout } from '../../hooks/useCurrentScout';
+import { getAllScouts } from '../../lib/scoutGameUtils';
 import { getAchievementStats } from '../../lib/achievementUtils';
-import type { Scouter } from '../../lib/dexieDB';
+import type { Scout } from '../../lib/dexieDB';
 
-export const ScouterProfileWithSelector: React.FC = () => {
-  const { currentScouter, isLoading, refreshScouter } = useCurrentScouter();
-  const [availableScouters, setAvailableScouters] = useState<Scouter[]>([]);
-  const [scouterLoading, setScouterLoading] = useState(true);
+export const ScoutProfileWithSelector: React.FC = () => {
+  const { currentScout, isLoading, refreshScout } = useCurrentScout();
+  const [availableScouts, setAvailableScouts] = useState<Scout[]>([]);
+  const [scoutLoading, setScoutLoading] = useState(true);
   const [achievementStakes, setAchievementStakes] = useState<number>(0);
 
   useEffect(() => {
-    const loadScouters = async () => {
+    const loadScouts = async () => {
       try {
-        const scouters = await getAllScouters();
-        setAvailableScouters(scouters);
+        const scouts = await getAllScouts();
+        setAvailableScouts(scouts);
       } catch (error) {
-        console.error('Error loading scouters:', error);
+        console.error('Error loading scouts:', error);
       } finally {
-        setScouterLoading(false);
+        setScoutLoading(false);
       }
     };
 
-    loadScouters();
+    loadScouts();
   }, []);
 
-  // Load achievement stakes when current scouter changes
+  // Load achievement stakes when current scout changes
   useEffect(() => {
     const loadAchievementStakes = async () => {
-      if (currentScouter?.name) {
+      if (currentScout?.name) {
         try {
-          const stats = await getAchievementStats(currentScouter.name);
+          const stats = await getAchievementStats(currentScout.name);
           setAchievementStakes(stats.totalStakesFromAchievements);
         } catch (error) {
           console.error('Error loading achievement stakes:', error);
@@ -47,19 +47,19 @@ export const ScouterProfileWithSelector: React.FC = () => {
     };
 
     loadAchievementStakes();
-  }, [currentScouter?.name]);
+  }, [currentScout?.name]);
 
   const calculateAccuracy = () => {
-    if (!currentScouter || currentScouter.totalPredictions === 0) return 0;
-    return Math.round((currentScouter.correctPredictions / currentScouter.totalPredictions) * 100);
+    if (!currentScout || currentScout.totalPredictions === 0) return 0;
+    return Math.round((currentScout.correctPredictions / currentScout.totalPredictions) * 100);
   };
 
-  const handleScouterChange = (scouterName: string) => {
-    localStorage.setItem('currentScouter', scouterName);
-    window.dispatchEvent(new Event('scouterChanged'));
+  const handleScoutChange = (scoutName: string) => {
+    localStorage.setItem('currentScout', scoutName);
+    window.dispatchEvent(new Event('scoutChanged'));
   };
 
-  if (isLoading || scouterLoading) {
+  if (isLoading || scoutLoading) {
     return (
       <Card className="w-full max-w-md">
         <CardContent className="flex items-center justify-center p-6">
@@ -85,19 +85,19 @@ export const ScouterProfileWithSelector: React.FC = () => {
           <label className="text-sm font-medium">Select Scout:</label>
           <GenericSelector
             label="Select Scout"
-            value={currentScouter?.name || ''}
-            availableOptions={availableScouters.map(s => s.name)}
-            onValueChange={handleScouterChange}
-            placeholder={availableScouters.length > 0 ? "Choose a scout..." : "No scouts available"}
+            value={currentScout?.name || ''}
+            availableOptions={availableScouts.map(s => s.name)}
+            onValueChange={handleScoutChange}
+            placeholder={availableScouts.length > 0 ? "Choose a scout..." : "No scouts available"}
             displayFormat={(name) => name}
             className="w-full"
           />
         </div>
 
-        {currentScouter ? (
+        {currentScout ? (
           <div className="space-y-4 pt-4 border-t">
             <div className="text-center">
-              <h3 className="font-semibold text-lg">{currentScouter.name}</h3>
+              <h3 className="font-semibold text-lg">{currentScout.name}</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">Scouting Game Stats</p>
             </div>
 
@@ -108,7 +108,7 @@ export const ScouterProfileWithSelector: React.FC = () => {
                   <Star className="h-5 w-5 text-purple-500" />
                   <span className="text-sm font-bold text-purple-700 dark:text-purple-300">Total Stakes</span>
                 </div>
-                <span className="text-3xl font-bold text-purple-600 dark:text-purple-400">{currentScouter.stakes + achievementStakes}</span>
+                <span className="text-3xl font-bold text-purple-600 dark:text-purple-400">{currentScout.stakes + achievementStakes}</span>
               </div>
             </div>
 
@@ -119,7 +119,7 @@ export const ScouterProfileWithSelector: React.FC = () => {
                   <Trophy className="h-4 w-4 text-yellow-500" />
                   <span className="text-xs font-medium">Predicition Stakes</span>
                 </div>
-                <span className="text-xl font-bold">{currentScouter.stakes}</span>
+                <span className="text-xl font-bold">{currentScout.stakes}</span>
               </div>
 
               <div className="col-span-2 text-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -138,7 +138,7 @@ export const ScouterProfileWithSelector: React.FC = () => {
                   <Target className="h-4 w-4 text-blue-500" />
                   <span className="text-xs font-medium">Predictions</span>
                 </div>
-                <span className="text-lg font-bold">{currentScouter.totalPredictions}</span>
+                <span className="text-lg font-bold">{currentScout.totalPredictions}</span>
               </div>
 
               <div className="col-span-3 text-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -154,7 +154,7 @@ export const ScouterProfileWithSelector: React.FC = () => {
                   <Flame className="h-4 w-4 text-orange-500" />
                   <span className="text-xs font-medium">Current Streak</span>
                 </div>
-                <span className="text-lg font-bold">{currentScouter.currentStreak}</span>
+                <span className="text-lg font-bold">{currentScout.currentStreak}</span>
               </div>
 
               <div className="col-span-3 text-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -162,17 +162,17 @@ export const ScouterProfileWithSelector: React.FC = () => {
                   <Award className="h-4 w-4 text-blue-600" />
                   <span className="text-xs font-medium">Best Streak</span>
                 </div>
-                <span className="text-lg font-bold">{currentScouter.longestStreak}</span>
+                <span className="text-lg font-bold">{currentScout.longestStreak}</span>
               </div>
             </div>
 
             <div className="flex items-center justify-between pt-2">
               <Badge variant="outline" className="flex items-center gap-1">
                 <Award className="h-3 w-3" />
-                Correct: {currentScouter.correctPredictions}
+                Correct: {currentScout.correctPredictions}
               </Badge>
               <Button
-                onClick={refreshScouter}
+                onClick={refreshScout}
                 variant="ghost"
                 size="sm"
                 className="h-8 px-2"

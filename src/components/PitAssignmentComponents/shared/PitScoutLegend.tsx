@@ -1,16 +1,16 @@
 import React from 'react';
-import { ScouterSelectionBar } from './ScouterSelectionBar';
-import { AssignmentProgressBar } from './AssignmentProgressBar';
-import { AssignmentActionButtons } from './AssignmentActionButtons';
+import { PitScoutSelectionBar } from './PitScoutSelectionBar';
+import { PitAssignmentProgressBar } from './PitAssignmentProgressBar';
+import { PitAssignmentActionButtons } from './PitAssignmentActionButtons';
 import type { PitAssignment } from '@/lib/pitAssignmentTypes';
 
-interface ScouterLegendSectionProps {
-  scoutersList: string[];
+interface PitScoutLegendProps {
+  scoutsList: string[];
   assignments: PitAssignment[];
   assignmentMode: 'sequential' | 'spatial' | 'manual';
   assignmentsConfirmed: boolean;
-  selectedScouterForAssignment?: string | null;
-  onScouterSelectionChange?: (scouterName: string | null) => void;
+  selectedScoutForAssignment?: string | null;
+  onScoutSelectionChange?: (scoutName: string | null) => void;
   onClearAllAssignments?: () => void;
   onConfirmAssignments?: () => void;
   hasAssignments: boolean;
@@ -18,13 +18,13 @@ interface ScouterLegendSectionProps {
   helpText?: string;
 }
 
-export const ScouterLegendSection: React.FC<ScouterLegendSectionProps> = ({
-  scoutersList,
+export const PitScoutLegend: React.FC<PitScoutLegendProps> = ({
+  scoutsList,
   assignments,
   assignmentMode,
   assignmentsConfirmed,
-  selectedScouterForAssignment,
-  onScouterSelectionChange,
+  selectedScoutForAssignment,
+  onScoutSelectionChange,
   onClearAllAssignments,
   onConfirmAssignments,
   hasAssignments,
@@ -35,34 +35,34 @@ export const ScouterLegendSection: React.FC<ScouterLegendSectionProps> = ({
     <div className="mb-4 p-4 rounded-lg border">
       <div className="flex items-center justify-between mb-3">
         <div className="text-sm font-medium">
-          {assignmentMode === 'manual' && !assignmentsConfirmed ? 'Scouters (Click to Select):' : 'Assignment Legend:'}
+          {assignmentMode === 'manual' && !assignmentsConfirmed ? 'Scouts (Click to Select):' : 'Assignment Legend:'}
         </div>
         <div className="text-xs text-muted-foreground">
-          {scoutersList.length} scouters
+          {scoutsList.length} scouts
         </div>
       </div>
 
       <div className="mb-3">
-        <ScouterSelectionBar
-          scoutersList={scoutersList}
+        <PitScoutSelectionBar
+          scoutsList={scoutsList}
           assignments={assignments}
           assignmentMode={assignmentMode}
           assignmentsConfirmed={assignmentsConfirmed}
-          selectedScouterForAssignment={selectedScouterForAssignment}
-          onScouterSelectionChange={onScouterSelectionChange}
+          selectedScoutForAssignment={selectedScoutForAssignment}
+          onScoutSelectionChange={onScoutSelectionChange}
           hasAssignments={hasAssignments}
         />
       </div>
 
-      {/* Progress Bar - inside the scouter selection card */}
+      {/* Progress Bar - inside the scout selection card */}
       {hasAssignments && (
         <div className="mt-3 p-3">
-          <AssignmentProgressBar assignments={assignments} />
+          <PitAssignmentProgressBar assignments={assignments} />
           
           {/* Mobile Actions */}
           {showMobileActions && (
             <div className="md:hidden mt-3">
-              <AssignmentActionButtons
+              <PitAssignmentActionButtons
                 assignmentMode={assignmentMode}
                 assignmentsConfirmed={assignmentsConfirmed}
                 assignmentsLength={assignments.length}

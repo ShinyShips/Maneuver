@@ -27,7 +27,7 @@ interface FountainPacket {
 interface UniversalFountainScannerProps {
   onBack: () => void;
   onSwitchToGenerator?: () => void;
-  dataType: 'scouting' | 'match' | 'scouter' | 'combined' | 'pit-scouting' | 'pit-images';
+  dataType: 'scouting' | 'match' | 'scout' | 'combined' | 'pit-scouting' | 'pit-images';
   expectedPacketType: string;
   saveData: (data: unknown) => void;
   validateData: (data: unknown) => boolean;
@@ -189,10 +189,10 @@ const UniversalFountainScanner = ({
                   addDebugMsg(`🔍 First compressed entry keys: ${decompressedData.entries?.[0] ? Object.keys(decompressedData.entries[0]).join(', ') : 'none'}`);
                   
                   // Rebuild dictionaries for expansion
-                  const scouterDict = decompressedData.meta.scouterDict || [];
+                  const scoutDict = decompressedData.meta.scoutDict || [];
                   const eventDict = decompressedData.meta.eventDict || [];
                   const allianceReverse = ['redAlliance', 'blueAlliance'] as const;
-                  addDebugMsg(`🔍 Scouter dictionary: ${scouterDict.length} entries`);
+                  addDebugMsg(`🔍 Scout dictionary: ${scoutDict.length} entries`);
                   addDebugMsg(`🔍 Event dictionary: ${eventDict.length} entries`);
                   
                   // Expand compressed entries back to full format
@@ -202,8 +202,8 @@ const UniversalFountainScanner = ({
                     
                     // Expand dictionary-compressed fields
                     if (typeof compressed.a === 'number') expanded.alliance = allianceReverse[compressed.a];
-                    if (typeof compressed.s === 'number') expanded.scouterInitials = scouterDict[compressed.s];
-                    if (typeof compressed.sf === 'string') expanded.scouterInitials = compressed.sf;
+                    if (typeof compressed.s === 'number') expanded.scoutName = scoutDict[compressed.s];
+                    if (typeof compressed.sf === 'string') expanded.scoutName = compressed.sf;
                     if (typeof compressed.e === 'number') expanded.eventName = eventDict[compressed.e];
                     if (typeof compressed.ef === 'string') expanded.eventName = compressed.ef;
                     

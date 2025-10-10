@@ -8,10 +8,10 @@ import { toast } from 'sonner';
 import { getMatchResult, type TBAMatch } from '@/lib/tbaUtils';
 import {
   getAllPredictionsForMatch,
-  updateScouterWithPredictionResult,
+  updateScoutWithPredictionResult,
   markPredictionAsVerified,
   STAKE_VALUES
-} from '@/lib/scouterGameUtils';
+} from '@/lib/scoutGameUtils';
 
 interface MatchSelectorProps {
   matches: TBAMatch[];
@@ -90,9 +90,9 @@ export const MatchSelector: React.FC<MatchSelectorProps> = ({
             correctPredictions++;
           }
 
-          // Use the new streak-aware function to update scouter stats and calculate stakes
-          const stakesAwarded = await updateScouterWithPredictionResult(
-            prediction.scouterName,
+          // Use the new streak-aware function to update scout stats and calculate stakes
+          const stakesAwarded = await updateScoutWithPredictionResult(
+            prediction.scoutName,
             isCorrect,
             STAKE_VALUES.CORRECT_PREDICTION,
             currentEventKey,
@@ -159,7 +159,7 @@ export const MatchSelector: React.FC<MatchSelectorProps> = ({
           <div className="space-y-1">
             <CardTitle className="text-xl">Qualification Matches ({matches.length})</CardTitle>
             <p className="text-sm text-muted-foreground">
-              Select matches to verify predictions and award stakes to scouters
+              Select matches to verify predictions and award stakes to scouts
             </p>
           </div>
           <div className="flex flex-wrap gap-2 sm:gap-3 justify-center sm:justify-end">

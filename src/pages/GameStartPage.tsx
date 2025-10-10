@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import GameStartSelectTeam from "@/components/GameStartComponents/GameStartSelectTeam";
 import { EventNameSelector } from "@/components/GameStartComponents/EventNameSelector";
-import { createMatchPrediction, getPredictionForMatch } from "@/lib/scouterGameUtils";
+import { createMatchPrediction, getPredictionForMatch } from "@/lib/scoutGameUtils";
 import { AlertTriangle } from "lucide-react";
 
 const GameStartPage = () => {
@@ -74,10 +74,10 @@ const GameStartPage = () => {
   // Effect to load existing prediction when match/event changes
   useEffect(() => {
     const loadExistingPrediction = async () => {
-      const currentScouter = getCurrentScouter();
-      if (currentScouter && eventName && matchNumber) {
+      const currentScout = getCurrentScout();
+      if (currentScout && eventName && matchNumber) {
         try {
-          const existingPrediction = await getPredictionForMatch(currentScouter, eventName, matchNumber);
+          const existingPrediction = await getPredictionForMatch(currentScout, eventName, matchNumber);
           if (existingPrediction) {
             setPredictedWinner(existingPrediction.predictedWinner);
           } else {
@@ -97,10 +97,10 @@ const GameStartPage = () => {
   const handlePredictionChange = async (newPrediction: "red" | "blue" | "none") => {
     setPredictedWinner(newPrediction);
     
-    const currentScouter = getCurrentScouter();
-    if (newPrediction !== "none" && currentScouter && eventName && matchNumber) {
+    const currentScout = getCurrentScout();
+    if (newPrediction !== "none" && currentScout && eventName && matchNumber) {
       try {
-        await createMatchPrediction(currentScouter, eventName, matchNumber, newPrediction);
+        await createMatchPrediction(currentScout, eventName, matchNumber, newPrediction);
         toast.success(`Prediction updated: ${newPrediction} alliance to win`);
       } catch (error) {
         console.error("Error saving prediction:", error);
@@ -109,27 +109,27 @@ const GameStartPage = () => {
     }
   };
 
-  const getCurrentScouter = () => {
+  const getCurrentScout = () => {
     return (
-      localStorage.getItem("currentScouter") ||
-      localStorage.getItem("scouterInitials") ||
+      localStorage.getItem("currentScout") ||
+      localStorage.getItem("scoutName") ||
       ""
     );
   };
 
   const validateInputs = () => {
-    const currentScouter = getCurrentScouter();
+    const currentScout = getCurrentScout();
     const inputs = {
       matchNumber,
       alliance,
       selectTeam,
-      scouterInitials: currentScouter,
+      scoutName: currentScout,
       eventName,
     };
     const hasNull = Object.values(inputs).some((val) => !val || val === "");
 
-    if (!currentScouter) {
-      toast.error("Please select a scouter from the sidebar first");
+    if (!currentScout) {
+      toast.error("Please select a scout from the sidebar first");
       return false;
     }
 
@@ -148,12 +148,12 @@ const GameStartPage = () => {
   const handleStartScouting = async () => {
     if (!validateInputs()) return;
 
-    const currentScouter = getCurrentScouter();
+    const currentScout = getCurrentScout();
 
     // Save prediction if one was made
-    if (predictedWinner !== "none" && currentScouter && eventName && matchNumber) {
+    if (predictedWinner !== "none" && currentScout && eventName && matchNumber) {
       try {
-        await createMatchPrediction(currentScouter, eventName, matchNumber, predictedWinner);
+        await createMatchPrediction(currentScout, eventName, matchNumber, predictedWinner);
         toast.success(`Prediction saved: ${predictedWinner} alliance to win`);
       } catch (error) {
         console.error("Error saving prediction:", error);
@@ -174,7 +174,7 @@ const GameStartPage = () => {
         inputs: {
           matchNumber,
           alliance,
-          scouterInitials: currentScouter,
+          scoutName: currentScout,
           selectTeam,
           eventName,
         },
@@ -199,7 +199,7 @@ const GameStartPage = () => {
     return () => clearTimeout(timeout);
   }, [matchNumber]);
 
-  const currentScouter = getCurrentScouter();
+  const currentScout = getCurrentScout();
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center px-4 pt-6 pb-8 md:pb-6">
@@ -208,13 +208,13 @@ const GameStartPage = () => {
       </div>
       <div className="flex flex-col items-center gap-6 max-w-2xl w-full flex-1 pb-8 md:pb-4">
         
-        {!currentScouter && (
+        {!currentScout && (
           <Card className="w-full border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/20">
             <CardContent>
               <div className="flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5 text-orange-500" />
                 <span className="text-sm text-amber-700">
-                  Please select a scouter from the sidebar before starting
+                  Please select a scout from the sidebar before starting
                 </span>
               </div>
             </CardContent>
@@ -225,10 +225,10 @@ const GameStartPage = () => {
         <Card className="w-full">
           <CardHeader>
             <CardTitle className="text-xl">Match Information</CardTitle>
-            {currentScouter && (
+            {currentScout && (
               <p className="text-sm text-muted-foreground">
                 Scouting as:{" "}
-                <span className="font-medium">{currentScouter}</span>
+                <span className="font-medium">{currentScout}</span>
               </p>
             )}
           </CardHeader>
@@ -372,14 +372,14 @@ const GameStartPage = () => {
           <Button
             onClick={handleStartScouting}
             className="flex-2 h-12 text-lg font-semibold"
-            disabled={!matchNumber || !alliance || !selectTeam || !currentScouter || !eventName}
+            disabled={!matchNumber || !alliance || !selectTeam || !currentScout || !eventName}
           >
             Start Scouting
           </Button>
         </div>
 
         {/* Status Indicator */}
-        {matchNumber && alliance && selectTeam && currentScouter && eventName && (
+        {matchNumber && alliance && selectTeam && currentScout && eventName && (
           <Card className="w-full border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/20">
             <CardContent>
               <div className="flex items-center gap-2">
@@ -387,7 +387,7 @@ const GameStartPage = () => {
                 <span className="text-sm text-green-700 dark:text-green-300">
                   {eventName} • Match {matchNumber} •{" "}
                   {alliance.charAt(0).toUpperCase() + alliance.slice(1)} Alliance
-                  • Team {selectTeam} • {currentScouter}
+                  • Team {selectTeam} • {currentScout}
                 </span>
               </div>
             </CardContent>

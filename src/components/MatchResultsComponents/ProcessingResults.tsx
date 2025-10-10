@@ -28,7 +28,7 @@ export const ProcessingResults: React.FC<ProcessingResultsProps> = ({ results })
       <CardHeader className="pb-4">
         <CardTitle className="text-xl">Processing Results</CardTitle>
         <p className="text-sm text-muted-foreground mb-4">
-          Summary of verified predictions and stakes awarded to scouters
+          Summary of verified predictions and stakes awarded to scouts
         </p>
         
         {/* Summary at the top */}

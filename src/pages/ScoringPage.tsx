@@ -285,12 +285,12 @@ const ScoringPage = ({ phase }: ScoringPageProps) => {
           )}
 
           {/* Recent Actions */}
-          <Card className="flex-1 min-h-0">
+          <Card className="h-64">
             <CardHeader>
               <CardTitle className="text-lg">Recent Actions</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2 max-h-40 overflow-y-auto">
+              <div className="space-y-2 h-40 overflow-y-auto pb-2">
                 {scoringActions.slice(-8).reverse().map((action: { type: string; pieceType: any; location: any; level: string; timestamp: string | number | Date; }, index: Key | null | undefined) => (
                   <div key={index} className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">

@@ -2,29 +2,29 @@ import { gameDB } from './dexieDB';
 import { checkForNewAchievements } from './achievementUtils';
 import { ACHIEVEMENT_DEFINITIONS } from './achievementTypes';
 
-export const debugAchievements = async (scouterName: string) => {
-  console.log('🔍 Debug analysis for', scouterName);
+export const debugAchievements = async (scoutName: string) => {
+  console.log('🔍 Debug analysis for', scoutName);
   
-  // Get current scouter data
-  const scouter = await gameDB.scouters.get(scouterName);
-  if (!scouter) {
-    console.log('❌ Scouter not found');
+  // Get current scout data
+  const scout = await gameDB.scouts.get(scoutName);
+  if (!scout) {
+    console.log('❌ Scout not found');
     return;
   }
   
-  console.log('📊 Current scouter stats:', {
-    stakes: scouter.stakes,
-    totalPredictions: scouter.totalPredictions,
-    correctPredictions: scouter.correctPredictions,
-    accuracy: Math.round((scouter.correctPredictions / scouter.totalPredictions) * 100),
-    currentStreak: scouter.currentStreak,
-    longestStreak: scouter.longestStreak
+  console.log('📊 Current scout stats:', {
+    stakes: scout.stakes,
+    totalPredictions: scout.totalPredictions,
+    correctPredictions: scout.correctPredictions,
+    accuracy: Math.round((scout.correctPredictions / scout.totalPredictions) * 100),
+    currentStreak: scout.currentStreak,
+    longestStreak: scout.longestStreak
   });
   
   // Get current achievements
-  const achievements = await gameDB.scouterAchievements
-    .where('scouterName')
-    .equals(scouterName)
+  const achievements = await gameDB.scoutAchievements
+    .where('scoutName')
+    .equals(scoutName)
     .toArray();
   
   console.log('🏆 Current achievements:', achievements.length);
@@ -42,7 +42,7 @@ export const debugAchievements = async (scouterName: string) => {
   }, 0);
   
   console.log('💰 Total stakes from achievements:', totalStakesFromAchievements);
-  console.log('💰 Expected base stakes:', scouter.stakes - totalStakesFromAchievements);
+  console.log('💰 Expected base stakes:', scout.stakes - totalStakesFromAchievements);
   
   // Check which stakes achievements should be unlocked
   const stakesAchievements = ACHIEVEMENT_DEFINITIONS.filter(a => a.id.startsWith('stakes_'));
@@ -50,15 +50,15 @@ export const debugAchievements = async (scouterName: string) => {
   
   stakesAchievements.forEach(achievement => {
     const isUnlocked = achievements.some(a => a.achievementId === achievement.id);
-    const shouldBeUnlocked = scouter.stakes >= achievement.requirements.value;
+    const shouldBeUnlocked = scout.stakes >= achievement.requirements.value;
     const status = isUnlocked ? '✅' : (shouldBeUnlocked ? '❌ MISSING' : '⏳');
     
-    console.log(`  ${status} ${achievement.name}: needs ${achievement.requirements.value}, has ${scouter.stakes}`);
+    console.log(`  ${status} ${achievement.name}: needs ${achievement.requirements.value}, has ${scout.stakes}`);
   });
   
   // Try manual achievement check
   console.log('🔄 Running manual achievement check...');
-  const newAchievements = await checkForNewAchievements(scouterName);
+  const newAchievements = await checkForNewAchievements(scoutName);
   
   if (newAchievements.length > 0) {
     console.log('🎉 New achievements unlocked:', newAchievements.map(a => a.name));
@@ -66,20 +66,20 @@ export const debugAchievements = async (scouterName: string) => {
     console.log('ℹ️ No new achievements to unlock');
   }
   
-  // Get updated scouter data
-  const updatedScouter = await gameDB.scouters.get(scouterName);
-  if (updatedScouter && updatedScouter.stakes !== scouter.stakes) {
-    console.log('💰 Stakes updated:', scouter.stakes, '->', updatedScouter.stakes);
+  // Get updated scout data
+  const updatedScout = await gameDB.scouts.get(scoutName);
+  if (updatedScout && updatedScout.stakes !== scout.stakes) {
+    console.log('💰 Stakes updated:', scout.stakes, '->', updatedScout.stakes);
   }
 };
 
 export const fixStakesAchievements = async () => {
   console.log('🔧 Attempting to fix stakes achievements...');
   
-  const scouters = await gameDB.scouters.toArray();
+  const scouts = await gameDB.scouts.toArray();
   
-  for (const scouter of scouters) {
-    console.log(`\n🔍 Checking ${scouter.name}...`);
-    await debugAchievements(scouter.name);
+  for (const scout of scouts) {
+    console.log(`\n🔍 Checking ${scout.name}...`);
+    await debugAchievements(scout.name);
   }
 };

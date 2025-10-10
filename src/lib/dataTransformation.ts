@@ -11,7 +11,7 @@ interface ScoringAction {
 interface ScoutingInputs {
   matchNumber: string;
   alliance: string;
-  scouterInitials: string;
+  scoutName: string;
   selectTeam: string;
   eventName?: string;
   startPoses: boolean[];
@@ -122,7 +122,7 @@ export const transformToLegacyFormat = (inputs: ScoutingInputs) => {
   return [
     inputs.matchNumber,
     inputs.alliance === "red" ? "redAlliance" : "blueAlliance",
-    inputs.scouterInitials,
+    inputs.scoutName,
     inputs.selectTeam,
     
     // Starting positions (6 positions)
@@ -294,7 +294,7 @@ export const transformToObjectFormat = (inputs: ScoutingInputs): Record<string, 
   return {
     matchNumber: inputs.matchNumber,
     alliance: inputs.alliance === "red" ? "redAlliance" : "blueAlliance",
-    scouterInitials: inputs.scouterInitials,
+    scoutName: inputs.scoutName,
     selectTeam: inputs.selectTeam,
     eventName: inputs.eventName || "",
     

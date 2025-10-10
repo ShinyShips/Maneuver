@@ -1,6 +1,6 @@
 
 export const SCOUTING_DATA_HEADER = [
-  "id","matchNumber","alliance","scouterInitials","selectTeam",
+  "id","matchNumber","alliance","scoutName","selectTeam",
   "startPoses0","startPoses1","startPoses2","startPoses3","startPoses4","startPoses5",
   "autoCoralPlaceL1Count","autoCoralPlaceL2Count","autoCoralPlaceL3Count","autoCoralPlaceL4Count","autoCoralPlaceDropMissCount",
   "autoCoralPickPreloadCount","autoCoralPickStationCount","autoCoralPickMark1Count","autoCoralPickMark2Count","autoCoralPickMark3Count",

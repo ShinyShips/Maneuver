@@ -13,10 +13,10 @@ import {
   AlertTriangle,
   QrCode
 } from 'lucide-react';
-import { createTestScouterProfiles, clearTestData } from '@/lib/testDataGenerator';
-import { backfillAchievementsForAllScouters } from '@/lib/achievementUtils';
-import { getAllScouters } from '@/lib/scouterGameUtils';
-import { gameDB, type Scouter, type MatchPrediction } from '@/lib/dexieDB';
+import { createTestScoutProfiles, clearTestData } from '@/lib/testDataGenerator';
+import { backfillAchievementsForAllScouts } from '@/lib/achievementUtils';
+import { getAllScouts } from '@/lib/scoutGameUtils';
+import { gameDB, type Scout, type MatchPrediction } from '@/lib/dexieDB';
 import { toast } from 'sonner';
 
 const DevUtilitiesPage: React.FC = () => {
@@ -33,8 +33,8 @@ const DevUtilitiesPage: React.FC = () => {
   const handleCreateTestProfiles = async () => {
     setLoading(true);
     try {
-      const profiles = await createTestScouterProfiles();
-      showMessage(`✅ Created ${profiles.length} test scouter profiles successfully!`, 'success');
+      const profiles = await createTestScoutProfiles();
+      showMessage(`✅ Created ${profiles.length} test scout profiles successfully!`, 'success');
     } catch (error) {
       console.error('Error creating test profiles:', error);
       showMessage('❌ Failed to create test profiles', 'error');
@@ -47,7 +47,7 @@ const DevUtilitiesPage: React.FC = () => {
     setLoading(true);
     try {
       await clearTestData();
-      showMessage('✅ All scouter data cleared successfully!', 'success');
+      showMessage('✅ All scout data cleared successfully!', 'success');
     } catch (error) {
       console.error('Error clearing data:', error);
       showMessage('❌ Failed to clear data', 'error');
@@ -59,7 +59,7 @@ const DevUtilitiesPage: React.FC = () => {
   const handleBackfillAchievements = async () => {
     setLoading(true);
     try {
-      await backfillAchievementsForAllScouters();
+      await backfillAchievementsForAllScouts();
       showMessage('✅ Achievement backfill completed!', 'success');
     } catch (error) {
       console.error('Error during achievement backfill:', error);
@@ -72,8 +72,8 @@ const DevUtilitiesPage: React.FC = () => {
   const handleCheckCurrentData = async () => {
     setLoading(true);
     try {
-      const scouters = await getAllScouters();
-      showMessage(`📊 Current database has ${scouters.length} scouters`, 'info');
+      const scouts = await getAllScouts();
+      showMessage(`📊 Current database has ${scouts.length} scouts`, 'info');
     } catch (error) {
       console.error('Error checking data:', error);
       showMessage('❌ Failed to check current data', 'error');
@@ -86,7 +86,7 @@ const DevUtilitiesPage: React.FC = () => {
     setLoading(true);
     try {
       // Create test profiles first (this gives us realistic test data)
-      const testProfiles = await createTestScouterProfiles();
+      const testProfiles = await createTestScoutProfiles();
       
       if (testProfiles.length === 0) {
         showMessage('❌ Failed to create test profiles for transfer simulation', 'error');
@@ -94,32 +94,32 @@ const DevUtilitiesPage: React.FC = () => {
       }
 
       // Get the test data we just created
-      const scoutersData = await gameDB.scouters.toArray();
+      const scoutsData = await gameDB.scouts.toArray();
       const predictionsData = await gameDB.predictions.toArray();
 
-      // Simulate the exact QR transfer process from ScouterProfilesFountainScanner
+      // Simulate the exact QR transfer process from ScoutProfilesFountainScanner
       const profilesData = {
-        scouters: scoutersData,
+        scouts: scoutsData,
         predictions: predictionsData,
         exportedAt: new Date().toISOString(),
         version: "1.0"
       };
 
       // Clear the database first to simulate fresh transfer
-      await gameDB.scouters.clear();
+      await gameDB.scouts.clear();
       await gameDB.predictions.clear();
 
       // Reimport the data (simulating QR scan process)
-      const scoutersToImport: Scouter[] = profilesData.scouters;
+      const scoutsToImport: Scout[] = profilesData.scouts;
       const predictionsToImport: MatchPrediction[] = profilesData.predictions;
       
-      let scoutersAdded = 0;
+      let scoutsAdded = 0;
       let predictionsAdded = 0;
 
-      // Process scouters - exactly like QR transfer
-      for (const scouter of scoutersToImport) {
-        await gameDB.scouters.add(scouter);
-        scoutersAdded++;
+      // Process scouts - exactly like QR transfer
+      for (const scout of scoutsToImport) {
+        await gameDB.scouts.add(scout);
+        scoutsAdded++;
       }
 
       // Process predictions - exactly like QR transfer  
@@ -133,14 +133,14 @@ const DevUtilitiesPage: React.FC = () => {
         }
       }
 
-      // **CRITICAL**: Don't update localStorage scoutersList 
+      // **CRITICAL**: Don't update localStorage scoutsList 
       // This is the key difference from normal nav user creation
       // In QR transfer, scouts are imported for data aggregation only
       // They should NOT appear in the nav user dropdown
 
-      const message = `🔄 QR Transfer simulation complete! Transferred ${scoutersAdded} test scouters and ${predictionsAdded} predictions. Note: Transferred scouts will NOT appear in nav user dropdown (by design).`;
+      const message = `🔄 QR Transfer simulation complete! Transferred ${scoutsAdded} test scouts and ${predictionsAdded} predictions. Note: Transferred scouts will NOT appear in nav user dropdown (by design).`;
       showMessage(message, 'success');
-      toast.success(`QR Transfer simulated: ${scoutersAdded} test scouters, ${predictionsAdded} predictions imported`);
+      toast.success(`QR Transfer simulated: ${scoutsAdded} test scouts, ${predictionsAdded} predictions imported`);
       
     } catch (error) {
       console.error('Error simulating QR transfer:', error);
@@ -205,7 +205,7 @@ const DevUtilitiesPage: React.FC = () => {
               Test Data Management
             </CardTitle>
             <CardDescription>
-              Create or clear test scouter profiles for UI testing
+              Create or clear test scout profiles for UI testing
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -268,7 +268,7 @@ const DevUtilitiesPage: React.FC = () => {
             </Button>
 
             <div className="text-sm text-gray-600 dark:text-gray-400">
-              <p>This will check all existing scouters and award any missing achievements based on their current stats.</p>
+              <p>This will check all existing scouts and award any missing achievements based on their current stats.</p>
             </div>
           </CardContent>
         </Card>
@@ -299,7 +299,7 @@ const DevUtilitiesPage: React.FC = () => {
             <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
               <p><strong>This simulates the complete QR profile transfer workflow:</strong></p>
               <ul className="list-disc list-inside space-y-1 text-xs">
-                <li>Creates 8 diverse test scouter profiles with realistic stats</li>
+                <li>Creates 8 diverse test scout profiles with realistic stats</li>
                 <li>Simulates QR fountain code export/import process</li>
                 <li><strong>Test scouts are NOT added to nav dropdown</strong> (by design)</li>
                 <li>Verifies transferred profiles work correctly for data aggregation</li>

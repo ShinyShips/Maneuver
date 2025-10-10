@@ -5,7 +5,7 @@ export const parseScoutingEntry = (dataObject: Record<string, unknown>): Scoutin
   return {
     matchNumber: dataObject.matchNumber?.toString() || "",
     alliance: dataObject.alliance?.toString() || "",
-    scouterInitials: dataObject.scouterInitials?.toString() || "",
+    scoutName: dataObject.scoutName?.toString() || "",
     selectTeam: dataObject.selectTeam?.toString() || "",
     eventName: dataObject.eventName?.toString() || "",
     startPoses0: Boolean(dataObject.startPoses0),
@@ -161,7 +161,8 @@ export const calculateTeamStats = (
       climbed: (entry.shallowClimbAttempted || entry.deepClimbAttempted) && !entry.climbFailed,
       brokeDown: entry.brokeDown,
       startPosition,
-      comment: entry.comment
+      comment: entry.comment,
+      fullEntry: entry // Add full entry for detailed match stats
     };
   });
 

@@ -19,7 +19,7 @@ interface ScoutingEntryDB {
   teamNumber?: string;           // Extracted for indexing
   matchNumber?: string;          // Extracted for indexing
   alliance?: string;             // Extracted for indexing
-  scouterInitials?: string;      // Extracted for indexing
+  scoutName?: string;      // Extracted for indexing
   eventName?: string;            // Extracted for indexing
   data: Record<string, unknown>; // Full scouting data object
   timestamp: number;             // Entry creation time
@@ -27,7 +27,7 @@ interface ScoutingEntryDB {
 ```
 
 ### Database Schema
-- **Version 1**: Basic indexes for teamNumber, matchNumber, alliance, scouterInitials, timestamp
+- **Version 1**: Basic indexes for teamNumber, matchNumber, alliance, scoutName, timestamp
 - **Version 2**: Added eventName index
 
 ## API Overview
@@ -91,11 +91,11 @@ import { getDBStats, getFilterOptions } from './lib/dexieDB';
 
 // Get database statistics
 const stats = await getDBStats();
-// Returns: { totalEntries, teams, matches, scouters, events, oldestEntry, newestEntry }
+// Returns: { totalEntries, teams, matches, scouts, events, oldestEntry, newestEntry }
 
 // Get filter options for UI
 const options = await getFilterOptions();
-// Returns: { teams, matches, events, alliances, scouters }
+// Returns: { teams, matches, events, alliances, scouts }
 ```
 
 ### Import/Export
@@ -157,7 +157,7 @@ To add new indexes, increment the database version in `dexieDB.ts`:
 
 ```typescript
 this.version(3).stores({
-  scoutingData: 'id, teamNumber, matchNumber, alliance, scouterInitials, eventName, newField, timestamp'
+  scoutingData: 'id, teamNumber, matchNumber, alliance, scoutName, eventName, newField, timestamp'
 });
 ```
 

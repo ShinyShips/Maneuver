@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 const JSONDataTransferPage = () => {
   const [mode, setMode] = useState<'select' | 'upload'>('select');
-  const [dataType, setDataType] = useState<'scouting' | 'scouterProfiles' | 'pitScouting' | 'pitScoutingImagesOnly'>('scouting');
+  const [dataType, setDataType] = useState<'scouting' | 'scoutProfiles' | 'pitScouting' | 'pitScoutingImagesOnly'>('scouting');
 
   if (mode === 'upload') {
     return (
@@ -66,34 +66,34 @@ const JSONDataTransferPage = () => {
           alert("CSV export not available for images-only data. Use JSON download instead.");
           return;
         }
-        case 'scouterProfiles': {
-          // CSV export for scouter profiles
-          const scoutersData = await gameDB.scouters.toArray();
+        case 'scoutProfiles': {
+          // CSV export for scout profiles
+          const scoutsData = await gameDB.scouts.toArray();
           const predictionsData = await gameDB.predictions.toArray();
           
-          if (scoutersData.length === 0 && predictionsData.length === 0) {
-            alert("No scouter profiles data found.");
+          if (scoutsData.length === 0 && predictionsData.length === 0) {
+            alert("No scout profiles data found.");
             return;
           }
 
-          // Create CSV for scouter profiles
-          const scouterHeaders = ['Name', 'Stakes', 'Stakes From Predictions', 'Total Predictions', 'Correct Predictions', 'Accuracy %', 'Current Streak', 'Longest Streak', 'Created At', 'Last Updated'];
-          const scouterRows = scoutersData.map(scouter => [
-            scouter.name,
-            scouter.stakes,
-            scouter.stakesFromPredictions,
-            scouter.totalPredictions,
-            scouter.correctPredictions,
-            scouter.totalPredictions > 0 ? Math.round((scouter.correctPredictions / scouter.totalPredictions) * 100) : 0,
-            scouter.currentStreak,
-            scouter.longestStreak,
-            new Date(scouter.createdAt).toLocaleDateString(),
-            new Date(scouter.lastUpdated).toLocaleDateString()
+          // Create CSV for scout profiles
+          const scoutHeaders = ['Name', 'Stakes', 'Stakes From Predictions', 'Total Predictions', 'Correct Predictions', 'Accuracy %', 'Current Streak', 'Longest Streak', 'Created At', 'Last Updated'];
+          const scoutRows = scoutsData.map(scout => [
+            scout.name,
+            scout.stakes,
+            scout.stakesFromPredictions,
+            scout.totalPredictions,
+            scout.correctPredictions,
+            scout.totalPredictions > 0 ? Math.round((scout.correctPredictions / scout.totalPredictions) * 100) : 0,
+            scout.currentStreak,
+            scout.longestStreak,
+            new Date(scout.createdAt).toLocaleDateString(),
+            new Date(scout.lastUpdated).toLocaleDateString()
           ]);
           
-          const scouterCsvData = [scouterHeaders, ...scouterRows];
-          csv = convertArrayOfArraysToCSV(scouterCsvData as (string | number)[][]);
-          filename = `ManeuverScouterProfiles-${new Date().toLocaleTimeString()}-local.csv`;
+          const scoutCsvData = [scoutHeaders, ...scoutRows];
+          csv = convertArrayOfArraysToCSV(scoutCsvData as (string | number)[][]);
+          filename = `ManeuverScoutProfiles-${new Date().toLocaleTimeString()}-local.csv`;
           break;
         }
         default:
@@ -129,13 +129,13 @@ const JSONDataTransferPage = () => {
         <div className="flex flex-col gap-4 w-full">
           <div className="flex flex-col gap-2">
             <label className="text-sm font-medium">Data Type to Export:</label>
-            <Select value={dataType} onValueChange={(value: 'scouting' | 'scouterProfiles' | 'pitScouting' | 'pitScoutingImagesOnly') => setDataType(value)}>
+            <Select value={dataType} onValueChange={(value: 'scouting' | 'scoutProfiles' | 'pitScouting' | 'pitScoutingImagesOnly') => setDataType(value)}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select data type" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="scouting">Scouting Data</SelectItem>
-                <SelectItem value="scouterProfiles">Scouter Profiles</SelectItem>
+                <SelectItem value="scoutProfiles">Scout Profiles</SelectItem>
                 <SelectItem value="pitScouting">Pit Scouting Data</SelectItem>
                 <SelectItem value="pitScoutingImagesOnly">Pit Scouting Images Only</SelectItem>
               </SelectContent>
@@ -183,22 +183,22 @@ const JSONDataTransferPage = () => {
                       return;
                     }
                   }
-                  case 'scouterProfiles': {
-                    const scoutersData = await gameDB.scouters.toArray();
+                  case 'scoutProfiles': {
+                    const scoutsData = await gameDB.scouts.toArray();
                     const predictionsData = await gameDB.predictions.toArray();
                     
-                    if (scoutersData.length === 0 && predictionsData.length === 0) {
-                      alert("No scouter profiles data found.");
+                    if (scoutsData.length === 0 && predictionsData.length === 0) {
+                      alert("No scout profiles data found.");
                       return;
                     }
 
                     dataToExport = {
-                      scouters: scoutersData,
+                      scouts: scoutsData,
                       predictions: predictionsData,
                       exportedAt: new Date().toISOString(),
                       version: "1.0"
                     };
-                    filename = `ManeuverScouterProfiles-${new Date().toLocaleTimeString()}.json`;
+                    filename = `ManeuverScoutProfiles-${new Date().toLocaleTimeString()}.json`;
                     break;
                   }
                   default:
@@ -223,7 +223,7 @@ const JSONDataTransferPage = () => {
             }}
             className="w-full h-16 text-xl"
           >
-            Download {dataType === 'scouting' ? 'Scouting Data' : dataType === 'pitScouting' ? 'Pit Scouting Data' : dataType === 'pitScoutingImagesOnly' ? 'Pit Scouting Images' : 'Scouter Profiles'} as JSON
+            Download {dataType === 'scouting' ? 'Scouting Data' : dataType === 'pitScouting' ? 'Pit Scouting Data' : dataType === 'pitScoutingImagesOnly' ? 'Pit Scouting Images' : 'Scout Profiles'} as JSON
           </Button>
 
           <div className="flex items-center gap-4">
@@ -241,7 +241,7 @@ const JSONDataTransferPage = () => {
             >
               {dataType === 'pitScoutingImagesOnly' 
                 ? 'Images Cannot Be Downloaded as CSV' 
-                : `Download ${dataType === 'scouting' ? 'Scouting Data' : dataType === 'pitScouting' ? 'Pit Scouting Data' : 'Scouter Profiles'} as CSV`
+                : `Download ${dataType === 'scouting' ? 'Scouting Data' : dataType === 'pitScouting' ? 'Pit Scouting Data' : 'Scout Profiles'} as CSV`
               }
             </Button>
             {dataType === 'pitScouting' && (
@@ -270,7 +270,7 @@ const JSONDataTransferPage = () => {
           <p>• CSV: Export data for spreadsheet analysis</p>
           <p>• JSON: Export/import data for backup or device transfer</p>
           <p>• Scouting Data: Match performance data</p>
-          <p>• Scouter Profiles: User achievements and predictions</p>
+          <p>• Scout Profiles: User achievements and predictions</p>
           <p>• Pit Scouting: Team technical specifications and capabilities</p>
           <p>• Pit Scouting Images Only: Robot photos for merging with existing data (requires text data first)</p>
         </div>

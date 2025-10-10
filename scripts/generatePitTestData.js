@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 // Sample data pools for realistic variation
 const drivetrains = ['Swerve', 'Tank Drive', 'West Coast', 'Mecanum', 'H-Drive'];
 const programmingLanguages = ['Java', 'C++', 'Python', 'LabVIEW'];
-const scouterInitials = ['SC', 'MR', 'AK', 'ET', 'AN', 'JD', 'KL', 'RW', 'TM', 'BH'];
+const scoutName = ['SC', 'MR', 'AK', 'ET', 'AN', 'JD', 'KL', 'RW', 'TM', 'BH'];
 const events = ['2025pawar', '2025mrcmp', '2025njfla', '2025ontor', '2025casd'];
 
 // Generate random scoring data that looks realistic
@@ -74,7 +74,7 @@ const generateTestData = (numTeams = 85) => {
     const team = {
       teamNumber,
       eventName: events[Math.floor(Math.random() * events.length)],
-      scouterInitials: scouterInitials[Math.floor(Math.random() * scouterInitials.length)],
+      scoutName: scoutName[Math.floor(Math.random() * scoutName.length)],
       weight: 80 + Math.floor(Math.random() * 45), // 80-125 lbs
       drivetrain: drivetrains[Math.floor(Math.random() * drivetrains.length)],
       programmingLanguage: programmingLanguages[Math.floor(Math.random() * programmingLanguages.length)],

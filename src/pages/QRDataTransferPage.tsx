@@ -7,14 +7,14 @@ import FountainCodeGenerator from "@/components/DataTransferComponents/FountainC
 import FountainCodeScanner from "@/components/DataTransferComponents/FountainCodeScanner";
 import MatchDataFountainGenerator from "@/components/DataTransferComponents/MatchDataFountainGenerator";
 import MatchDataFountainScanner from "@/components/DataTransferComponents/MatchDataFountainScanner";
-import ScouterProfilesFountainGenerator from "@/components/DataTransferComponents/ScouterProfilesFountainGenerator";
-import ScouterProfilesFountainScanner from "@/components/DataTransferComponents/ScouterProfilesFountainScanner";
+import ScoutProfilesFountainGenerator from "@/components/DataTransferComponents/ScoutProfilesFountainGenerator";
+import ScoutProfilesFountainScanner from "@/components/DataTransferComponents/ScoutProfilesFountainScanner";
 import CombinedDataFountainGenerator from "@/components/DataTransferComponents/CombinedDataFountainGenerator";
 import CombinedDataFountainScanner from "@/components/DataTransferComponents/CombinedDataFountainScanner";
 import PitScoutingFountainGenerator from "@/components/DataTransferComponents/PitScoutingFountainGenerator";
 import PitScoutingFountainScanner from "@/components/DataTransferComponents/PitScoutingFountainScanner";
 
-type DataType = 'scouting' | 'match' | 'scouter' | 'combined' | 'pit-scouting';
+type DataType = 'scouting' | 'match' | 'scout' | 'combined' | 'pit-scouting';
 
 const QRDataTransferPage = () => {
   const [mode, setMode] = useState<'select' | 'generate' | 'scan'>('select');
@@ -35,9 +35,9 @@ const QRDataTransferPage = () => {
           onSwitchToScanner={() => setMode('scan')} 
         />
       );
-    } else if (dataType === 'scouter') {
+    } else if (dataType === 'scout') {
       return (
-        <ScouterProfilesFountainGenerator 
+        <ScoutProfilesFountainGenerator 
           onBack={() => setMode('select')} 
           onSwitchToScanner={() => setMode('scan')} 
         />
@@ -74,9 +74,9 @@ const QRDataTransferPage = () => {
           onSwitchToGenerator={() => setMode('generate')} 
         />
       );
-    } else if (dataType === 'scouter') {
+    } else if (dataType === 'scout') {
       return (
-        <ScouterProfilesFountainScanner 
+        <ScoutProfilesFountainScanner 
           onBack={() => setMode('select')} 
           onSwitchToGenerator={() => setMode('generate')} 
         />
@@ -124,7 +124,7 @@ const QRDataTransferPage = () => {
                 <SelectItem value="scouting">Scouting Data</SelectItem>
                 <SelectItem value="pit-scouting">Pit Scouting Data (no images)</SelectItem>
                 <SelectItem value="match">Match Schedule Data</SelectItem>
-                <SelectItem value="scouter">Scouter Profiles</SelectItem>
+                <SelectItem value="scout">Scout Profiles</SelectItem>
               </SelectContent>
             </Select>
           </CardContent>

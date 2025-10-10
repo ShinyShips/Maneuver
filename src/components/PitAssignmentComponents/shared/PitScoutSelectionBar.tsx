@@ -2,32 +2,32 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Plus } from 'lucide-react';
 import type { PitAssignment } from '@/lib/pitAssignmentTypes';
-import { getScouterColor } from './scouterUtils';
+import { getScoutColor } from './scoutUtils';
 
-interface PitScouterSelectionBarProps {
-  scoutersList: string[];
+interface PitScoutSelectionBarProps {
+  scoutsList: string[];
   assignments: PitAssignment[];
   assignmentMode: 'sequential' | 'spatial' | 'manual';
   assignmentsConfirmed: boolean;
-  selectedScouterForAssignment?: string | null;
-  onScouterSelectionChange?: (scouterName: string | null) => void;
+  selectedScoutForAssignment?: string | null;
+  onScoutSelectionChange?: (scoutName: string | null) => void;
   hasAssignments: boolean;
 }
 
-export const PitScouterSelectionBar: React.FC<PitScouterSelectionBarProps> = ({
-  scoutersList,
+export const PitScoutSelectionBar: React.FC<PitScoutSelectionBarProps> = ({
+  scoutsList,
   assignments,
   assignmentMode,
   assignmentsConfirmed,
-  selectedScouterForAssignment,
-  onScouterSelectionChange,
+  selectedScoutForAssignment,
+  onScoutSelectionChange,
   hasAssignments
 }) => {
-  const handleScouterSelect = (scouterName: string) => {
-    if (selectedScouterForAssignment === scouterName) {
-      onScouterSelectionChange?.(null);
+  const handleScoutSelect = (scoutName: string) => {
+    if (selectedScoutForAssignment === scoutName) {
+      onScoutSelectionChange?.(null);
     } else {
-      onScouterSelectionChange?.(scouterName);
+      onScoutSelectionChange?.(scoutName);
     }
   };
 
@@ -35,18 +35,18 @@ export const PitScouterSelectionBar: React.FC<PitScouterSelectionBarProps> = ({
 
   return (
     <div className="flex flex-wrap gap-2">
-      {scoutersList.map((scouter, index) => {
-        const scouterAssignments = assignments.filter(a => a.scouterName === scouter);
-        const completedCount = scouterAssignments.filter(a => a.completed).length;
-        const totalCount = scouterAssignments.length;
-        const isSelected = isInteractive && selectedScouterForAssignment === scouter;
+      {scoutsList.map((scout, index) => {
+        const scoutAssignments = assignments.filter(a => a.scoutName === scout);
+        const completedCount = scoutAssignments.filter(a => a.completed).length;
+        const totalCount = scoutAssignments.length;
+        const isSelected = isInteractive && selectedScoutForAssignment === scout;
         
         return (
           <Button
-            key={scouter}
+            key={scout}
             variant={isSelected ? "default" : "outline"}
             size="default"
-            className={`${getScouterColor(index)} px-2 ${
+            className={`${getScoutColor(index)} px-2 ${
               isInteractive
                 ? `transition-all hover:scale-105 active:scale-95 ${
                     isSelected ? 'ring-2 ring-blue-500 shadow-md' : 'hover:shadow-sm'
@@ -55,17 +55,17 @@ export const PitScouterSelectionBar: React.FC<PitScouterSelectionBarProps> = ({
             }`}
             title={
               isInteractive
-                ? `${scouter} - ${totalCount} teams assigned - Click to select for assignment`
+                ? `${scout} - ${totalCount} teams assigned - Click to select for assignment`
                 : `${completedCount}/${totalCount} teams completed`
             }
-            onClick={isInteractive ? () => handleScouterSelect(scouter) : undefined}
+            onClick={isInteractive ? () => handleScoutSelect(scout) : undefined}
             disabled={false}
           >
             <div className="flex items-center gap-1">
               {isInteractive && (
                 <Plus className="h-3 w-3" />
               )}
-              <span>{scouter} ({hasAssignments ? totalCount : 0})</span>
+              <span>{scout} ({hasAssignments ? totalCount : 0})</span>
             </div>
           </Button>
         );

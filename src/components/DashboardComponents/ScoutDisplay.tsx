@@ -1,13 +1,13 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { User, Trophy } from "lucide-react"
 
-interface ScouterDisplayProps {
-  currentScouter: string
-  currentScouterStakes: number
+interface ScoutDisplayProps {
+  currentScout: string
+  currentScoutStakes: number
 }
 
-export function ScouterDisplay({ currentScouter, currentScouterStakes }: ScouterDisplayProps) {
-  const getScouterInitials = (name: string) => {
+export function ScoutDisplay({ currentScout, currentScoutStakes }: ScoutDisplayProps) {
+  const getScoutName = (name: string) => {
     return name
       .split(' ')
       .map(word => word.charAt(0).toUpperCase())
@@ -19,25 +19,25 @@ export function ScouterDisplay({ currentScouter, currentScouterStakes }: Scouter
     <>
       <Avatar className="h-8 w-8 rounded-lg">
         <AvatarFallback className="rounded-lg bg-primary text-primary-foreground">
-          {currentScouter ? getScouterInitials(currentScouter) : <User className="h-4 w-4" />}
+          {currentScout ? getScoutName(currentScout) : <User className="h-4 w-4" />}
         </AvatarFallback>
       </Avatar>
       <div className="grid flex-1 text-left text-sm leading-tight">
         <span className="truncate font-medium">
-          {currentScouter || "Select Scouter"}
+          {currentScout || "Select Scout"}
         </span>
         <span className="text-muted-foreground truncate text-xs">
-          {currentScouter ? (
+          {currentScout ? (
             <div className="flex items-center gap-1">
-              <span>Active Scouter</span>
+              <span>Active Scout</span>
               <span className="text-xs">•</span>
               <div className="flex items-center gap-1">
                 <Trophy className="h-3 w-3 text-yellow-500" />
-                <span>{currentScouterStakes}</span>
+                <span>{currentScoutStakes}</span>
               </div>
             </div>
           ) : (
-            "No scouter selected"
+            "No scout selected"
           )}
         </span>
       </div>

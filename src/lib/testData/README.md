@@ -20,8 +20,8 @@ Complete match schedule with 120 matches showing red and blue alliance team assi
 ### `pitScoutingData.json`
 Sample pit scouting entries for various teams.
 
-### `scouterProfiles.json`
-Demo scouter profiles with achievements and statistics.
+### `scoutProfiles.json`
+Demo scout profiles with achievements and statistics.
 
 ### `matchScoutingData.json`
 Sample match scouting data entries.
@@ -71,7 +71,7 @@ After running `setupDemoEventTeams()`, you'll have access to these demo events:
 1. Run the demo setup
 2. Navigate to the Pit Assignments page
 3. You should see the demo events available in the dropdown
-4. Add some scouters in the management section
+4. Add some scouts in the management section
 5. Try different assignment modes:
    - **Sequential**: Assigns teams in order
    - **Spatial**: Uses pit addresses (for Nexus events) 

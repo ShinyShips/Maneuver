@@ -2,7 +2,7 @@
   {
     "matchNumber": "1",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "254",
     "startPoses0": false,
     "startPoses1": false,
@@ -54,7 +54,7 @@
   {
     "matchNumber": "1",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "1114",
     "startPoses0": false,
     "startPoses1": false,
@@ -106,7 +106,7 @@
   {
     "matchNumber": "1",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "2056",
     "startPoses0": false,
     "startPoses1": false,
@@ -158,7 +158,7 @@
   {
     "matchNumber": "1",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "973",
     "startPoses0": false,
     "startPoses1": false,
@@ -210,7 +210,7 @@
   {
     "matchNumber": "1",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "1678",
     "startPoses0": false,
     "startPoses1": false,
@@ -262,7 +262,7 @@
   {
     "matchNumber": "1",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "148",
     "startPoses0": false,
     "startPoses1": false,
@@ -314,7 +314,7 @@
   {
     "matchNumber": "2",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "118",
     "startPoses0": false,
     "startPoses1": false,
@@ -366,7 +366,7 @@
   {
     "matchNumber": "2",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "1323",
     "startPoses0": false,
     "startPoses1": false,
@@ -418,7 +418,7 @@
   {
     "matchNumber": "2",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "1640",
     "startPoses0": false,
     "startPoses1": false,
@@ -470,7 +470,7 @@
   {
     "matchNumber": "2",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "2471",
     "startPoses0": false,
     "startPoses1": false,
@@ -522,7 +522,7 @@
   {
     "matchNumber": "2",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "5813",
     "startPoses0": false,
     "startPoses1": false,
@@ -574,7 +574,7 @@
   {
     "matchNumber": "2",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "2910",
     "startPoses0": false,
     "startPoses1": false,
@@ -626,7 +626,7 @@
   {
     "matchNumber": "3",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "5940",
     "startPoses0": false,
     "startPoses1": false,
@@ -678,7 +678,7 @@
   {
     "matchNumber": "3",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "3476",
     "startPoses0": false,
     "startPoses1": false,
@@ -730,7 +730,7 @@
   {
     "matchNumber": "3",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "1690",
     "startPoses0": false,
     "startPoses1": false,
@@ -782,7 +782,7 @@
   {
     "matchNumber": "3",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "2767",
     "startPoses0": false,
     "startPoses1": false,
@@ -834,7 +834,7 @@
   {
     "matchNumber": "3",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "624",
     "startPoses0": false,
     "startPoses1": false,
@@ -886,7 +886,7 @@
   {
     "matchNumber": "3",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "217",
     "startPoses0": false,
     "startPoses1": false,
@@ -938,7 +938,7 @@
   {
     "matchNumber": "4",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "1533",
     "startPoses0": false,
     "startPoses1": true,
@@ -990,7 +990,7 @@
   {
     "matchNumber": "4",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "3005",
     "startPoses0": false,
     "startPoses1": false,
@@ -1042,7 +1042,7 @@
   {
     "matchNumber": "4",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "5865",
     "startPoses0": false,
     "startPoses1": false,
@@ -1094,7 +1094,7 @@
   {
     "matchNumber": "4",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "4800",
     "startPoses0": false,
     "startPoses1": false,
@@ -1146,7 +1146,7 @@
   {
     "matchNumber": "4",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "6561",
     "startPoses0": false,
     "startPoses1": false,
@@ -1198,7 +1198,7 @@
   {
     "matchNumber": "4",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "1417",
     "startPoses0": false,
     "startPoses1": true,
@@ -1250,7 +1250,7 @@
   {
     "matchNumber": "5",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "7078",
     "startPoses0": false,
     "startPoses1": false,
@@ -1302,7 +1302,7 @@
   {
     "matchNumber": "5",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "7393",
     "startPoses0": false,
     "startPoses1": false,
@@ -1354,7 +1354,7 @@
   {
     "matchNumber": "5",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "3493",
     "startPoses0": false,
     "startPoses1": false,
@@ -1406,7 +1406,7 @@
   {
     "matchNumber": "5",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "1922",
     "startPoses0": false,
     "startPoses1": false,
@@ -1458,7 +1458,7 @@
   {
     "matchNumber": "5",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "1267",
     "startPoses0": false,
     "startPoses1": false,
@@ -1510,7 +1510,7 @@
   {
     "matchNumber": "5",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "5348",
     "startPoses0": false,
     "startPoses1": false,
@@ -1562,7 +1562,7 @@
   {
     "matchNumber": "6",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "2531",
     "startPoses0": false,
     "startPoses1": false,
@@ -1614,7 +1614,7 @@
   {
     "matchNumber": "6",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "2225",
     "startPoses0": false,
     "startPoses1": false,
@@ -1666,7 +1666,7 @@
   {
     "matchNumber": "6",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "1107",
     "startPoses0": false,
     "startPoses1": false,
@@ -1718,7 +1718,7 @@
   {
     "matchNumber": "6",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "2932",
     "startPoses0": false,
     "startPoses1": false,
@@ -1770,7 +1770,7 @@
   {
     "matchNumber": "6",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "7582",
     "startPoses0": false,
     "startPoses1": true,
@@ -1822,7 +1822,7 @@
   {
     "matchNumber": "6",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "2485",
     "startPoses0": false,
     "startPoses1": false,
@@ -1874,7 +1874,7 @@
   {
     "matchNumber": "7",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "6516",
     "startPoses0": false,
     "startPoses1": false,
@@ -1926,7 +1926,7 @@
   {
     "matchNumber": "7",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "1237",
     "startPoses0": false,
     "startPoses1": false,
@@ -1978,7 +1978,7 @@
   {
     "matchNumber": "7",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "7753",
     "startPoses0": false,
     "startPoses1": false,
@@ -2030,7 +2030,7 @@
   {
     "matchNumber": "7",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "6051",
     "startPoses0": false,
     "startPoses1": false,
@@ -2082,7 +2082,7 @@
   {
     "matchNumber": "7",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "1762",
     "startPoses0": false,
     "startPoses1": false,
@@ -2134,7 +2134,7 @@
   {
     "matchNumber": "7",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "6794",
     "startPoses0": false,
     "startPoses1": false,
@@ -2186,7 +2186,7 @@
   {
     "matchNumber": "8",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "5414",
     "startPoses0": false,
     "startPoses1": false,
@@ -2238,7 +2238,7 @@
   {
     "matchNumber": "8",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "7305",
     "startPoses0": false,
     "startPoses1": false,
@@ -2290,7 +2290,7 @@
   {
     "matchNumber": "8",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "1737",
     "startPoses0": false,
     "startPoses1": false,
@@ -2342,7 +2342,7 @@
   {
     "matchNumber": "8",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "5966",
     "startPoses0": false,
     "startPoses1": false,
@@ -2394,7 +2394,7 @@
   {
     "matchNumber": "8",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "4338",
     "startPoses0": false,
     "startPoses1": false,
@@ -2446,7 +2446,7 @@
   {
     "matchNumber": "8",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "4179",
     "startPoses0": false,
     "startPoses1": false,
@@ -2498,7 +2498,7 @@
   {
     "matchNumber": "9",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "5517",
     "startPoses0": false,
     "startPoses1": false,
@@ -2550,7 +2550,7 @@
   {
     "matchNumber": "9",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "6311",
     "startPoses0": false,
     "startPoses1": false,
@@ -2602,7 +2602,7 @@
   {
     "matchNumber": "9",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "1234",
     "startPoses0": false,
     "startPoses1": true,
@@ -2654,7 +2654,7 @@
   {
     "matchNumber": "9",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "1615",
     "startPoses0": false,
     "startPoses1": false,
@@ -2706,7 +2706,7 @@
   {
     "matchNumber": "9",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "4868",
     "startPoses0": false,
     "startPoses1": false,
@@ -2758,7 +2758,7 @@
   {
     "matchNumber": "9",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "3475",
     "startPoses0": false,
     "startPoses1": false,
@@ -2810,7 +2810,7 @@
   {
     "matchNumber": "10",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "2275",
     "startPoses0": false,
     "startPoses1": true,
@@ -2862,7 +2862,7 @@
   {
     "matchNumber": "10",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "4022",
     "startPoses0": false,
     "startPoses1": false,
@@ -2914,7 +2914,7 @@
   {
     "matchNumber": "10",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "5088",
     "startPoses0": false,
     "startPoses1": false,
@@ -2966,7 +2966,7 @@
   {
     "matchNumber": "10",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "3793",
     "startPoses0": false,
     "startPoses1": false,
@@ -3018,7 +3018,7 @@
   {
     "matchNumber": "10",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "2541",
     "startPoses0": false,
     "startPoses1": false,
@@ -3070,7 +3070,7 @@
   {
     "matchNumber": "10",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "4884",
     "startPoses0": false,
     "startPoses1": false,
@@ -3122,7 +3122,7 @@
   {
     "matchNumber": "11",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "3744",
     "startPoses0": false,
     "startPoses1": false,
@@ -3174,7 +3174,7 @@
   {
     "matchNumber": "11",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "6316",
     "startPoses0": false,
     "startPoses1": false,
@@ -3226,7 +3226,7 @@
   {
     "matchNumber": "11",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "5298",
     "startPoses0": false,
     "startPoses1": true,
@@ -3278,7 +3278,7 @@
   {
     "matchNumber": "11",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "7345",
     "startPoses0": false,
     "startPoses1": false,
@@ -3330,7 +3330,7 @@
   {
     "matchNumber": "11",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "1995",
     "startPoses0": false,
     "startPoses1": false,
@@ -3382,7 +3382,7 @@
   {
     "matchNumber": "11",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "5723",
     "startPoses0": false,
     "startPoses1": false,
@@ -3434,7 +3434,7 @@
   {
     "matchNumber": "12",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "6502",
     "startPoses0": false,
     "startPoses1": false,
@@ -3486,7 +3486,7 @@
   {
     "matchNumber": "12",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "4459",
     "startPoses0": false,
     "startPoses1": false,
@@ -3538,7 +3538,7 @@
   {
     "matchNumber": "12",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "1050",
     "startPoses0": false,
     "startPoses1": false,
@@ -3590,7 +3590,7 @@
   {
     "matchNumber": "12",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "6884",
     "startPoses0": false,
     "startPoses1": false,
@@ -3642,7 +3642,7 @@
   {
     "matchNumber": "12",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "1148",
     "startPoses0": false,
     "startPoses1": false,
@@ -3694,7 +3694,7 @@
   {
     "matchNumber": "12",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "4958",
     "startPoses0": false,
     "startPoses1": false,
@@ -3746,7 +3746,7 @@
   {
     "matchNumber": "13",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "7576",
     "startPoses0": false,
     "startPoses1": false,
@@ -3798,7 +3798,7 @@
   {
     "matchNumber": "13",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "4939",
     "startPoses0": false,
     "startPoses1": false,
@@ -3850,7 +3850,7 @@
   {
     "matchNumber": "13",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "6931",
     "startPoses0": false,
     "startPoses1": false,
@@ -3902,7 +3902,7 @@
   {
     "matchNumber": "13",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "4909",
     "startPoses0": false,
     "startPoses1": false,
@@ -3954,7 +3954,7 @@
   {
     "matchNumber": "13",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "5044",
     "startPoses0": false,
     "startPoses1": true,
@@ -4006,7 +4006,7 @@
   {
     "matchNumber": "13",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "7577",
     "startPoses0": false,
     "startPoses1": false,
@@ -4058,7 +4058,7 @@
   {
     "matchNumber": "14",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "1874",
     "startPoses0": false,
     "startPoses1": false,
@@ -4110,7 +4110,7 @@
   {
     "matchNumber": "14",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "2578",
     "startPoses0": false,
     "startPoses1": false,
@@ -4162,7 +4162,7 @@
   {
     "matchNumber": "14",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "9472",
     "startPoses0": false,
     "startPoses1": true,
@@ -4214,7 +4214,7 @@
   {
     "matchNumber": "14",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "9029",
     "startPoses0": false,
     "startPoses1": false,
@@ -4266,7 +4266,7 @@
   {
     "matchNumber": "14",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "9530",
     "startPoses0": false,
     "startPoses1": false,
@@ -4318,7 +4318,7 @@
   {
     "matchNumber": "14",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "8079",
     "startPoses0": false,
     "startPoses1": false,
@@ -4370,7 +4370,7 @@
   {
     "matchNumber": "15",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "8016",
     "startPoses0": false,
     "startPoses1": false,
@@ -4422,7 +4422,7 @@
   {
     "matchNumber": "15",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "8927",
     "startPoses0": false,
     "startPoses1": false,
@@ -4474,7 +4474,7 @@
   {
     "matchNumber": "15",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9583",
     "startPoses0": false,
     "startPoses1": false,
@@ -4526,7 +4526,7 @@
   {
     "matchNumber": "15",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "8959",
     "startPoses0": false,
     "startPoses1": false,
@@ -4578,7 +4578,7 @@
   {
     "matchNumber": "15",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "9210",
     "startPoses0": false,
     "startPoses1": false,
@@ -4630,7 +4630,7 @@
   {
     "matchNumber": "15",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "9209",
     "startPoses0": false,
     "startPoses1": false,
@@ -4682,7 +4682,7 @@
   {
     "matchNumber": "16",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "9500",
     "startPoses0": false,
     "startPoses1": false,
@@ -4734,7 +4734,7 @@
   {
     "matchNumber": "16",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "8775",
     "startPoses0": false,
     "startPoses1": false,
@@ -4786,7 +4786,7 @@
   {
     "matchNumber": "16",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "9943",
     "startPoses0": false,
     "startPoses1": false,
@@ -4838,7 +4838,7 @@
   {
     "matchNumber": "16",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "8444",
     "startPoses0": false,
     "startPoses1": false,
@@ -4890,7 +4890,7 @@
   {
     "matchNumber": "16",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "9871",
     "startPoses0": false,
     "startPoses1": false,
@@ -4942,7 +4942,7 @@
   {
     "matchNumber": "16",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "8214",
     "startPoses0": false,
     "startPoses1": false,
@@ -4994,7 +4994,7 @@
   {
     "matchNumber": "17",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "8344",
     "startPoses0": false,
     "startPoses1": false,
@@ -5046,7 +5046,7 @@
   {
     "matchNumber": "17",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "9305",
     "startPoses0": false,
     "startPoses1": false,
@@ -5098,7 +5098,7 @@
   {
     "matchNumber": "17",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "9574",
     "startPoses0": false,
     "startPoses1": false,
@@ -5150,7 +5150,7 @@
   {
     "matchNumber": "17",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9261",
     "startPoses0": false,
     "startPoses1": false,
@@ -5202,7 +5202,7 @@
   {
     "matchNumber": "17",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "9829",
     "startPoses0": false,
     "startPoses1": false,
@@ -5254,7 +5254,7 @@
   {
     "matchNumber": "17",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "8139",
     "startPoses0": false,
     "startPoses1": false,
@@ -5306,7 +5306,7 @@
   {
     "matchNumber": "18",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "9362",
     "startPoses0": false,
     "startPoses1": false,
@@ -5358,7 +5358,7 @@
   {
     "matchNumber": "18",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "9404",
     "startPoses0": false,
     "startPoses1": false,
@@ -5410,7 +5410,7 @@
   {
     "matchNumber": "18",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "8284",
     "startPoses0": false,
     "startPoses1": false,
@@ -5462,7 +5462,7 @@
   {
     "matchNumber": "18",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "8447",
     "startPoses0": false,
     "startPoses1": false,
@@ -5514,7 +5514,7 @@
   {
     "matchNumber": "18",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "8791",
     "startPoses0": false,
     "startPoses1": false,
@@ -5566,7 +5566,7 @@
   {
     "matchNumber": "18",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "9886",
     "startPoses0": false,
     "startPoses1": false,
@@ -5618,7 +5618,7 @@
   {
     "matchNumber": "19",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9548",
     "startPoses0": false,
     "startPoses1": false,
@@ -5670,7 +5670,7 @@
   {
     "matchNumber": "19",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "9655",
     "startPoses0": false,
     "startPoses1": false,
@@ -5722,7 +5722,7 @@
   {
     "matchNumber": "19",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "8078",
     "startPoses0": false,
     "startPoses1": false,
@@ -5774,7 +5774,7 @@
   {
     "matchNumber": "19",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "9706",
     "startPoses0": false,
     "startPoses1": false,
@@ -5826,7 +5826,7 @@
   {
     "matchNumber": "19",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "8137",
     "startPoses0": false,
     "startPoses1": false,
@@ -5878,7 +5878,7 @@
   {
     "matchNumber": "19",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "8073",
     "startPoses0": false,
     "startPoses1": false,
@@ -5930,7 +5930,7 @@
   {
     "matchNumber": "20",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "9439",
     "startPoses0": false,
     "startPoses1": false,
@@ -5982,7 +5982,7 @@
   {
     "matchNumber": "20",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "8038",
     "startPoses0": false,
     "startPoses1": false,
@@ -6034,7 +6034,7 @@
   {
     "matchNumber": "20",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "9737",
     "startPoses0": false,
     "startPoses1": false,
@@ -6086,7 +6086,7 @@
   {
     "matchNumber": "20",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "8151",
     "startPoses0": false,
     "startPoses1": false,
@@ -6138,7 +6138,7 @@
   {
     "matchNumber": "20",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "9307",
     "startPoses0": false,
     "startPoses1": false,
@@ -6190,7 +6190,7 @@
   {
     "matchNumber": "20",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "9897",
     "startPoses0": false,
     "startPoses1": false,
@@ -6242,7 +6242,7 @@
   {
     "matchNumber": "21",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "9148",
     "startPoses0": false,
     "startPoses1": false,
@@ -6294,7 +6294,7 @@
   {
     "matchNumber": "21",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9874",
     "startPoses0": false,
     "startPoses1": false,
@@ -6346,7 +6346,7 @@
   {
     "matchNumber": "21",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "9097",
     "startPoses0": false,
     "startPoses1": false,
@@ -6398,7 +6398,7 @@
   {
     "matchNumber": "21",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "8017",
     "startPoses0": false,
     "startPoses1": false,
@@ -6450,7 +6450,7 @@
   {
     "matchNumber": "21",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "9401",
     "startPoses0": false,
     "startPoses1": false,
@@ -6502,7 +6502,7 @@
   {
     "matchNumber": "21",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "254",
     "startPoses0": false,
     "startPoses1": false,
@@ -6554,7 +6554,7 @@
   {
     "matchNumber": "22",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "1114",
     "startPoses0": false,
     "startPoses1": false,
@@ -6606,7 +6606,7 @@
   {
     "matchNumber": "22",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "2056",
     "startPoses0": false,
     "startPoses1": false,
@@ -6658,7 +6658,7 @@
   {
     "matchNumber": "22",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "973",
     "startPoses0": false,
     "startPoses1": false,
@@ -6710,7 +6710,7 @@
   {
     "matchNumber": "22",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "1678",
     "startPoses0": false,
     "startPoses1": false,
@@ -6762,7 +6762,7 @@
   {
     "matchNumber": "22",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "148",
     "startPoses0": false,
     "startPoses1": false,
@@ -6814,7 +6814,7 @@
   {
     "matchNumber": "22",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "118",
     "startPoses0": false,
     "startPoses1": false,
@@ -6866,7 +6866,7 @@
   {
     "matchNumber": "23",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "1323",
     "startPoses0": false,
     "startPoses1": false,
@@ -6918,7 +6918,7 @@
   {
     "matchNumber": "23",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "1640",
     "startPoses0": false,
     "startPoses1": false,
@@ -6970,7 +6970,7 @@
   {
     "matchNumber": "23",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "2471",
     "startPoses0": false,
     "startPoses1": false,
@@ -7022,7 +7022,7 @@
   {
     "matchNumber": "23",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "5813",
     "startPoses0": false,
     "startPoses1": false,
@@ -7074,7 +7074,7 @@
   {
     "matchNumber": "23",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "2910",
     "startPoses0": false,
     "startPoses1": false,
@@ -7126,7 +7126,7 @@
   {
     "matchNumber": "23",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "5940",
     "startPoses0": false,
     "startPoses1": false,
@@ -7178,7 +7178,7 @@
   {
     "matchNumber": "24",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "3476",
     "startPoses0": false,
     "startPoses1": false,
@@ -7230,7 +7230,7 @@
   {
     "matchNumber": "24",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "1690",
     "startPoses0": false,
     "startPoses1": false,
@@ -7282,7 +7282,7 @@
   {
     "matchNumber": "24",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "2767",
     "startPoses0": false,
     "startPoses1": false,
@@ -7334,7 +7334,7 @@
   {
     "matchNumber": "24",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "624",
     "startPoses0": false,
     "startPoses1": false,
@@ -7386,7 +7386,7 @@
   {
     "matchNumber": "24",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "217",
     "startPoses0": false,
     "startPoses1": false,
@@ -7438,7 +7438,7 @@
   {
     "matchNumber": "24",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "1533",
     "startPoses0": false,
     "startPoses1": false,
@@ -7490,7 +7490,7 @@
   {
     "matchNumber": "25",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "3005",
     "startPoses0": false,
     "startPoses1": false,
@@ -7542,7 +7542,7 @@
   {
     "matchNumber": "25",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "5865",
     "startPoses0": false,
     "startPoses1": false,
@@ -7594,7 +7594,7 @@
   {
     "matchNumber": "25",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "4800",
     "startPoses0": false,
     "startPoses1": false,
@@ -7646,7 +7646,7 @@
   {
     "matchNumber": "25",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "6561",
     "startPoses0": false,
     "startPoses1": false,
@@ -7698,7 +7698,7 @@
   {
     "matchNumber": "25",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1417",
     "startPoses0": false,
     "startPoses1": false,
@@ -7750,7 +7750,7 @@
   {
     "matchNumber": "25",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "7078",
     "startPoses0": false,
     "startPoses1": false,
@@ -7802,7 +7802,7 @@
   {
     "matchNumber": "26",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "7393",
     "startPoses0": false,
     "startPoses1": false,
@@ -7854,7 +7854,7 @@
   {
     "matchNumber": "26",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "3493",
     "startPoses0": false,
     "startPoses1": false,
@@ -7906,7 +7906,7 @@
   {
     "matchNumber": "26",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "1922",
     "startPoses0": false,
     "startPoses1": false,
@@ -7958,7 +7958,7 @@
   {
     "matchNumber": "26",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "1267",
     "startPoses0": false,
     "startPoses1": false,
@@ -8010,7 +8010,7 @@
   {
     "matchNumber": "26",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "5348",
     "startPoses0": false,
     "startPoses1": false,
@@ -8062,7 +8062,7 @@
   {
     "matchNumber": "26",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "2531",
     "startPoses0": false,
     "startPoses1": false,
@@ -8114,7 +8114,7 @@
   {
     "matchNumber": "27",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "2225",
     "startPoses0": false,
     "startPoses1": false,
@@ -8166,7 +8166,7 @@
   {
     "matchNumber": "27",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1107",
     "startPoses0": false,
     "startPoses1": false,
@@ -8218,7 +8218,7 @@
   {
     "matchNumber": "27",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "2932",
     "startPoses0": false,
     "startPoses1": false,
@@ -8270,7 +8270,7 @@
   {
     "matchNumber": "27",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "7582",
     "startPoses0": false,
     "startPoses1": false,
@@ -8322,7 +8322,7 @@
   {
     "matchNumber": "27",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "2485",
     "startPoses0": false,
     "startPoses1": false,
@@ -8374,7 +8374,7 @@
   {
     "matchNumber": "27",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "6516",
     "startPoses0": false,
     "startPoses1": false,
@@ -8426,7 +8426,7 @@
   {
     "matchNumber": "28",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "1237",
     "startPoses0": false,
     "startPoses1": false,
@@ -8478,7 +8478,7 @@
   {
     "matchNumber": "28",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "7753",
     "startPoses0": false,
     "startPoses1": false,
@@ -8530,7 +8530,7 @@
   {
     "matchNumber": "28",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "6051",
     "startPoses0": false,
     "startPoses1": false,
@@ -8582,7 +8582,7 @@
   {
     "matchNumber": "28",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "1762",
     "startPoses0": false,
     "startPoses1": false,
@@ -8634,7 +8634,7 @@
   {
     "matchNumber": "28",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "6794",
     "startPoses0": false,
     "startPoses1": false,
@@ -8686,7 +8686,7 @@
   {
     "matchNumber": "28",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "5414",
     "startPoses0": false,
     "startPoses1": false,
@@ -8738,7 +8738,7 @@
   {
     "matchNumber": "29",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "7305",
     "startPoses0": false,
     "startPoses1": false,
@@ -8790,7 +8790,7 @@
   {
     "matchNumber": "29",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "1737",
     "startPoses0": false,
     "startPoses1": false,
@@ -8842,7 +8842,7 @@
   {
     "matchNumber": "29",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "5966",
     "startPoses0": false,
     "startPoses1": false,
@@ -8894,7 +8894,7 @@
   {
     "matchNumber": "29",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "4338",
     "startPoses0": false,
     "startPoses1": false,
@@ -8946,7 +8946,7 @@
   {
     "matchNumber": "29",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "4179",
     "startPoses0": false,
     "startPoses1": false,
@@ -8998,7 +8998,7 @@
   {
     "matchNumber": "29",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5517",
     "startPoses0": false,
     "startPoses1": false,
@@ -9050,7 +9050,7 @@
   {
     "matchNumber": "30",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "6311",
     "startPoses0": false,
     "startPoses1": false,
@@ -9102,7 +9102,7 @@
   {
     "matchNumber": "30",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1234",
     "startPoses0": false,
     "startPoses1": false,
@@ -9154,7 +9154,7 @@
   {
     "matchNumber": "30",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1615",
     "startPoses0": false,
     "startPoses1": true,
@@ -9206,7 +9206,7 @@
   {
     "matchNumber": "30",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "4868",
     "startPoses0": false,
     "startPoses1": false,
@@ -9258,7 +9258,7 @@
   {
     "matchNumber": "30",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "3475",
     "startPoses0": false,
     "startPoses1": false,
@@ -9310,7 +9310,7 @@
   {
     "matchNumber": "30",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "2275",
     "startPoses0": false,
     "startPoses1": false,
@@ -9362,7 +9362,7 @@
   {
     "matchNumber": "31",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "4022",
     "startPoses0": false,
     "startPoses1": false,
@@ -9414,7 +9414,7 @@
   {
     "matchNumber": "31",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "5088",
     "startPoses0": false,
     "startPoses1": false,
@@ -9466,7 +9466,7 @@
   {
     "matchNumber": "31",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "3793",
     "startPoses0": false,
     "startPoses1": false,
@@ -9518,7 +9518,7 @@
   {
     "matchNumber": "31",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "2541",
     "startPoses0": false,
     "startPoses1": false,
@@ -9570,7 +9570,7 @@
   {
     "matchNumber": "31",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "4884",
     "startPoses0": false,
     "startPoses1": false,
@@ -9622,7 +9622,7 @@
   {
     "matchNumber": "31",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "3744",
     "startPoses0": false,
     "startPoses1": true,
@@ -9674,7 +9674,7 @@
   {
     "matchNumber": "32",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "6316",
     "startPoses0": false,
     "startPoses1": false,
@@ -9726,7 +9726,7 @@
   {
     "matchNumber": "32",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "5298",
     "startPoses0": false,
     "startPoses1": false,
@@ -9778,7 +9778,7 @@
   {
     "matchNumber": "32",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "7345",
     "startPoses0": false,
     "startPoses1": false,
@@ -9830,7 +9830,7 @@
   {
     "matchNumber": "32",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "1995",
     "startPoses0": false,
     "startPoses1": false,
@@ -9882,7 +9882,7 @@
   {
     "matchNumber": "32",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5723",
     "startPoses0": false,
     "startPoses1": false,
@@ -9934,7 +9934,7 @@
   {
     "matchNumber": "32",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "6502",
     "startPoses0": false,
     "startPoses1": false,
@@ -9986,7 +9986,7 @@
   {
     "matchNumber": "33",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "4459",
     "startPoses0": false,
     "startPoses1": false,
@@ -10038,7 +10038,7 @@
   {
     "matchNumber": "33",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "1050",
     "startPoses0": false,
     "startPoses1": false,
@@ -10090,7 +10090,7 @@
   {
     "matchNumber": "33",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "6884",
     "startPoses0": false,
     "startPoses1": false,
@@ -10142,7 +10142,7 @@
   {
     "matchNumber": "33",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "1148",
     "startPoses0": false,
     "startPoses1": false,
@@ -10194,7 +10194,7 @@
   {
     "matchNumber": "33",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "4958",
     "startPoses0": false,
     "startPoses1": false,
@@ -10246,7 +10246,7 @@
   {
     "matchNumber": "33",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "7576",
     "startPoses0": false,
     "startPoses1": false,
@@ -10298,7 +10298,7 @@
   {
     "matchNumber": "34",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "4939",
     "startPoses0": false,
     "startPoses1": false,
@@ -10350,7 +10350,7 @@
   {
     "matchNumber": "34",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "6931",
     "startPoses0": false,
     "startPoses1": false,
@@ -10402,7 +10402,7 @@
   {
     "matchNumber": "34",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "4909",
     "startPoses0": false,
     "startPoses1": false,
@@ -10454,7 +10454,7 @@
   {
     "matchNumber": "34",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "5044",
     "startPoses0": false,
     "startPoses1": false,
@@ -10506,7 +10506,7 @@
   {
     "matchNumber": "34",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "7577",
     "startPoses0": false,
     "startPoses1": false,
@@ -10558,7 +10558,7 @@
   {
     "matchNumber": "34",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "1874",
     "startPoses0": false,
     "startPoses1": false,
@@ -10610,7 +10610,7 @@
   {
     "matchNumber": "35",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "2578",
     "startPoses0": false,
     "startPoses1": false,
@@ -10662,7 +10662,7 @@
   {
     "matchNumber": "35",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "9472",
     "startPoses0": false,
     "startPoses1": false,
@@ -10714,7 +10714,7 @@
   {
     "matchNumber": "35",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "9029",
     "startPoses0": false,
     "startPoses1": false,
@@ -10766,7 +10766,7 @@
   {
     "matchNumber": "35",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "9530",
     "startPoses0": false,
     "startPoses1": false,
@@ -10818,7 +10818,7 @@
   {
     "matchNumber": "35",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "8079",
     "startPoses0": false,
     "startPoses1": false,
@@ -10870,7 +10870,7 @@
   {
     "matchNumber": "35",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "8016",
     "startPoses0": false,
     "startPoses1": false,
@@ -10922,7 +10922,7 @@
   {
     "matchNumber": "36",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "8927",
     "startPoses0": false,
     "startPoses1": false,
@@ -10974,7 +10974,7 @@
   {
     "matchNumber": "36",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "9583",
     "startPoses0": false,
     "startPoses1": false,
@@ -11026,7 +11026,7 @@
   {
     "matchNumber": "36",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "8959",
     "startPoses0": false,
     "startPoses1": false,
@@ -11078,7 +11078,7 @@
   {
     "matchNumber": "36",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "9210",
     "startPoses0": false,
     "startPoses1": false,
@@ -11130,7 +11130,7 @@
   {
     "matchNumber": "36",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9209",
     "startPoses0": false,
     "startPoses1": false,
@@ -11182,7 +11182,7 @@
   {
     "matchNumber": "36",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "9500",
     "startPoses0": false,
     "startPoses1": false,
@@ -11234,7 +11234,7 @@
   {
     "matchNumber": "37",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "8775",
     "startPoses0": false,
     "startPoses1": false,
@@ -11286,7 +11286,7 @@
   {
     "matchNumber": "37",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9943",
     "startPoses0": false,
     "startPoses1": false,
@@ -11338,7 +11338,7 @@
   {
     "matchNumber": "37",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "8444",
     "startPoses0": false,
     "startPoses1": false,
@@ -11390,7 +11390,7 @@
   {
     "matchNumber": "37",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "9871",
     "startPoses0": false,
     "startPoses1": false,
@@ -11442,7 +11442,7 @@
   {
     "matchNumber": "37",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "8214",
     "startPoses0": false,
     "startPoses1": false,
@@ -11494,7 +11494,7 @@
   {
     "matchNumber": "37",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "8344",
     "startPoses0": false,
     "startPoses1": false,
@@ -11546,7 +11546,7 @@
   {
     "matchNumber": "38",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "9305",
     "startPoses0": false,
     "startPoses1": false,
@@ -11598,7 +11598,7 @@
   {
     "matchNumber": "38",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "9574",
     "startPoses0": false,
     "startPoses1": false,
@@ -11650,7 +11650,7 @@
   {
     "matchNumber": "38",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "9261",
     "startPoses0": false,
     "startPoses1": false,
@@ -11702,7 +11702,7 @@
   {
     "matchNumber": "38",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "9829",
     "startPoses0": false,
     "startPoses1": false,
@@ -11754,7 +11754,7 @@
   {
     "matchNumber": "38",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "8139",
     "startPoses0": false,
     "startPoses1": false,
@@ -11806,7 +11806,7 @@
   {
     "matchNumber": "38",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "9362",
     "startPoses0": false,
     "startPoses1": false,
@@ -11858,7 +11858,7 @@
   {
     "matchNumber": "39",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "9404",
     "startPoses0": false,
     "startPoses1": false,
@@ -11910,7 +11910,7 @@
   {
     "matchNumber": "39",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "8284",
     "startPoses0": false,
     "startPoses1": false,
@@ -11962,7 +11962,7 @@
   {
     "matchNumber": "39",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "8447",
     "startPoses0": false,
     "startPoses1": false,
@@ -12014,7 +12014,7 @@
   {
     "matchNumber": "39",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "8791",
     "startPoses0": false,
     "startPoses1": false,
@@ -12066,7 +12066,7 @@
   {
     "matchNumber": "39",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "9886",
     "startPoses0": false,
     "startPoses1": false,
@@ -12118,7 +12118,7 @@
   {
     "matchNumber": "39",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "9548",
     "startPoses0": false,
     "startPoses1": false,
@@ -12170,7 +12170,7 @@
   {
     "matchNumber": "40",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "9655",
     "startPoses0": false,
     "startPoses1": false,
@@ -12222,7 +12222,7 @@
   {
     "matchNumber": "40",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "8078",
     "startPoses0": false,
     "startPoses1": false,
@@ -12274,7 +12274,7 @@
   {
     "matchNumber": "40",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9706",
     "startPoses0": false,
     "startPoses1": false,
@@ -12326,7 +12326,7 @@
   {
     "matchNumber": "40",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "8137",
     "startPoses0": false,
     "startPoses1": true,
@@ -12378,7 +12378,7 @@
   {
     "matchNumber": "40",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "8073",
     "startPoses0": false,
     "startPoses1": false,
@@ -12430,7 +12430,7 @@
   {
     "matchNumber": "40",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "9439",
     "startPoses0": false,
     "startPoses1": false,
@@ -12482,7 +12482,7 @@
   {
     "matchNumber": "41",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "8038",
     "startPoses0": false,
     "startPoses1": false,
@@ -12534,7 +12534,7 @@
   {
     "matchNumber": "41",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "9737",
     "startPoses0": false,
     "startPoses1": false,
@@ -12586,7 +12586,7 @@
   {
     "matchNumber": "41",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "8151",
     "startPoses0": false,
     "startPoses1": false,
@@ -12638,7 +12638,7 @@
   {
     "matchNumber": "41",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "9307",
     "startPoses0": false,
     "startPoses1": false,
@@ -12690,7 +12690,7 @@
   {
     "matchNumber": "41",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "9897",
     "startPoses0": false,
     "startPoses1": false,
@@ -12742,7 +12742,7 @@
   {
     "matchNumber": "41",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "9148",
     "startPoses0": false,
     "startPoses1": false,
@@ -12794,7 +12794,7 @@
   {
     "matchNumber": "42",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "9874",
     "startPoses0": false,
     "startPoses1": false,
@@ -12846,7 +12846,7 @@
   {
     "matchNumber": "42",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "9097",
     "startPoses0": false,
     "startPoses1": false,
@@ -12898,7 +12898,7 @@
   {
     "matchNumber": "42",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "8017",
     "startPoses0": false,
     "startPoses1": false,
@@ -12950,7 +12950,7 @@
   {
     "matchNumber": "42",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9401",
     "startPoses0": false,
     "startPoses1": false,
@@ -13002,7 +13002,7 @@
   {
     "matchNumber": "42",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "254",
     "startPoses0": false,
     "startPoses1": false,
@@ -13054,7 +13054,7 @@
   {
     "matchNumber": "42",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1114",
     "startPoses0": false,
     "startPoses1": false,
@@ -13106,7 +13106,7 @@
   {
     "matchNumber": "43",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "2056",
     "startPoses0": false,
     "startPoses1": false,
@@ -13158,7 +13158,7 @@
   {
     "matchNumber": "43",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "973",
     "startPoses0": false,
     "startPoses1": false,
@@ -13210,7 +13210,7 @@
   {
     "matchNumber": "43",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1678",
     "startPoses0": false,
     "startPoses1": false,
@@ -13262,7 +13262,7 @@
   {
     "matchNumber": "43",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "148",
     "startPoses0": false,
     "startPoses1": false,
@@ -13314,7 +13314,7 @@
   {
     "matchNumber": "43",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "118",
     "startPoses0": false,
     "startPoses1": false,
@@ -13366,7 +13366,7 @@
   {
     "matchNumber": "43",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "1323",
     "startPoses0": false,
     "startPoses1": false,
@@ -13418,7 +13418,7 @@
   {
     "matchNumber": "44",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "1640",
     "startPoses0": false,
     "startPoses1": false,
@@ -13470,7 +13470,7 @@
   {
     "matchNumber": "44",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "2471",
     "startPoses0": false,
     "startPoses1": false,
@@ -13522,7 +13522,7 @@
   {
     "matchNumber": "44",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "5813",
     "startPoses0": false,
     "startPoses1": false,
@@ -13574,7 +13574,7 @@
   {
     "matchNumber": "44",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "2910",
     "startPoses0": false,
     "startPoses1": false,
@@ -13626,7 +13626,7 @@
   {
     "matchNumber": "44",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "5940",
     "startPoses0": false,
     "startPoses1": false,
@@ -13678,7 +13678,7 @@
   {
     "matchNumber": "44",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "3476",
     "startPoses0": false,
     "startPoses1": false,
@@ -13730,7 +13730,7 @@
   {
     "matchNumber": "45",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "1690",
     "startPoses0": false,
     "startPoses1": false,
@@ -13782,7 +13782,7 @@
   {
     "matchNumber": "45",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "2767",
     "startPoses0": false,
     "startPoses1": false,
@@ -13834,7 +13834,7 @@
   {
     "matchNumber": "45",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "624",
     "startPoses0": false,
     "startPoses1": false,
@@ -13886,7 +13886,7 @@
   {
     "matchNumber": "45",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "217",
     "startPoses0": false,
     "startPoses1": false,
@@ -13938,7 +13938,7 @@
   {
     "matchNumber": "45",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "1533",
     "startPoses0": false,
     "startPoses1": false,
@@ -13990,7 +13990,7 @@
   {
     "matchNumber": "45",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "3005",
     "startPoses0": false,
     "startPoses1": false,
@@ -14042,7 +14042,7 @@
   {
     "matchNumber": "46",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5865",
     "startPoses0": false,
     "startPoses1": false,
@@ -14094,7 +14094,7 @@
   {
     "matchNumber": "46",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "4800",
     "startPoses0": false,
     "startPoses1": false,
@@ -14146,7 +14146,7 @@
   {
     "matchNumber": "46",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "6561",
     "startPoses0": false,
     "startPoses1": false,
@@ -14198,7 +14198,7 @@
   {
     "matchNumber": "46",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "1417",
     "startPoses0": false,
     "startPoses1": false,
@@ -14250,7 +14250,7 @@
   {
     "matchNumber": "46",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "7078",
     "startPoses0": false,
     "startPoses1": false,
@@ -14302,7 +14302,7 @@
   {
     "matchNumber": "46",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "7393",
     "startPoses0": false,
     "startPoses1": false,
@@ -14354,7 +14354,7 @@
   {
     "matchNumber": "47",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "3493",
     "startPoses0": false,
     "startPoses1": false,
@@ -14406,7 +14406,7 @@
   {
     "matchNumber": "47",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "1922",
     "startPoses0": false,
     "startPoses1": false,
@@ -14458,7 +14458,7 @@
   {
     "matchNumber": "47",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "1267",
     "startPoses0": false,
     "startPoses1": false,
@@ -14510,7 +14510,7 @@
   {
     "matchNumber": "47",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "5348",
     "startPoses0": false,
     "startPoses1": false,
@@ -14562,7 +14562,7 @@
   {
     "matchNumber": "47",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "2531",
     "startPoses0": false,
     "startPoses1": false,
@@ -14614,7 +14614,7 @@
   {
     "matchNumber": "47",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "2225",
     "startPoses0": false,
     "startPoses1": false,
@@ -14666,7 +14666,7 @@
   {
     "matchNumber": "48",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "1107",
     "startPoses0": false,
     "startPoses1": false,
@@ -14718,7 +14718,7 @@
   {
     "matchNumber": "48",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "2932",
     "startPoses0": false,
     "startPoses1": false,
@@ -14770,7 +14770,7 @@
   {
     "matchNumber": "48",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "7582",
     "startPoses0": false,
     "startPoses1": false,
@@ -14822,7 +14822,7 @@
   {
     "matchNumber": "48",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "2485",
     "startPoses0": false,
     "startPoses1": false,
@@ -14874,7 +14874,7 @@
   {
     "matchNumber": "48",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "6516",
     "startPoses0": false,
     "startPoses1": false,
@@ -14926,7 +14926,7 @@
   {
     "matchNumber": "48",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "1237",
     "startPoses0": false,
     "startPoses1": false,
@@ -14978,7 +14978,7 @@
   {
     "matchNumber": "49",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "7753",
     "startPoses0": false,
     "startPoses1": false,
@@ -15030,7 +15030,7 @@
   {
     "matchNumber": "49",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "6051",
     "startPoses0": false,
     "startPoses1": false,
@@ -15082,7 +15082,7 @@
   {
     "matchNumber": "49",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "1762",
     "startPoses0": false,
     "startPoses1": false,
@@ -15134,7 +15134,7 @@
   {
     "matchNumber": "49",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "6794",
     "startPoses0": false,
     "startPoses1": false,
@@ -15186,7 +15186,7 @@
   {
     "matchNumber": "49",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "5414",
     "startPoses0": false,
     "startPoses1": false,
@@ -15238,7 +15238,7 @@
   {
     "matchNumber": "49",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "7305",
     "startPoses0": false,
     "startPoses1": false,
@@ -15290,7 +15290,7 @@
   {
     "matchNumber": "50",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "1737",
     "startPoses0": false,
     "startPoses1": false,
@@ -15342,7 +15342,7 @@
   {
     "matchNumber": "50",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "5966",
     "startPoses0": false,
     "startPoses1": false,
@@ -15394,7 +15394,7 @@
   {
     "matchNumber": "50",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "4338",
     "startPoses0": false,
     "startPoses1": false,
@@ -15446,7 +15446,7 @@
   {
     "matchNumber": "50",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "4179",
     "startPoses0": false,
     "startPoses1": false,
@@ -15498,7 +15498,7 @@
   {
     "matchNumber": "50",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "5517",
     "startPoses0": false,
     "startPoses1": true,
@@ -15550,7 +15550,7 @@
   {
     "matchNumber": "50",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "6311",
     "startPoses0": false,
     "startPoses1": false,
@@ -15602,7 +15602,7 @@
   {
     "matchNumber": "51",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1234",
     "startPoses0": false,
     "startPoses1": false,
@@ -15654,7 +15654,7 @@
   {
     "matchNumber": "51",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "1615",
     "startPoses0": false,
     "startPoses1": false,
@@ -15706,7 +15706,7 @@
   {
     "matchNumber": "51",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "4868",
     "startPoses0": false,
     "startPoses1": false,
@@ -15758,7 +15758,7 @@
   {
     "matchNumber": "51",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "3475",
     "startPoses0": false,
     "startPoses1": false,
@@ -15810,7 +15810,7 @@
   {
     "matchNumber": "51",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "2275",
     "startPoses0": false,
     "startPoses1": false,
@@ -15862,7 +15862,7 @@
   {
     "matchNumber": "51",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "4022",
     "startPoses0": false,
     "startPoses1": false,
@@ -15914,7 +15914,7 @@
   {
     "matchNumber": "52",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "5088",
     "startPoses0": false,
     "startPoses1": false,
@@ -15966,7 +15966,7 @@
   {
     "matchNumber": "52",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "3793",
     "startPoses0": false,
     "startPoses1": false,
@@ -16018,7 +16018,7 @@
   {
     "matchNumber": "52",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "2541",
     "startPoses0": false,
     "startPoses1": false,
@@ -16070,7 +16070,7 @@
   {
     "matchNumber": "52",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "4884",
     "startPoses0": false,
     "startPoses1": false,
@@ -16122,7 +16122,7 @@
   {
     "matchNumber": "52",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "3744",
     "startPoses0": false,
     "startPoses1": false,
@@ -16174,7 +16174,7 @@
   {
     "matchNumber": "52",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "6316",
     "startPoses0": false,
     "startPoses1": false,
@@ -16226,7 +16226,7 @@
   {
     "matchNumber": "53",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "5298",
     "startPoses0": false,
     "startPoses1": false,
@@ -16278,7 +16278,7 @@
   {
     "matchNumber": "53",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "7345",
     "startPoses0": false,
     "startPoses1": false,
@@ -16330,7 +16330,7 @@
   {
     "matchNumber": "53",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "1995",
     "startPoses0": false,
     "startPoses1": false,
@@ -16382,7 +16382,7 @@
   {
     "matchNumber": "53",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "5723",
     "startPoses0": false,
     "startPoses1": false,
@@ -16434,7 +16434,7 @@
   {
     "matchNumber": "53",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "6502",
     "startPoses0": false,
     "startPoses1": false,
@@ -16486,7 +16486,7 @@
   {
     "matchNumber": "53",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "4459",
     "startPoses0": false,
     "startPoses1": false,
@@ -16538,7 +16538,7 @@
   {
     "matchNumber": "54",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "1050",
     "startPoses0": false,
     "startPoses1": false,
@@ -16590,7 +16590,7 @@
   {
     "matchNumber": "54",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "6884",
     "startPoses0": false,
     "startPoses1": false,
@@ -16642,7 +16642,7 @@
   {
     "matchNumber": "54",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "1148",
     "startPoses0": false,
     "startPoses1": false,
@@ -16694,7 +16694,7 @@
   {
     "matchNumber": "54",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "4958",
     "startPoses0": false,
     "startPoses1": true,
@@ -16746,7 +16746,7 @@
   {
     "matchNumber": "54",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "7576",
     "startPoses0": false,
     "startPoses1": false,
@@ -16798,7 +16798,7 @@
   {
     "matchNumber": "54",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "4939",
     "startPoses0": false,
     "startPoses1": false,
@@ -16850,7 +16850,7 @@
   {
     "matchNumber": "55",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "6931",
     "startPoses0": false,
     "startPoses1": false,
@@ -16902,7 +16902,7 @@
   {
     "matchNumber": "55",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "4909",
     "startPoses0": false,
     "startPoses1": false,
@@ -16954,7 +16954,7 @@
   {
     "matchNumber": "55",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "5044",
     "startPoses0": false,
     "startPoses1": false,
@@ -17006,7 +17006,7 @@
   {
     "matchNumber": "55",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "7577",
     "startPoses0": false,
     "startPoses1": true,
@@ -17058,7 +17058,7 @@
   {
     "matchNumber": "55",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1874",
     "startPoses0": false,
     "startPoses1": false,
@@ -17110,7 +17110,7 @@
   {
     "matchNumber": "55",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "2578",
     "startPoses0": false,
     "startPoses1": false,
@@ -17162,7 +17162,7 @@
   {
     "matchNumber": "56",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "9472",
     "startPoses0": false,
     "startPoses1": false,
@@ -17214,7 +17214,7 @@
   {
     "matchNumber": "56",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9029",
     "startPoses0": false,
     "startPoses1": false,
@@ -17266,7 +17266,7 @@
   {
     "matchNumber": "56",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "9530",
     "startPoses0": false,
     "startPoses1": false,
@@ -17318,7 +17318,7 @@
   {
     "matchNumber": "56",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "8079",
     "startPoses0": false,
     "startPoses1": false,
@@ -17370,7 +17370,7 @@
   {
     "matchNumber": "56",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "8016",
     "startPoses0": false,
     "startPoses1": false,
@@ -17422,7 +17422,7 @@
   {
     "matchNumber": "56",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "8927",
     "startPoses0": false,
     "startPoses1": false,
@@ -17474,7 +17474,7 @@
   {
     "matchNumber": "57",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "9583",
     "startPoses0": false,
     "startPoses1": false,
@@ -17526,7 +17526,7 @@
   {
     "matchNumber": "57",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "8959",
     "startPoses0": false,
     "startPoses1": false,
@@ -17578,7 +17578,7 @@
   {
     "matchNumber": "57",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "9210",
     "startPoses0": false,
     "startPoses1": false,
@@ -17630,7 +17630,7 @@
   {
     "matchNumber": "57",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "9209",
     "startPoses0": false,
     "startPoses1": true,
@@ -17682,7 +17682,7 @@
   {
     "matchNumber": "57",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "9500",
     "startPoses0": false,
     "startPoses1": false,
@@ -17734,7 +17734,7 @@
   {
     "matchNumber": "57",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "8775",
     "startPoses0": false,
     "startPoses1": false,
@@ -17786,7 +17786,7 @@
   {
     "matchNumber": "58",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "9943",
     "startPoses0": false,
     "startPoses1": false,
@@ -17838,7 +17838,7 @@
   {
     "matchNumber": "58",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "8444",
     "startPoses0": false,
     "startPoses1": false,
@@ -17890,7 +17890,7 @@
   {
     "matchNumber": "58",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "9871",
     "startPoses0": false,
     "startPoses1": false,
@@ -17942,7 +17942,7 @@
   {
     "matchNumber": "58",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "8214",
     "startPoses0": false,
     "startPoses1": false,
@@ -17994,7 +17994,7 @@
   {
     "matchNumber": "58",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "8344",
     "startPoses0": false,
     "startPoses1": false,
@@ -18046,7 +18046,7 @@
   {
     "matchNumber": "58",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "9305",
     "startPoses0": false,
     "startPoses1": false,
@@ -18098,7 +18098,7 @@
   {
     "matchNumber": "59",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9574",
     "startPoses0": false,
     "startPoses1": false,
@@ -18150,7 +18150,7 @@
   {
     "matchNumber": "59",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "9261",
     "startPoses0": false,
     "startPoses1": false,
@@ -18202,7 +18202,7 @@
   {
     "matchNumber": "59",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "9829",
     "startPoses0": false,
     "startPoses1": false,
@@ -18254,7 +18254,7 @@
   {
     "matchNumber": "59",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "8139",
     "startPoses0": false,
     "startPoses1": false,
@@ -18306,7 +18306,7 @@
   {
     "matchNumber": "59",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "9362",
     "startPoses0": false,
     "startPoses1": false,
@@ -18358,7 +18358,7 @@
   {
     "matchNumber": "59",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "9404",
     "startPoses0": false,
     "startPoses1": false,
@@ -18410,7 +18410,7 @@
   {
     "matchNumber": "60",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "8284",
     "startPoses0": false,
     "startPoses1": false,
@@ -18462,7 +18462,7 @@
   {
     "matchNumber": "60",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "8447",
     "startPoses0": false,
     "startPoses1": false,
@@ -18514,7 +18514,7 @@
   {
     "matchNumber": "60",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "8791",
     "startPoses0": false,
     "startPoses1": false,
@@ -18566,7 +18566,7 @@
   {
     "matchNumber": "60",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9886",
     "startPoses0": false,
     "startPoses1": false,
@@ -18618,7 +18618,7 @@
   {
     "matchNumber": "60",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "9548",
     "startPoses0": false,
     "startPoses1": false,
@@ -18670,7 +18670,7 @@
   {
     "matchNumber": "60",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9655",
     "startPoses0": false,
     "startPoses1": false,
@@ -18722,7 +18722,7 @@
   {
     "matchNumber": "61",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "8078",
     "startPoses0": false,
     "startPoses1": false,
@@ -18774,7 +18774,7 @@
   {
     "matchNumber": "61",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "9706",
     "startPoses0": false,
     "startPoses1": false,
@@ -18826,7 +18826,7 @@
   {
     "matchNumber": "61",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "8137",
     "startPoses0": false,
     "startPoses1": false,
@@ -18878,7 +18878,7 @@
   {
     "matchNumber": "61",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "8073",
     "startPoses0": false,
     "startPoses1": false,
@@ -18930,7 +18930,7 @@
   {
     "matchNumber": "61",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "9439",
     "startPoses0": false,
     "startPoses1": false,
@@ -18982,7 +18982,7 @@
   {
     "matchNumber": "61",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "8038",
     "startPoses0": false,
     "startPoses1": false,
@@ -19034,7 +19034,7 @@
   {
     "matchNumber": "62",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9737",
     "startPoses0": false,
     "startPoses1": false,
@@ -19086,7 +19086,7 @@
   {
     "matchNumber": "62",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "8151",
     "startPoses0": false,
     "startPoses1": false,
@@ -19138,7 +19138,7 @@
   {
     "matchNumber": "62",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9307",
     "startPoses0": false,
     "startPoses1": false,
@@ -19190,7 +19190,7 @@
   {
     "matchNumber": "62",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9897",
     "startPoses0": false,
     "startPoses1": false,
@@ -19242,7 +19242,7 @@
   {
     "matchNumber": "62",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "9148",
     "startPoses0": false,
     "startPoses1": true,
@@ -19294,7 +19294,7 @@
   {
     "matchNumber": "62",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "9874",
     "startPoses0": false,
     "startPoses1": false,
@@ -19346,7 +19346,7 @@
   {
     "matchNumber": "63",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "9097",
     "startPoses0": false,
     "startPoses1": false,
@@ -19398,7 +19398,7 @@
   {
     "matchNumber": "63",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "8017",
     "startPoses0": false,
     "startPoses1": false,
@@ -19450,7 +19450,7 @@
   {
     "matchNumber": "63",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9401",
     "startPoses0": false,
     "startPoses1": false,
@@ -19502,7 +19502,7 @@
   {
     "matchNumber": "63",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "254",
     "startPoses0": false,
     "startPoses1": false,
@@ -19554,7 +19554,7 @@
   {
     "matchNumber": "63",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "1114",
     "startPoses0": false,
     "startPoses1": false,
@@ -19606,7 +19606,7 @@
   {
     "matchNumber": "63",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "2056",
     "startPoses0": false,
     "startPoses1": false,
@@ -19658,7 +19658,7 @@
   {
     "matchNumber": "64",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "973",
     "startPoses0": false,
     "startPoses1": true,
@@ -19710,7 +19710,7 @@
   {
     "matchNumber": "64",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "1678",
     "startPoses0": false,
     "startPoses1": false,
@@ -19762,7 +19762,7 @@
   {
     "matchNumber": "64",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "148",
     "startPoses0": false,
     "startPoses1": false,
@@ -19814,7 +19814,7 @@
   {
     "matchNumber": "64",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "118",
     "startPoses0": false,
     "startPoses1": false,
@@ -19866,7 +19866,7 @@
   {
     "matchNumber": "64",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "1323",
     "startPoses0": false,
     "startPoses1": false,
@@ -19918,7 +19918,7 @@
   {
     "matchNumber": "64",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "1640",
     "startPoses0": false,
     "startPoses1": false,
@@ -19970,7 +19970,7 @@
   {
     "matchNumber": "65",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "2471",
     "startPoses0": false,
     "startPoses1": false,
@@ -20022,7 +20022,7 @@
   {
     "matchNumber": "65",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "5813",
     "startPoses0": false,
     "startPoses1": false,
@@ -20074,7 +20074,7 @@
   {
     "matchNumber": "65",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "2910",
     "startPoses0": false,
     "startPoses1": false,
@@ -20126,7 +20126,7 @@
   {
     "matchNumber": "65",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "5940",
     "startPoses0": false,
     "startPoses1": false,
@@ -20178,7 +20178,7 @@
   {
     "matchNumber": "65",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "3476",
     "startPoses0": false,
     "startPoses1": false,
@@ -20230,7 +20230,7 @@
   {
     "matchNumber": "65",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "1690",
     "startPoses0": false,
     "startPoses1": false,
@@ -20282,7 +20282,7 @@
   {
     "matchNumber": "66",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "2767",
     "startPoses0": false,
     "startPoses1": false,
@@ -20334,7 +20334,7 @@
   {
     "matchNumber": "66",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "624",
     "startPoses0": false,
     "startPoses1": false,
@@ -20386,7 +20386,7 @@
   {
     "matchNumber": "66",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "217",
     "startPoses0": false,
     "startPoses1": false,
@@ -20438,7 +20438,7 @@
   {
     "matchNumber": "66",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "1533",
     "startPoses0": false,
     "startPoses1": false,
@@ -20490,7 +20490,7 @@
   {
     "matchNumber": "66",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "3005",
     "startPoses0": false,
     "startPoses1": false,
@@ -20542,7 +20542,7 @@
   {
     "matchNumber": "66",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "5865",
     "startPoses0": false,
     "startPoses1": false,
@@ -20594,7 +20594,7 @@
   {
     "matchNumber": "67",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "4800",
     "startPoses0": false,
     "startPoses1": false,
@@ -20646,7 +20646,7 @@
   {
     "matchNumber": "67",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "6561",
     "startPoses0": false,
     "startPoses1": false,
@@ -20698,7 +20698,7 @@
   {
     "matchNumber": "67",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "1417",
     "startPoses0": false,
     "startPoses1": false,
@@ -20750,7 +20750,7 @@
   {
     "matchNumber": "67",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "7078",
     "startPoses0": false,
     "startPoses1": false,
@@ -20802,7 +20802,7 @@
   {
     "matchNumber": "67",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "7393",
     "startPoses0": false,
     "startPoses1": false,
@@ -20854,7 +20854,7 @@
   {
     "matchNumber": "67",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "3493",
     "startPoses0": false,
     "startPoses1": false,
@@ -20906,7 +20906,7 @@
   {
     "matchNumber": "68",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "1922",
     "startPoses0": false,
     "startPoses1": false,
@@ -20958,7 +20958,7 @@
   {
     "matchNumber": "68",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1267",
     "startPoses0": false,
     "startPoses1": false,
@@ -21010,7 +21010,7 @@
   {
     "matchNumber": "68",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "5348",
     "startPoses0": false,
     "startPoses1": false,
@@ -21062,7 +21062,7 @@
   {
     "matchNumber": "68",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "2531",
     "startPoses0": false,
     "startPoses1": false,
@@ -21114,7 +21114,7 @@
   {
     "matchNumber": "68",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "2225",
     "startPoses0": false,
     "startPoses1": false,
@@ -21166,7 +21166,7 @@
   {
     "matchNumber": "68",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "1107",
     "startPoses0": false,
     "startPoses1": false,
@@ -21218,7 +21218,7 @@
   {
     "matchNumber": "69",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "2932",
     "startPoses0": false,
     "startPoses1": false,
@@ -21270,7 +21270,7 @@
   {
     "matchNumber": "69",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "7582",
     "startPoses0": false,
     "startPoses1": false,
@@ -21322,7 +21322,7 @@
   {
     "matchNumber": "69",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "2485",
     "startPoses0": false,
     "startPoses1": false,
@@ -21374,7 +21374,7 @@
   {
     "matchNumber": "69",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "6516",
     "startPoses0": false,
     "startPoses1": false,
@@ -21426,7 +21426,7 @@
   {
     "matchNumber": "69",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1237",
     "startPoses0": false,
     "startPoses1": false,
@@ -21478,7 +21478,7 @@
   {
     "matchNumber": "69",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "7753",
     "startPoses0": false,
     "startPoses1": false,
@@ -21530,7 +21530,7 @@
   {
     "matchNumber": "70",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "6051",
     "startPoses0": false,
     "startPoses1": false,
@@ -21582,7 +21582,7 @@
   {
     "matchNumber": "70",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "1762",
     "startPoses0": false,
     "startPoses1": false,
@@ -21634,7 +21634,7 @@
   {
     "matchNumber": "70",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "6794",
     "startPoses0": false,
     "startPoses1": false,
@@ -21686,7 +21686,7 @@
   {
     "matchNumber": "70",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "5414",
     "startPoses0": false,
     "startPoses1": false,
@@ -21738,7 +21738,7 @@
   {
     "matchNumber": "70",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "7305",
     "startPoses0": false,
     "startPoses1": true,
@@ -21790,7 +21790,7 @@
   {
     "matchNumber": "70",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1737",
     "startPoses0": false,
     "startPoses1": false,
@@ -21842,7 +21842,7 @@
   {
     "matchNumber": "71",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "5966",
     "startPoses0": false,
     "startPoses1": false,
@@ -21894,7 +21894,7 @@
   {
     "matchNumber": "71",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "4338",
     "startPoses0": false,
     "startPoses1": false,
@@ -21946,7 +21946,7 @@
   {
     "matchNumber": "71",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "4179",
     "startPoses0": false,
     "startPoses1": false,
@@ -21998,7 +21998,7 @@
   {
     "matchNumber": "71",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "5517",
     "startPoses0": false,
     "startPoses1": false,
@@ -22050,7 +22050,7 @@
   {
     "matchNumber": "71",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "6311",
     "startPoses0": false,
     "startPoses1": false,
@@ -22102,7 +22102,7 @@
   {
     "matchNumber": "71",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "1234",
     "startPoses0": false,
     "startPoses1": false,
@@ -22154,7 +22154,7 @@
   {
     "matchNumber": "72",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "1615",
     "startPoses0": false,
     "startPoses1": false,
@@ -22206,7 +22206,7 @@
   {
     "matchNumber": "72",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "4868",
     "startPoses0": false,
     "startPoses1": false,
@@ -22258,7 +22258,7 @@
   {
     "matchNumber": "72",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "3475",
     "startPoses0": false,
     "startPoses1": false,
@@ -22310,7 +22310,7 @@
   {
     "matchNumber": "72",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "2275",
     "startPoses0": false,
     "startPoses1": true,
@@ -22362,7 +22362,7 @@
   {
     "matchNumber": "72",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "4022",
     "startPoses0": false,
     "startPoses1": false,
@@ -22414,7 +22414,7 @@
   {
     "matchNumber": "72",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "5088",
     "startPoses0": false,
     "startPoses1": false,
@@ -22466,7 +22466,7 @@
   {
     "matchNumber": "73",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "3793",
     "startPoses0": false,
     "startPoses1": false,
@@ -22518,7 +22518,7 @@
   {
     "matchNumber": "73",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "2541",
     "startPoses0": false,
     "startPoses1": false,
@@ -22570,7 +22570,7 @@
   {
     "matchNumber": "73",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "4884",
     "startPoses0": false,
     "startPoses1": false,
@@ -22622,7 +22622,7 @@
   {
     "matchNumber": "73",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "3744",
     "startPoses0": false,
     "startPoses1": false,
@@ -22674,7 +22674,7 @@
   {
     "matchNumber": "73",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "6316",
     "startPoses0": false,
     "startPoses1": false,
@@ -22726,7 +22726,7 @@
   {
     "matchNumber": "73",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "5298",
     "startPoses0": false,
     "startPoses1": false,
@@ -22778,7 +22778,7 @@
   {
     "matchNumber": "74",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "7345",
     "startPoses0": false,
     "startPoses1": false,
@@ -22830,7 +22830,7 @@
   {
     "matchNumber": "74",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "1995",
     "startPoses0": false,
     "startPoses1": false,
@@ -22882,7 +22882,7 @@
   {
     "matchNumber": "74",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "5723",
     "startPoses0": false,
     "startPoses1": false,
@@ -22934,7 +22934,7 @@
   {
     "matchNumber": "74",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "6502",
     "startPoses0": false,
     "startPoses1": false,
@@ -22986,7 +22986,7 @@
   {
     "matchNumber": "74",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "4459",
     "startPoses0": false,
     "startPoses1": false,
@@ -23038,7 +23038,7 @@
   {
     "matchNumber": "74",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "1050",
     "startPoses0": false,
     "startPoses1": false,
@@ -23090,7 +23090,7 @@
   {
     "matchNumber": "75",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "6884",
     "startPoses0": false,
     "startPoses1": false,
@@ -23142,7 +23142,7 @@
   {
     "matchNumber": "75",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "1148",
     "startPoses0": false,
     "startPoses1": false,
@@ -23194,7 +23194,7 @@
   {
     "matchNumber": "75",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "4958",
     "startPoses0": false,
     "startPoses1": false,
@@ -23246,7 +23246,7 @@
   {
     "matchNumber": "75",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "7576",
     "startPoses0": false,
     "startPoses1": false,
@@ -23298,7 +23298,7 @@
   {
     "matchNumber": "75",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "4939",
     "startPoses0": false,
     "startPoses1": false,
@@ -23350,7 +23350,7 @@
   {
     "matchNumber": "75",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "6931",
     "startPoses0": false,
     "startPoses1": false,
@@ -23402,7 +23402,7 @@
   {
     "matchNumber": "76",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "4909",
     "startPoses0": false,
     "startPoses1": false,
@@ -23454,7 +23454,7 @@
   {
     "matchNumber": "76",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "5044",
     "startPoses0": false,
     "startPoses1": false,
@@ -23506,7 +23506,7 @@
   {
     "matchNumber": "76",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "7577",
     "startPoses0": false,
     "startPoses1": false,
@@ -23558,7 +23558,7 @@
   {
     "matchNumber": "76",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "1874",
     "startPoses0": false,
     "startPoses1": false,
@@ -23610,7 +23610,7 @@
   {
     "matchNumber": "76",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "2578",
     "startPoses0": false,
     "startPoses1": false,
@@ -23662,7 +23662,7 @@
   {
     "matchNumber": "76",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "9472",
     "startPoses0": false,
     "startPoses1": false,
@@ -23714,7 +23714,7 @@
   {
     "matchNumber": "77",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "9029",
     "startPoses0": false,
     "startPoses1": false,
@@ -23766,7 +23766,7 @@
   {
     "matchNumber": "77",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9530",
     "startPoses0": false,
     "startPoses1": false,
@@ -23818,7 +23818,7 @@
   {
     "matchNumber": "77",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "8079",
     "startPoses0": false,
     "startPoses1": false,
@@ -23870,7 +23870,7 @@
   {
     "matchNumber": "77",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "8016",
     "startPoses0": false,
     "startPoses1": false,
@@ -23922,7 +23922,7 @@
   {
     "matchNumber": "77",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "8927",
     "startPoses0": false,
     "startPoses1": false,
@@ -23974,7 +23974,7 @@
   {
     "matchNumber": "77",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "9583",
     "startPoses0": false,
     "startPoses1": false,
@@ -24026,7 +24026,7 @@
   {
     "matchNumber": "78",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "8959",
     "startPoses0": false,
     "startPoses1": false,
@@ -24078,7 +24078,7 @@
   {
     "matchNumber": "78",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9210",
     "startPoses0": false,
     "startPoses1": false,
@@ -24130,7 +24130,7 @@
   {
     "matchNumber": "78",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "9209",
     "startPoses0": false,
     "startPoses1": false,
@@ -24182,7 +24182,7 @@
   {
     "matchNumber": "78",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "9500",
     "startPoses0": false,
     "startPoses1": false,
@@ -24234,7 +24234,7 @@
   {
     "matchNumber": "78",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "8775",
     "startPoses0": false,
     "startPoses1": false,
@@ -24286,7 +24286,7 @@
   {
     "matchNumber": "78",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9943",
     "startPoses0": false,
     "startPoses1": false,
@@ -24338,7 +24338,7 @@
   {
     "matchNumber": "79",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "8444",
     "startPoses0": false,
     "startPoses1": false,
@@ -24390,7 +24390,7 @@
   {
     "matchNumber": "79",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "9871",
     "startPoses0": false,
     "startPoses1": false,
@@ -24442,7 +24442,7 @@
   {
     "matchNumber": "79",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "8214",
     "startPoses0": false,
     "startPoses1": false,
@@ -24494,7 +24494,7 @@
   {
     "matchNumber": "79",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "8344",
     "startPoses0": false,
     "startPoses1": false,
@@ -24546,7 +24546,7 @@
   {
     "matchNumber": "79",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "9305",
     "startPoses0": false,
     "startPoses1": false,
@@ -24598,7 +24598,7 @@
   {
     "matchNumber": "79",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "9574",
     "startPoses0": false,
     "startPoses1": false,
@@ -24650,7 +24650,7 @@
   {
     "matchNumber": "80",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9261",
     "startPoses0": false,
     "startPoses1": false,
@@ -24702,7 +24702,7 @@
   {
     "matchNumber": "80",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "9829",
     "startPoses0": false,
     "startPoses1": false,
@@ -24754,7 +24754,7 @@
   {
     "matchNumber": "80",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "8139",
     "startPoses0": false,
     "startPoses1": false,
@@ -24806,7 +24806,7 @@
   {
     "matchNumber": "80",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "9362",
     "startPoses0": false,
     "startPoses1": false,
@@ -24858,7 +24858,7 @@
   {
     "matchNumber": "80",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "9404",
     "startPoses0": false,
     "startPoses1": false,
@@ -24910,7 +24910,7 @@
   {
     "matchNumber": "80",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "8284",
     "startPoses0": false,
     "startPoses1": false,
@@ -24962,7 +24962,7 @@
   {
     "matchNumber": "81",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "8447",
     "startPoses0": false,
     "startPoses1": false,
@@ -25014,7 +25014,7 @@
   {
     "matchNumber": "81",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "8791",
     "startPoses0": false,
     "startPoses1": false,
@@ -25066,7 +25066,7 @@
   {
     "matchNumber": "81",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "9886",
     "startPoses0": false,
     "startPoses1": false,
@@ -25118,7 +25118,7 @@
   {
     "matchNumber": "81",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "9548",
     "startPoses0": false,
     "startPoses1": false,
@@ -25170,7 +25170,7 @@
   {
     "matchNumber": "81",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "9655",
     "startPoses0": false,
     "startPoses1": false,
@@ -25222,7 +25222,7 @@
   {
     "matchNumber": "81",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "8078",
     "startPoses0": false,
     "startPoses1": false,
@@ -25274,7 +25274,7 @@
   {
     "matchNumber": "82",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "9706",
     "startPoses0": false,
     "startPoses1": true,
@@ -25326,7 +25326,7 @@
   {
     "matchNumber": "82",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "8137",
     "startPoses0": false,
     "startPoses1": false,
@@ -25378,7 +25378,7 @@
   {
     "matchNumber": "82",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "8073",
     "startPoses0": false,
     "startPoses1": false,
@@ -25430,7 +25430,7 @@
   {
     "matchNumber": "82",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "9439",
     "startPoses0": false,
     "startPoses1": false,
@@ -25482,7 +25482,7 @@
   {
     "matchNumber": "82",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "8038",
     "startPoses0": false,
     "startPoses1": false,
@@ -25534,7 +25534,7 @@
   {
     "matchNumber": "82",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "9737",
     "startPoses0": false,
     "startPoses1": false,
@@ -25586,7 +25586,7 @@
   {
     "matchNumber": "83",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "8151",
     "startPoses0": false,
     "startPoses1": false,
@@ -25638,7 +25638,7 @@
   {
     "matchNumber": "83",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "9307",
     "startPoses0": false,
     "startPoses1": false,
@@ -25690,7 +25690,7 @@
   {
     "matchNumber": "83",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "9897",
     "startPoses0": false,
     "startPoses1": false,
@@ -25742,7 +25742,7 @@
   {
     "matchNumber": "83",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "9148",
     "startPoses0": false,
     "startPoses1": false,
@@ -25794,7 +25794,7 @@
   {
     "matchNumber": "83",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "9874",
     "startPoses0": false,
     "startPoses1": false,
@@ -25846,7 +25846,7 @@
   {
     "matchNumber": "83",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "9097",
     "startPoses0": false,
     "startPoses1": false,
@@ -25898,7 +25898,7 @@
   {
     "matchNumber": "84",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "8017",
     "startPoses0": false,
     "startPoses1": false,
@@ -25950,7 +25950,7 @@
   {
     "matchNumber": "84",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "9401",
     "startPoses0": false,
     "startPoses1": true,
@@ -26002,7 +26002,7 @@
   {
     "matchNumber": "84",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "254",
     "startPoses0": false,
     "startPoses1": false,
@@ -26054,7 +26054,7 @@
   {
     "matchNumber": "84",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "1114",
     "startPoses0": false,
     "startPoses1": false,
@@ -26106,7 +26106,7 @@
   {
     "matchNumber": "84",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "2056",
     "startPoses0": false,
     "startPoses1": false,
@@ -26158,7 +26158,7 @@
   {
     "matchNumber": "84",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "973",
     "startPoses0": false,
     "startPoses1": false,
@@ -26210,7 +26210,7 @@
   {
     "matchNumber": "85",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "1678",
     "startPoses0": false,
     "startPoses1": false,
@@ -26262,7 +26262,7 @@
   {
     "matchNumber": "85",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "148",
     "startPoses0": false,
     "startPoses1": false,
@@ -26314,7 +26314,7 @@
   {
     "matchNumber": "85",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "118",
     "startPoses0": false,
     "startPoses1": false,
@@ -26366,7 +26366,7 @@
   {
     "matchNumber": "85",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "1323",
     "startPoses0": false,
     "startPoses1": false,
@@ -26418,7 +26418,7 @@
   {
     "matchNumber": "85",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "1640",
     "startPoses0": false,
     "startPoses1": false,
@@ -26470,7 +26470,7 @@
   {
     "matchNumber": "85",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "2471",
     "startPoses0": false,
     "startPoses1": false,
@@ -26522,7 +26522,7 @@
   {
     "matchNumber": "86",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "5813",
     "startPoses0": false,
     "startPoses1": false,
@@ -26574,7 +26574,7 @@
   {
     "matchNumber": "86",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "2910",
     "startPoses0": false,
     "startPoses1": false,
@@ -26626,7 +26626,7 @@
   {
     "matchNumber": "86",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5940",
     "startPoses0": false,
     "startPoses1": false,
@@ -26678,7 +26678,7 @@
   {
     "matchNumber": "86",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "3476",
     "startPoses0": false,
     "startPoses1": false,
@@ -26730,7 +26730,7 @@
   {
     "matchNumber": "86",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "1690",
     "startPoses0": false,
     "startPoses1": false,
@@ -26782,7 +26782,7 @@
   {
     "matchNumber": "86",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "2767",
     "startPoses0": false,
     "startPoses1": false,
@@ -26834,7 +26834,7 @@
   {
     "matchNumber": "87",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "624",
     "startPoses0": false,
     "startPoses1": false,
@@ -26886,7 +26886,7 @@
   {
     "matchNumber": "87",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "217",
     "startPoses0": false,
     "startPoses1": false,
@@ -26938,7 +26938,7 @@
   {
     "matchNumber": "87",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "1533",
     "startPoses0": false,
     "startPoses1": false,
@@ -26990,7 +26990,7 @@
   {
     "matchNumber": "87",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "3005",
     "startPoses0": false,
     "startPoses1": false,
@@ -27042,7 +27042,7 @@
   {
     "matchNumber": "87",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "5865",
     "startPoses0": false,
     "startPoses1": false,
@@ -27094,7 +27094,7 @@
   {
     "matchNumber": "87",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "4800",
     "startPoses0": false,
     "startPoses1": false,
@@ -27146,7 +27146,7 @@
   {
     "matchNumber": "88",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "6561",
     "startPoses0": false,
     "startPoses1": false,
@@ -27198,7 +27198,7 @@
   {
     "matchNumber": "88",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "1417",
     "startPoses0": false,
     "startPoses1": false,
@@ -27250,7 +27250,7 @@
   {
     "matchNumber": "88",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "7078",
     "startPoses0": false,
     "startPoses1": false,
@@ -27302,7 +27302,7 @@
   {
     "matchNumber": "88",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "7393",
     "startPoses0": false,
     "startPoses1": false,
@@ -27354,7 +27354,7 @@
   {
     "matchNumber": "88",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "3493",
     "startPoses0": false,
     "startPoses1": false,
@@ -27406,7 +27406,7 @@
   {
     "matchNumber": "88",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "1922",
     "startPoses0": false,
     "startPoses1": false,
@@ -27458,7 +27458,7 @@
   {
     "matchNumber": "89",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "1267",
     "startPoses0": false,
     "startPoses1": false,
@@ -27510,7 +27510,7 @@
   {
     "matchNumber": "89",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "5348",
     "startPoses0": false,
     "startPoses1": false,
@@ -27562,7 +27562,7 @@
   {
     "matchNumber": "89",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "2531",
     "startPoses0": false,
     "startPoses1": false,
@@ -27614,7 +27614,7 @@
   {
     "matchNumber": "89",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "2225",
     "startPoses0": false,
     "startPoses1": false,
@@ -27666,7 +27666,7 @@
   {
     "matchNumber": "89",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "1107",
     "startPoses0": false,
     "startPoses1": false,
@@ -27718,7 +27718,7 @@
   {
     "matchNumber": "89",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "2932",
     "startPoses0": false,
     "startPoses1": false,
@@ -27770,7 +27770,7 @@
   {
     "matchNumber": "90",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "7582",
     "startPoses0": false,
     "startPoses1": false,
@@ -27822,7 +27822,7 @@
   {
     "matchNumber": "90",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "2485",
     "startPoses0": false,
     "startPoses1": false,
@@ -27874,7 +27874,7 @@
   {
     "matchNumber": "90",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "6516",
     "startPoses0": false,
     "startPoses1": false,
@@ -27926,7 +27926,7 @@
   {
     "matchNumber": "90",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "1237",
     "startPoses0": false,
     "startPoses1": false,
@@ -27978,7 +27978,7 @@
   {
     "matchNumber": "90",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "7753",
     "startPoses0": false,
     "startPoses1": false,
@@ -28030,7 +28030,7 @@
   {
     "matchNumber": "90",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "6051",
     "startPoses0": false,
     "startPoses1": false,
@@ -28082,7 +28082,7 @@
   {
     "matchNumber": "91",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "1762",
     "startPoses0": false,
     "startPoses1": false,
@@ -28134,7 +28134,7 @@
   {
     "matchNumber": "91",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "6794",
     "startPoses0": false,
     "startPoses1": false,
@@ -28186,7 +28186,7 @@
   {
     "matchNumber": "91",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "5414",
     "startPoses0": false,
     "startPoses1": false,
@@ -28238,7 +28238,7 @@
   {
     "matchNumber": "91",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "7305",
     "startPoses0": false,
     "startPoses1": false,
@@ -28290,7 +28290,7 @@
   {
     "matchNumber": "91",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "1737",
     "startPoses0": false,
     "startPoses1": false,
@@ -28342,7 +28342,7 @@
   {
     "matchNumber": "91",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "5966",
     "startPoses0": false,
     "startPoses1": false,
@@ -28394,7 +28394,7 @@
   {
     "matchNumber": "92",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "4338",
     "startPoses0": false,
     "startPoses1": false,
@@ -28446,7 +28446,7 @@
   {
     "matchNumber": "92",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "4179",
     "startPoses0": false,
     "startPoses1": false,
@@ -28498,7 +28498,7 @@
   {
     "matchNumber": "92",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "5517",
     "startPoses0": false,
     "startPoses1": false,
@@ -28550,7 +28550,7 @@
   {
     "matchNumber": "92",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "6311",
     "startPoses0": false,
     "startPoses1": false,
@@ -28602,7 +28602,7 @@
   {
     "matchNumber": "92",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "1234",
     "startPoses0": false,
     "startPoses1": false,
@@ -28654,7 +28654,7 @@
   {
     "matchNumber": "92",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "1615",
     "startPoses0": false,
     "startPoses1": false,
@@ -28706,7 +28706,7 @@
   {
     "matchNumber": "93",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "4868",
     "startPoses0": false,
     "startPoses1": false,
@@ -28758,7 +28758,7 @@
   {
     "matchNumber": "93",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "3475",
     "startPoses0": false,
     "startPoses1": true,
@@ -28810,7 +28810,7 @@
   {
     "matchNumber": "93",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "2275",
     "startPoses0": false,
     "startPoses1": false,
@@ -28862,7 +28862,7 @@
   {
     "matchNumber": "93",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "4022",
     "startPoses0": false,
     "startPoses1": false,
@@ -28914,7 +28914,7 @@
   {
     "matchNumber": "93",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5088",
     "startPoses0": false,
     "startPoses1": false,
@@ -28966,7 +28966,7 @@
   {
     "matchNumber": "93",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "3793",
     "startPoses0": false,
     "startPoses1": false,
@@ -29018,7 +29018,7 @@
   {
     "matchNumber": "94",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "2541",
     "startPoses0": false,
     "startPoses1": false,
@@ -29070,7 +29070,7 @@
   {
     "matchNumber": "94",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "4884",
     "startPoses0": false,
     "startPoses1": false,
@@ -29122,7 +29122,7 @@
   {
     "matchNumber": "94",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "3744",
     "startPoses0": false,
     "startPoses1": false,
@@ -29174,7 +29174,7 @@
   {
     "matchNumber": "94",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "6316",
     "startPoses0": false,
     "startPoses1": false,
@@ -29226,7 +29226,7 @@
   {
     "matchNumber": "94",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "5298",
     "startPoses0": false,
     "startPoses1": false,
@@ -29278,7 +29278,7 @@
   {
     "matchNumber": "94",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "7345",
     "startPoses0": false,
     "startPoses1": false,
@@ -29330,7 +29330,7 @@
   {
     "matchNumber": "95",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "1995",
     "startPoses0": false,
     "startPoses1": false,
@@ -29382,7 +29382,7 @@
   {
     "matchNumber": "95",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "5723",
     "startPoses0": false,
     "startPoses1": false,
@@ -29434,7 +29434,7 @@
   {
     "matchNumber": "95",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "6502",
     "startPoses0": false,
     "startPoses1": false,
@@ -29486,7 +29486,7 @@
   {
     "matchNumber": "95",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "4459",
     "startPoses0": false,
     "startPoses1": true,
@@ -29538,7 +29538,7 @@
   {
     "matchNumber": "95",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "1050",
     "startPoses0": false,
     "startPoses1": false,
@@ -29590,7 +29590,7 @@
   {
     "matchNumber": "95",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "6884",
     "startPoses0": false,
     "startPoses1": false,
@@ -29642,7 +29642,7 @@
   {
     "matchNumber": "96",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "1148",
     "startPoses0": false,
     "startPoses1": false,
@@ -29694,7 +29694,7 @@
   {
     "matchNumber": "96",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "4958",
     "startPoses0": false,
     "startPoses1": false,
@@ -29746,7 +29746,7 @@
   {
     "matchNumber": "96",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "7576",
     "startPoses0": false,
     "startPoses1": false,
@@ -29798,7 +29798,7 @@
   {
     "matchNumber": "96",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "4939",
     "startPoses0": false,
     "startPoses1": false,
@@ -29850,7 +29850,7 @@
   {
     "matchNumber": "96",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "6931",
     "startPoses0": false,
     "startPoses1": false,
@@ -29902,7 +29902,7 @@
   {
     "matchNumber": "96",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "4909",
     "startPoses0": false,
     "startPoses1": false,
@@ -29954,7 +29954,7 @@
   {
     "matchNumber": "97",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "5044",
     "startPoses0": false,
     "startPoses1": false,
@@ -30006,7 +30006,7 @@
   {
     "matchNumber": "97",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "7577",
     "startPoses0": false,
     "startPoses1": false,
@@ -30058,7 +30058,7 @@
   {
     "matchNumber": "97",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "1874",
     "startPoses0": false,
     "startPoses1": false,
@@ -30110,7 +30110,7 @@
   {
     "matchNumber": "97",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "2578",
     "startPoses0": false,
     "startPoses1": false,
@@ -30162,7 +30162,7 @@
   {
     "matchNumber": "97",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "9472",
     "startPoses0": false,
     "startPoses1": false,
@@ -30214,7 +30214,7 @@
   {
     "matchNumber": "97",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "9029",
     "startPoses0": false,
     "startPoses1": true,
@@ -30266,7 +30266,7 @@
   {
     "matchNumber": "98",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "9530",
     "startPoses0": false,
     "startPoses1": false,
@@ -30318,7 +30318,7 @@
   {
     "matchNumber": "98",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "8079",
     "startPoses0": false,
     "startPoses1": false,
@@ -30370,7 +30370,7 @@
   {
     "matchNumber": "98",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "8016",
     "startPoses0": false,
     "startPoses1": false,
@@ -30422,7 +30422,7 @@
   {
     "matchNumber": "98",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "8927",
     "startPoses0": false,
     "startPoses1": false,
@@ -30474,7 +30474,7 @@
   {
     "matchNumber": "98",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "9583",
     "startPoses0": false,
     "startPoses1": false,
@@ -30526,7 +30526,7 @@
   {
     "matchNumber": "98",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "8959",
     "startPoses0": false,
     "startPoses1": false,
@@ -30578,7 +30578,7 @@
   {
     "matchNumber": "99",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "9210",
     "startPoses0": false,
     "startPoses1": false,
@@ -30630,7 +30630,7 @@
   {
     "matchNumber": "99",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "9209",
     "startPoses0": false,
     "startPoses1": false,
@@ -30682,7 +30682,7 @@
   {
     "matchNumber": "99",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "9500",
     "startPoses0": false,
     "startPoses1": false,
@@ -30734,7 +30734,7 @@
   {
     "matchNumber": "99",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "8775",
     "startPoses0": false,
     "startPoses1": false,
@@ -30786,7 +30786,7 @@
   {
     "matchNumber": "99",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "9943",
     "startPoses0": false,
     "startPoses1": false,
@@ -30838,7 +30838,7 @@
   {
     "matchNumber": "99",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "8444",
     "startPoses0": false,
     "startPoses1": false,
@@ -30890,7 +30890,7 @@
   {
     "matchNumber": "100",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "9871",
     "startPoses0": false,
     "startPoses1": true,
@@ -30942,7 +30942,7 @@
   {
     "matchNumber": "100",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "8214",
     "startPoses0": false,
     "startPoses1": false,
@@ -30994,7 +30994,7 @@
   {
     "matchNumber": "100",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "8344",
     "startPoses0": false,
     "startPoses1": false,
@@ -31046,7 +31046,7 @@
   {
     "matchNumber": "100",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "9305",
     "startPoses0": false,
     "startPoses1": false,
@@ -31098,7 +31098,7 @@
   {
     "matchNumber": "100",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "9574",
     "startPoses0": false,
     "startPoses1": true,
@@ -31150,7 +31150,7 @@
   {
     "matchNumber": "100",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9261",
     "startPoses0": false,
     "startPoses1": false,
@@ -31202,7 +31202,7 @@
   {
     "matchNumber": "101",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "9829",
     "startPoses0": false,
     "startPoses1": false,
@@ -31254,7 +31254,7 @@
   {
     "matchNumber": "101",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "8139",
     "startPoses0": false,
     "startPoses1": false,
@@ -31306,7 +31306,7 @@
   {
     "matchNumber": "101",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "9362",
     "startPoses0": false,
     "startPoses1": false,
@@ -31358,7 +31358,7 @@
   {
     "matchNumber": "101",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "9404",
     "startPoses0": false,
     "startPoses1": false,
@@ -31410,7 +31410,7 @@
   {
     "matchNumber": "101",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "8284",
     "startPoses0": false,
     "startPoses1": false,
@@ -31462,7 +31462,7 @@
   {
     "matchNumber": "101",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "8447",
     "startPoses0": false,
     "startPoses1": false,
@@ -31514,7 +31514,7 @@
   {
     "matchNumber": "102",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "8791",
     "startPoses0": false,
     "startPoses1": false,
@@ -31566,7 +31566,7 @@
   {
     "matchNumber": "102",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9886",
     "startPoses0": false,
     "startPoses1": false,
@@ -31618,7 +31618,7 @@
   {
     "matchNumber": "102",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "9548",
     "startPoses0": false,
     "startPoses1": false,
@@ -31670,7 +31670,7 @@
   {
     "matchNumber": "102",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "9655",
     "startPoses0": false,
     "startPoses1": false,
@@ -31722,7 +31722,7 @@
   {
     "matchNumber": "102",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "8078",
     "startPoses0": false,
     "startPoses1": false,
@@ -31774,7 +31774,7 @@
   {
     "matchNumber": "102",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "9706",
     "startPoses0": false,
     "startPoses1": false,
@@ -31826,7 +31826,7 @@
   {
     "matchNumber": "103",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "8137",
     "startPoses0": false,
     "startPoses1": false,
@@ -31878,7 +31878,7 @@
   {
     "matchNumber": "103",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "8073",
     "startPoses0": false,
     "startPoses1": false,
@@ -31930,7 +31930,7 @@
   {
     "matchNumber": "103",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "9439",
     "startPoses0": false,
     "startPoses1": false,
@@ -31982,7 +31982,7 @@
   {
     "matchNumber": "103",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "8038",
     "startPoses0": false,
     "startPoses1": false,
@@ -32034,7 +32034,7 @@
   {
     "matchNumber": "103",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9737",
     "startPoses0": false,
     "startPoses1": false,
@@ -32086,7 +32086,7 @@
   {
     "matchNumber": "103",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "8151",
     "startPoses0": false,
     "startPoses1": false,
@@ -32138,7 +32138,7 @@
   {
     "matchNumber": "104",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "9307",
     "startPoses0": false,
     "startPoses1": false,
@@ -32190,7 +32190,7 @@
   {
     "matchNumber": "104",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "9897",
     "startPoses0": false,
     "startPoses1": false,
@@ -32242,7 +32242,7 @@
   {
     "matchNumber": "104",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9148",
     "startPoses0": false,
     "startPoses1": false,
@@ -32294,7 +32294,7 @@
   {
     "matchNumber": "104",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9874",
     "startPoses0": false,
     "startPoses1": false,
@@ -32346,7 +32346,7 @@
   {
     "matchNumber": "104",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9097",
     "startPoses0": false,
     "startPoses1": false,
@@ -32398,7 +32398,7 @@
   {
     "matchNumber": "104",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "8017",
     "startPoses0": false,
     "startPoses1": false,
@@ -32450,7 +32450,7 @@
   {
     "matchNumber": "105",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "9401",
     "startPoses0": false,
     "startPoses1": false,
@@ -32502,7 +32502,7 @@
   {
     "matchNumber": "105",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "254",
     "startPoses0": false,
     "startPoses1": false,
@@ -32554,7 +32554,7 @@
   {
     "matchNumber": "105",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "1114",
     "startPoses0": false,
     "startPoses1": false,
@@ -32606,7 +32606,7 @@
   {
     "matchNumber": "105",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "2056",
     "startPoses0": false,
     "startPoses1": false,
@@ -32658,7 +32658,7 @@
   {
     "matchNumber": "105",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "973",
     "startPoses0": false,
     "startPoses1": false,
@@ -32710,7 +32710,7 @@
   {
     "matchNumber": "105",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "1678",
     "startPoses0": false,
     "startPoses1": false,
@@ -32762,7 +32762,7 @@
   {
     "matchNumber": "106",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "148",
     "startPoses0": false,
     "startPoses1": false,
@@ -32814,7 +32814,7 @@
   {
     "matchNumber": "106",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "118",
     "startPoses0": false,
     "startPoses1": false,
@@ -32866,7 +32866,7 @@
   {
     "matchNumber": "106",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "1323",
     "startPoses0": false,
     "startPoses1": false,
@@ -32918,7 +32918,7 @@
   {
     "matchNumber": "106",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "1640",
     "startPoses0": false,
     "startPoses1": false,
@@ -32970,7 +32970,7 @@
   {
     "matchNumber": "106",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "2471",
     "startPoses0": false,
     "startPoses1": true,
@@ -33022,7 +33022,7 @@
   {
     "matchNumber": "106",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "5813",
     "startPoses0": false,
     "startPoses1": false,
@@ -33074,7 +33074,7 @@
   {
     "matchNumber": "107",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "2910",
     "startPoses0": false,
     "startPoses1": false,
@@ -33126,7 +33126,7 @@
   {
     "matchNumber": "107",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "5940",
     "startPoses0": false,
     "startPoses1": false,
@@ -33178,7 +33178,7 @@
   {
     "matchNumber": "107",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "3476",
     "startPoses0": false,
     "startPoses1": false,
@@ -33230,7 +33230,7 @@
   {
     "matchNumber": "107",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "1690",
     "startPoses0": false,
     "startPoses1": false,
@@ -33282,7 +33282,7 @@
   {
     "matchNumber": "107",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "2767",
     "startPoses0": false,
     "startPoses1": false,
@@ -33334,7 +33334,7 @@
   {
     "matchNumber": "107",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "624",
     "startPoses0": false,
     "startPoses1": false,
@@ -33386,7 +33386,7 @@
   {
     "matchNumber": "108",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "217",
     "startPoses0": false,
     "startPoses1": false,
@@ -33438,7 +33438,7 @@
   {
     "matchNumber": "108",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "1533",
     "startPoses0": false,
     "startPoses1": false,
@@ -33490,7 +33490,7 @@
   {
     "matchNumber": "108",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "3005",
     "startPoses0": false,
     "startPoses1": false,
@@ -33542,7 +33542,7 @@
   {
     "matchNumber": "108",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "5865",
     "startPoses0": false,
     "startPoses1": false,
@@ -33594,7 +33594,7 @@
   {
     "matchNumber": "108",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "4800",
     "startPoses0": false,
     "startPoses1": false,
@@ -33646,7 +33646,7 @@
   {
     "matchNumber": "108",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "6561",
     "startPoses0": false,
     "startPoses1": false,
@@ -33698,7 +33698,7 @@
   {
     "matchNumber": "109",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "1417",
     "startPoses0": false,
     "startPoses1": false,
@@ -33750,7 +33750,7 @@
   {
     "matchNumber": "109",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "7078",
     "startPoses0": false,
     "startPoses1": false,
@@ -33802,7 +33802,7 @@
   {
     "matchNumber": "109",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "7393",
     "startPoses0": false,
     "startPoses1": false,
@@ -33854,7 +33854,7 @@
   {
     "matchNumber": "109",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "3493",
     "startPoses0": false,
     "startPoses1": false,
@@ -33906,7 +33906,7 @@
   {
     "matchNumber": "109",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "1922",
     "startPoses0": false,
     "startPoses1": false,
@@ -33958,7 +33958,7 @@
   {
     "matchNumber": "109",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "1267",
     "startPoses0": false,
     "startPoses1": false,
@@ -34010,7 +34010,7 @@
   {
     "matchNumber": "110",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "5348",
     "startPoses0": false,
     "startPoses1": false,
@@ -34062,7 +34062,7 @@
   {
     "matchNumber": "110",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "2531",
     "startPoses0": false,
     "startPoses1": false,
@@ -34114,7 +34114,7 @@
   {
     "matchNumber": "110",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "2225",
     "startPoses0": false,
     "startPoses1": false,
@@ -34166,7 +34166,7 @@
   {
     "matchNumber": "110",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "1107",
     "startPoses0": false,
     "startPoses1": false,
@@ -34218,7 +34218,7 @@
   {
     "matchNumber": "110",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "2932",
     "startPoses0": false,
     "startPoses1": false,
@@ -34270,7 +34270,7 @@
   {
     "matchNumber": "110",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "7582",
     "startPoses0": false,
     "startPoses1": false,
@@ -34322,7 +34322,7 @@
   {
     "matchNumber": "111",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "2485",
     "startPoses0": false,
     "startPoses1": false,
@@ -34374,7 +34374,7 @@
   {
     "matchNumber": "111",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "6516",
     "startPoses0": false,
     "startPoses1": false,
@@ -34426,7 +34426,7 @@
   {
     "matchNumber": "111",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "1237",
     "startPoses0": false,
     "startPoses1": false,
@@ -34478,7 +34478,7 @@
   {
     "matchNumber": "111",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "7753",
     "startPoses0": false,
     "startPoses1": false,
@@ -34530,7 +34530,7 @@
   {
     "matchNumber": "111",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "6051",
     "startPoses0": false,
     "startPoses1": false,
@@ -34582,7 +34582,7 @@
   {
     "matchNumber": "111",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "1762",
     "startPoses0": false,
     "startPoses1": false,
@@ -34634,7 +34634,7 @@
   {
     "matchNumber": "112",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "6794",
     "startPoses0": false,
     "startPoses1": false,
@@ -34686,7 +34686,7 @@
   {
     "matchNumber": "112",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "5414",
     "startPoses0": false,
     "startPoses1": false,
@@ -34738,7 +34738,7 @@
   {
     "matchNumber": "112",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "7305",
     "startPoses0": false,
     "startPoses1": false,
@@ -34790,7 +34790,7 @@
   {
     "matchNumber": "112",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "1737",
     "startPoses0": false,
     "startPoses1": false,
@@ -34842,7 +34842,7 @@
   {
     "matchNumber": "112",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "5966",
     "startPoses0": false,
     "startPoses1": false,
@@ -34894,7 +34894,7 @@
   {
     "matchNumber": "112",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "4338",
     "startPoses0": false,
     "startPoses1": false,
@@ -34946,7 +34946,7 @@
   {
     "matchNumber": "113",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "4179",
     "startPoses0": false,
     "startPoses1": false,
@@ -34998,7 +34998,7 @@
   {
     "matchNumber": "113",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "5517",
     "startPoses0": false,
     "startPoses1": false,
@@ -35050,7 +35050,7 @@
   {
     "matchNumber": "113",
     "alliance": "redAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "6311",
     "startPoses0": false,
     "startPoses1": false,
@@ -35102,7 +35102,7 @@
   {
     "matchNumber": "113",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "1234",
     "startPoses0": false,
     "startPoses1": false,
@@ -35154,7 +35154,7 @@
   {
     "matchNumber": "113",
     "alliance": "blueAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "1615",
     "startPoses0": false,
     "startPoses1": false,
@@ -35206,7 +35206,7 @@
   {
     "matchNumber": "113",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "4868",
     "startPoses0": false,
     "startPoses1": false,
@@ -35258,7 +35258,7 @@
   {
     "matchNumber": "114",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "3475",
     "startPoses0": false,
     "startPoses1": false,
@@ -35310,7 +35310,7 @@
   {
     "matchNumber": "114",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "2275",
     "startPoses0": false,
     "startPoses1": false,
@@ -35362,7 +35362,7 @@
   {
     "matchNumber": "114",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "4022",
     "startPoses0": false,
     "startPoses1": false,
@@ -35414,7 +35414,7 @@
   {
     "matchNumber": "114",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "5088",
     "startPoses0": false,
     "startPoses1": false,
@@ -35466,7 +35466,7 @@
   {
     "matchNumber": "114",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "3793",
     "startPoses0": false,
     "startPoses1": false,
@@ -35518,7 +35518,7 @@
   {
     "matchNumber": "114",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "2541",
     "startPoses0": false,
     "startPoses1": false,
@@ -35570,7 +35570,7 @@
   {
     "matchNumber": "115",
     "alliance": "redAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "4884",
     "startPoses0": false,
     "startPoses1": false,
@@ -35622,7 +35622,7 @@
   {
     "matchNumber": "115",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "3744",
     "startPoses0": false,
     "startPoses1": false,
@@ -35674,7 +35674,7 @@
   {
     "matchNumber": "115",
     "alliance": "redAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "6316",
     "startPoses0": false,
     "startPoses1": false,
@@ -35726,7 +35726,7 @@
   {
     "matchNumber": "115",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "5298",
     "startPoses0": false,
     "startPoses1": false,
@@ -35778,7 +35778,7 @@
   {
     "matchNumber": "115",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "7345",
     "startPoses0": false,
     "startPoses1": false,
@@ -35830,7 +35830,7 @@
   {
     "matchNumber": "115",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "1995",
     "startPoses0": false,
     "startPoses1": false,
@@ -35882,7 +35882,7 @@
   {
     "matchNumber": "116",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "5723",
     "startPoses0": false,
     "startPoses1": false,
@@ -35934,7 +35934,7 @@
   {
     "matchNumber": "116",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "6502",
     "startPoses0": false,
     "startPoses1": false,
@@ -35986,7 +35986,7 @@
   {
     "matchNumber": "116",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "4459",
     "startPoses0": false,
     "startPoses1": false,
@@ -36038,7 +36038,7 @@
   {
     "matchNumber": "116",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "1050",
     "startPoses0": false,
     "startPoses1": false,
@@ -36090,7 +36090,7 @@
   {
     "matchNumber": "116",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "6884",
     "startPoses0": false,
     "startPoses1": false,
@@ -36142,7 +36142,7 @@
   {
     "matchNumber": "116",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "1148",
     "startPoses0": false,
     "startPoses1": false,
@@ -36194,7 +36194,7 @@
   {
     "matchNumber": "117",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "4958",
     "startPoses0": false,
     "startPoses1": false,
@@ -36246,7 +36246,7 @@
   {
     "matchNumber": "117",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "7576",
     "startPoses0": false,
     "startPoses1": false,
@@ -36298,7 +36298,7 @@
   {
     "matchNumber": "117",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "4939",
     "startPoses0": false,
     "startPoses1": false,
@@ -36350,7 +36350,7 @@
   {
     "matchNumber": "117",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "6931",
     "startPoses0": false,
     "startPoses1": false,
@@ -36402,7 +36402,7 @@
   {
     "matchNumber": "117",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "4909",
     "startPoses0": false,
     "startPoses1": false,
@@ -36454,7 +36454,7 @@
   {
     "matchNumber": "117",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "5044",
     "startPoses0": false,
     "startPoses1": false,
@@ -36506,7 +36506,7 @@
   {
     "matchNumber": "118",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "7577",
     "startPoses0": false,
     "startPoses1": false,
@@ -36558,7 +36558,7 @@
   {
     "matchNumber": "118",
     "alliance": "redAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "1874",
     "startPoses0": false,
     "startPoses1": false,
@@ -36610,7 +36610,7 @@
   {
     "matchNumber": "118",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "2578",
     "startPoses0": false,
     "startPoses1": false,
@@ -36662,7 +36662,7 @@
   {
     "matchNumber": "118",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "9472",
     "startPoses0": false,
     "startPoses1": false,
@@ -36714,7 +36714,7 @@
   {
     "matchNumber": "118",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9029",
     "startPoses0": false,
     "startPoses1": false,
@@ -36766,7 +36766,7 @@
   {
     "matchNumber": "118",
     "alliance": "blueAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "9530",
     "startPoses0": false,
     "startPoses1": false,
@@ -36818,7 +36818,7 @@
   {
     "matchNumber": "119",
     "alliance": "redAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "8079",
     "startPoses0": false,
     "startPoses1": false,
@@ -36870,7 +36870,7 @@
   {
     "matchNumber": "119",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "8016",
     "startPoses0": false,
     "startPoses1": false,
@@ -36922,7 +36922,7 @@
   {
     "matchNumber": "119",
     "alliance": "redAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "8927",
     "startPoses0": false,
     "startPoses1": false,
@@ -36974,7 +36974,7 @@
   {
     "matchNumber": "119",
     "alliance": "blueAlliance",
-    "scouterInitials": "ZY",
+    "scoutName": "ZY",
     "selectTeam": "9583",
     "startPoses0": false,
     "startPoses1": false,
@@ -37026,7 +37026,7 @@
   {
     "matchNumber": "119",
     "alliance": "blueAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "8959",
     "startPoses0": false,
     "startPoses1": false,
@@ -37078,7 +37078,7 @@
   {
     "matchNumber": "119",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "9210",
     "startPoses0": false,
     "startPoses1": false,
@@ -37130,7 +37130,7 @@
   {
     "matchNumber": "120",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "9209",
     "startPoses0": false,
     "startPoses1": false,
@@ -37182,7 +37182,7 @@
   {
     "matchNumber": "120",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "9500",
     "startPoses0": false,
     "startPoses1": false,
@@ -37234,7 +37234,7 @@
   {
     "matchNumber": "120",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "8775",
     "startPoses0": false,
     "startPoses1": false,
@@ -37286,7 +37286,7 @@
   {
     "matchNumber": "120",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "9943",
     "startPoses0": false,
     "startPoses1": false,
@@ -37338,7 +37338,7 @@
   {
     "matchNumber": "120",
     "alliance": "blueAlliance",
-    "scouterInitials": "KL",
+    "scoutName": "KL",
     "selectTeam": "8444",
     "startPoses0": false,
     "startPoses1": false,
@@ -37390,7 +37390,7 @@
   {
     "matchNumber": "120",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "9871",
     "startPoses0": false,
     "startPoses1": false,
@@ -37442,7 +37442,7 @@
   {
     "matchNumber": "121",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "8214",
     "startPoses0": false,
     "startPoses1": false,
@@ -37494,7 +37494,7 @@
   {
     "matchNumber": "121",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "8344",
     "startPoses0": false,
     "startPoses1": false,
@@ -37546,7 +37546,7 @@
   {
     "matchNumber": "121",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "9305",
     "startPoses0": false,
     "startPoses1": false,
@@ -37598,7 +37598,7 @@
   {
     "matchNumber": "121",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "9574",
     "startPoses0": false,
     "startPoses1": false,
@@ -37650,7 +37650,7 @@
   {
     "matchNumber": "121",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9261",
     "startPoses0": false,
     "startPoses1": false,
@@ -37702,7 +37702,7 @@
   {
     "matchNumber": "121",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "9829",
     "startPoses0": false,
     "startPoses1": false,
@@ -37754,7 +37754,7 @@
   {
     "matchNumber": "122",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "8139",
     "startPoses0": false,
     "startPoses1": false,
@@ -37806,7 +37806,7 @@
   {
     "matchNumber": "122",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9362",
     "startPoses0": false,
     "startPoses1": false,
@@ -37858,7 +37858,7 @@
   {
     "matchNumber": "122",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9404",
     "startPoses0": false,
     "startPoses1": false,
@@ -37910,7 +37910,7 @@
   {
     "matchNumber": "122",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "8284",
     "startPoses0": false,
     "startPoses1": false,
@@ -37962,7 +37962,7 @@
   {
     "matchNumber": "122",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "8447",
     "startPoses0": false,
     "startPoses1": false,
@@ -38014,7 +38014,7 @@
   {
     "matchNumber": "122",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "8791",
     "startPoses0": false,
     "startPoses1": false,
@@ -38066,7 +38066,7 @@
   {
     "matchNumber": "123",
     "alliance": "redAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9886",
     "startPoses0": false,
     "startPoses1": false,
@@ -38118,7 +38118,7 @@
   {
     "matchNumber": "123",
     "alliance": "redAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "9548",
     "startPoses0": false,
     "startPoses1": false,
@@ -38170,7 +38170,7 @@
   {
     "matchNumber": "123",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "9655",
     "startPoses0": false,
     "startPoses1": false,
@@ -38222,7 +38222,7 @@
   {
     "matchNumber": "123",
     "alliance": "blueAlliance",
-    "scouterInitials": "RW",
+    "scoutName": "RW",
     "selectTeam": "8078",
     "startPoses0": false,
     "startPoses1": false,
@@ -38274,7 +38274,7 @@
   {
     "matchNumber": "123",
     "alliance": "blueAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "9706",
     "startPoses0": false,
     "startPoses1": false,
@@ -38326,7 +38326,7 @@
   {
     "matchNumber": "123",
     "alliance": "blueAlliance",
-    "scouterInitials": "BH",
+    "scoutName": "BH",
     "selectTeam": "8137",
     "startPoses0": false,
     "startPoses1": false,
@@ -38378,7 +38378,7 @@
   {
     "matchNumber": "124",
     "alliance": "redAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "8073",
     "startPoses0": false,
     "startPoses1": false,
@@ -38430,7 +38430,7 @@
   {
     "matchNumber": "124",
     "alliance": "redAlliance",
-    "scouterInitials": "LN",
+    "scoutName": "LN",
     "selectTeam": "9439",
     "startPoses0": false,
     "startPoses1": false,
@@ -38482,7 +38482,7 @@
   {
     "matchNumber": "124",
     "alliance": "redAlliance",
-    "scouterInitials": "AK",
+    "scoutName": "AK",
     "selectTeam": "8038",
     "startPoses0": false,
     "startPoses1": false,
@@ -38534,7 +38534,7 @@
   {
     "matchNumber": "124",
     "alliance": "blueAlliance",
-    "scouterInitials": "MR",
+    "scoutName": "MR",
     "selectTeam": "9737",
     "startPoses0": false,
     "startPoses1": false,
@@ -38586,7 +38586,7 @@
   {
     "matchNumber": "124",
     "alliance": "blueAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "8151",
     "startPoses0": false,
     "startPoses1": false,
@@ -38638,7 +38638,7 @@
   {
     "matchNumber": "124",
     "alliance": "blueAlliance",
-    "scouterInitials": "TM",
+    "scoutName": "TM",
     "selectTeam": "9307",
     "startPoses0": false,
     "startPoses1": false,
@@ -38690,7 +38690,7 @@
   {
     "matchNumber": "125",
     "alliance": "redAlliance",
-    "scouterInitials": "QS",
+    "scoutName": "QS",
     "selectTeam": "9897",
     "startPoses0": false,
     "startPoses1": false,
@@ -38742,7 +38742,7 @@
   {
     "matchNumber": "125",
     "alliance": "redAlliance",
-    "scouterInitials": "VX",
+    "scoutName": "VX",
     "selectTeam": "9148",
     "startPoses0": false,
     "startPoses1": false,
@@ -38794,7 +38794,7 @@
   {
     "matchNumber": "125",
     "alliance": "redAlliance",
-    "scouterInitials": "JD",
+    "scoutName": "JD",
     "selectTeam": "9874",
     "startPoses0": false,
     "startPoses1": false,
@@ -38846,7 +38846,7 @@
   {
     "matchNumber": "125",
     "alliance": "blueAlliance",
-    "scouterInitials": "SC",
+    "scoutName": "SC",
     "selectTeam": "9097",
     "startPoses0": false,
     "startPoses1": false,
@@ -38898,7 +38898,7 @@
   {
     "matchNumber": "125",
     "alliance": "blueAlliance",
-    "scouterInitials": "ET",
+    "scoutName": "ET",
     "selectTeam": "8017",
     "startPoses0": false,
     "startPoses1": false,
@@ -38950,7 +38950,7 @@
   {
     "matchNumber": "125",
     "alliance": "blueAlliance",
-    "scouterInitials": "AN",
+    "scoutName": "AN",
     "selectTeam": "9401",
     "startPoses0": false,
     "startPoses1": false,
