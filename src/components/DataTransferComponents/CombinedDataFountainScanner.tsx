@@ -1,7 +1,15 @@
 import { gameDB, type Scout, type MatchPrediction } from "@/lib/dexieDB";
-import { loadScoutingData, saveScoutingData, mergeScoutingData, type ScoutingDataWithId } from "@/lib/scoutingDataUtils";
+import { 
+  loadScoutingData, 
+  saveScoutingData, 
+  mergeScoutingData, 
+  detectConflicts,
+  type ScoutingDataWithId
+} from "@/lib/scoutingDataUtils";
+import { useConflictResolution } from "@/hooks/useConflictResolution";
 import UniversalFountainScanner from "./UniversalFountainScanner";
 import ScoutAddConfirmDialog from "./ScoutAddConfirmDialog";
+import ConflictResolutionDialog from "./ConflictResolutionDialog";
 import { toast } from "sonner";
 import { useState } from "react";
 
@@ -36,8 +44,22 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
     scoutsToImport: Scout[];
     predictionsToImport: MatchPrediction[];
   } | null>(null);
+  
+  // Use conflict resolution hook
+  const {
+    showConflictDialog,
+    setShowConflictDialog,
+    currentConflicts,
+    setCurrentConflicts,
+    currentConflictIndex,
+    setCurrentConflictIndex,
+    setConflictResolutions,
+    handleConflictResolution,
+    handleBatchResolve,
+    handleUndo,
+    canUndo
+  } = useConflictResolution();
   const saveCombinedData = async (data: unknown) => {
-    
     try {
       // Validate the received data structure
       if (!data || typeof data !== 'object') {
@@ -54,32 +76,79 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
         throw new Error('Missing required data sections in combined export');
       }
       
-      let scoutingResults = { added: 0, existing: 0, duplicates: 0 };
+      const scoutingResults = { added: 0, replaced: 0, conflictsToReview: 0 };
       const scoutResults = { scoutsAdded: 0, scoutsUpdated: 0, predictionsAdded: 0, predictionsSkipped: 0 };
       
-      // Process scouting data if present
+      // Process scouting data with conflict detection if present
       if (combinedData.scoutingData.entries && combinedData.scoutingData.entries.length > 0) {
+        // Check if entries have composite IDs (new format) or hash IDs (old format)
+        const firstEntry = combinedData.scoutingData.entries[0];
+        const hasCompositeIds = firstEntry?.id && typeof firstEntry.id === 'string' && firstEntry.id.includes('::');
         
-        // Load existing scouting data
-        const existingScoutingData = await loadScoutingData();
+        let entriesWithIds;
+        if (hasCompositeIds) {
+          // Already has composite IDs - preserve them!
+          entriesWithIds = combinedData.scoutingData.entries;
+        } else {
+          // Old hash IDs or missing IDs - regenerate with composite format
+          const { addIdsToScoutingData } = await import('@/lib/scoutingDataUtils');
+          const rawData = combinedData.scoutingData.entries.map(entry => entry.data);
+          entriesWithIds = addIdsToScoutingData(rawData);
+        }
         
-        // Merge scouting data with deduplication
-        const mergeResult = mergeScoutingData(
-          existingScoutingData.entries,
-          combinedData.scoutingData.entries,
-          'smart-merge'
-        );
+        // Detect conflicts using the new system
+        const conflictResult = await detectConflicts(entriesWithIds);
         
-        // Save merged scouting data
-        await saveScoutingData({ entries: mergeResult.merged });
-        scoutingResults = {
-          added: mergeResult.stats.new,
-          existing: mergeResult.stats.existing,
-          duplicates: mergeResult.stats.duplicates
-        };
+        // Import non-conflicting entries immediately
+        const { saveScoutingEntry, db } = await import('@/lib/dexieDB');
+        
+        // Auto-import: Save new entries
+        if (conflictResult.autoImport.length > 0) {
+          for (const entry of conflictResult.autoImport) {
+            await saveScoutingEntry(entry);
+          }
+          scoutingResults.added = conflictResult.autoImport.length;
+        }
+        
+        // Auto-replace: Delete old, save new (with correction metadata preserved)
+        if (conflictResult.autoReplace.length > 0) {
+          for (const entry of conflictResult.autoReplace) {
+            const incomingData = entry.data;
+            const matchNumber = String(incomingData.matchNumber || '');
+            const teamNumber = String(incomingData.selectTeam || incomingData.teamNumber || '');
+            const alliance = String(incomingData.alliance || '').toLowerCase().replace('alliance', '').trim();
+            const eventName = String(incomingData.eventName || '');
+            
+            // Find and delete existing entry
+            const existing = await db.scoutingData
+              .toArray()
+              .then(entries => entries.find(e => 
+                e.matchNumber === matchNumber &&
+                e.teamNumber === teamNumber &&
+                e.alliance?.toLowerCase().replace('alliance', '').trim() === alliance &&
+                e.eventName === eventName
+              ));
+            
+            if (existing) {
+              await db.scoutingData.delete(existing.id);
+            }
+            
+            // Save new entry (with correction metadata if present)
+            await saveScoutingEntry(entry);
+          }
+          scoutingResults.replaced = conflictResult.autoReplace.length;
+        }
+        
+        // Conflicts: Store for user resolution (but don't return yet - process scout profiles first)
+        if (conflictResult.conflicts.length > 0) {
+          scoutingResults.conflictsToReview = conflictResult.conflicts.length;
+          setCurrentConflicts(conflictResult.conflicts);
+          setCurrentConflictIndex(0);
+          setConflictResolutions(new Map());
+        }
       }
       
-      // Process scout profiles data if present
+      // Process scout profiles data if present (existing logic)
       if (combinedData.scoutProfiles.scouts || combinedData.scoutProfiles.predictions) {
         const scoutsToImport = combinedData.scoutProfiles.scouts || [];
         const predictionsToImport = combinedData.scoutProfiles.predictions || [];
@@ -120,20 +189,28 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
         scoutResults.predictionsSkipped = scoutImportResult.predictionsSkipped;
       }
       
-      // Show comprehensive summary to user
-      const scoutingMessage = scoutingResults.added > 0 || scoutingResults.existing > 0 
-        ? `Scouting: ${scoutingResults.added} new entries added, ${scoutingResults.existing} existing entries found${scoutingResults.duplicates > 0 ? `, ${scoutingResults.duplicates} duplicates skipped` : ''}. `
+      // Show comprehensive summary to user (updated to show replaced instead of existing)
+      const scoutingMessage = scoutingResults.added > 0 || scoutingResults.replaced > 0 
+        ? `Scouting: ${scoutingResults.added} new entries, ${scoutingResults.replaced} entries replaced. `
         : '';
         
       const scoutMessage = scoutResults.scoutsAdded > 0 || scoutResults.scoutsUpdated > 0 || scoutResults.predictionsAdded > 0
         ? `Profiles: ${scoutResults.scoutsAdded} new scouts, ${scoutResults.scoutsUpdated} updated scouts, ${scoutResults.predictionsAdded} predictions imported.`
         : '';
       
-      const fullMessage = `Combined import complete! ${scoutingMessage}${scoutMessage}`;
-      toast.success(fullMessage);
+      // If there are conflicts, show dialog AFTER scout profiles are imported
+      if (scoutingResults.conflictsToReview > 0) {
+        toast.success(
+          `${scoutingMessage}${scoutMessage}${scoutingResults.conflictsToReview} conflicts need review.`
+        );
+        setShowConflictDialog(true);
+      } else {
+        // No conflicts - show normal completion message
+        const fullMessage = `Combined import complete! ${scoutingMessage}${scoutMessage}`;
+        toast.success(fullMessage);
+      }
       
     } catch (error) {
-      console.error('Error importing combined data:', error);
       toast.error(`Combined import failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
       throw error;
     }
@@ -346,6 +423,18 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
         pendingScoutNames={pendingScoutNames}
         onAddToSelectable={handleAddScoutsToSelectable}
         onImportOnly={handleImportWithoutAdding}
+      />
+      
+      <ConflictResolutionDialog
+        open={showConflictDialog}
+        onOpenChange={setShowConflictDialog}
+        conflict={currentConflicts[currentConflictIndex] || null}
+        currentIndex={currentConflictIndex}
+        totalConflicts={currentConflicts.length}
+        onResolve={handleConflictResolution}
+        onBatchResolve={handleBatchResolve}
+        onUndo={handleUndo}
+        canUndo={canUndo}
       />
     </>
   );

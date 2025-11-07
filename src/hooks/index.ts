@@ -7,3 +7,4 @@ export { useFullscreen } from './useFullscreen';
 export { useCurrentScout } from './useCurrentScout';
 export { useMatchStrategy } from './useMatchStrategy';
 export { usePickList } from './usePickList';
+export { useMatchValidation } from './useMatchValidation';

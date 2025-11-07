@@ -2,17 +2,25 @@ import React, { useState, useEffect } from 'react';
 
 // Import hooks and components
 import { useTBAData } from '@/hooks/useTBAData';
+import { useTBAMatchData } from '@/hooks/useTBAMatchData';
 import ApiKeyForm from '@/components/MatchResultsComponents/ApiKeyForm';
-import MatchDataLoader from '@/components/TBADataComponents/MatchDataLoader';
 import { MatchSelector } from '@/components/MatchResultsComponents/MatchSelector';
 import { ProcessingResults } from '@/components/MatchResultsComponents/ProcessingResults';
-import { DataTypeSelector, type TBADataType } from '@/components/TBADataComponents/DataTypeSelector';
-import { EventConfigurationCard } from '@/components/TBADataComponents/EventConfigurationCard';
-import { DataOperationsCard } from '@/components/TBADataComponents/DataOperationsCard';
-import { EventSwitchConfirmDialog } from '@/components/TBADataComponents/EventSwitchConfirmDialog';
-import { EventTeamsDisplay } from '@/components/TBADataComponents/EventTeamsDisplay';
-import { PitDataDisplay } from '@/components/TBADataComponents/PitDataDisplay';
-import { DataStatusCard } from '@/components/TBADataComponents/DataStatusCard';
+import { 
+  MatchDataLoader,
+  DataStatusCard,
+  DataOperationsCard,
+  MatchValidationDataDisplay,
+  PitDataDisplay
+} from '@/components/TBADataComponents/DataManagement';
+import {
+  DataTypeSelector,
+  EventConfigurationCard,
+  EventSwitchConfirmDialog,
+  EventTeamsDisplay,
+  type TBADataType
+} from '@/components/TBADataComponents/EventConfiguration';
+import { ValidationTesting } from '@/components/TBADataComponents/ValidationTesting';
 import { DataAttribution } from '@/components/DataAttribution';
 import { getNexusPitData, storePitData, getStoredPitData, getNexusEvents, extractAndStoreTeamsFromPitAddresses, type NexusPitAddresses, type NexusPitMap } from '@/lib/nexusUtils';
 import { clearEventData, hasStoredEventData, setCurrentEvent, getCurrentEvent, isDifferentEvent } from '@/lib/eventDataUtils';
@@ -54,6 +62,7 @@ const APIDataPage: React.FC = () => {
   
   // Debug Nexus state
   const [debugNexusLoading, setDebugNexusLoading] = useState(false);
+  const [nexusEvents, setNexusEvents] = useState<Record<string, unknown> | null>(null);
 
   // Use the TBA data hook
   const {
@@ -69,6 +78,17 @@ const APIDataPage: React.FC = () => {
     handleStoreTeams,
     handleClearStored,
   } = useTBAData();
+
+  // Use the TBA match validation data hook
+  const {
+    loading: validationLoading,
+    matches: validationMatches,
+    cacheMetadata,
+    isOnline: validationOnline,
+    cacheExpired: validationCacheExpired,
+    fetchEventMatches: fetchValidationMatches,
+    clearCache: clearValidationCache,
+  } = useTBAMatchData();
 
   // Check for stored data when event key changes
   useEffect(() => {
@@ -133,6 +153,26 @@ const APIDataPage: React.FC = () => {
   const handleLoadMatchResults = () => {
     executeWithConfirmation(() => {
       loadMatchResults(apiKey, eventKey, rememberForSession, setApiKey);
+    });
+  };
+
+  const handleLoadValidationData = () => {
+    executeWithConfirmation(async () => {
+      if (!apiKey.trim() || !eventKey.trim()) {
+        toast.error('Please provide API key and event key');
+        return;
+      }
+      
+      try {
+        await fetchValidationMatches(eventKey, apiKey, false);
+        toast.success('Match validation data loaded and cached');
+        
+        // Update current event in localStorage after successful load
+        setCurrentEvent(eventKey.trim());
+      } catch (error) {
+        console.error('Error loading validation data:', error);
+        toast.error('Failed to load validation data');
+      }
     });
   };
 
@@ -234,6 +274,7 @@ const APIDataPage: React.FC = () => {
     try {
       const eventsData = await getNexusEvents(nexusApiKey);      
       const eventCount = Object.keys(eventsData).length;
+      setNexusEvents(eventsData);
       toast.success(`Loaded ${eventCount} events from Nexus API`);
       
       // Clear API key from memory if not remembering for session
@@ -244,6 +285,7 @@ const APIDataPage: React.FC = () => {
     } catch (error) {
       console.error('Error loading Nexus events:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to load Nexus events');
+      setNexusEvents(null);
     } finally {
       setDebugNexusLoading(false);
     }
@@ -330,11 +372,13 @@ const APIDataPage: React.FC = () => {
         nexusApiKey={nexusApiKey}
         matchDataLoading={matchDataLoading}
         matchResultsLoading={matchResultsLoading}
+        validationLoading={validationLoading}
         eventTeamsLoading={eventTeamsLoading}
         pitDataLoading={pitDataLoading}
         debugNexusLoading={debugNexusLoading}
         onLoadMatchData={handleLoadMatchData}
         onLoadMatchResults={handleLoadMatchResults}
+        onLoadValidationData={handleLoadValidationData}
         onLoadEventTeams={handleLoadEventTeams}
         onLoadPitData={handleLoadPitData}
         onDebugNexus={handleDebugNexus}
@@ -356,6 +400,18 @@ const APIDataPage: React.FC = () => {
         </>
       )}
 
+      {/* Match Validation Data Display */}
+      {dataType === 'match-validation-data' && (
+        <MatchValidationDataDisplay
+          matches={validationMatches}
+          cacheMetadata={cacheMetadata}
+          eventKey={eventKey}
+          isOnline={validationOnline}
+          cacheExpired={validationCacheExpired}
+          onClearCache={() => clearValidationCache(eventKey)}
+        />
+      )}
+
       {/* Event Teams Display */}
       {dataType === 'event-teams' && (
         <EventTeamsDisplay
@@ -374,6 +430,30 @@ const APIDataPage: React.FC = () => {
           map={pitData.map}
           eventKey={eventKey}
         />
+      )}
+
+      {/* Debug Nexus Events Display */}
+      {dataType === 'debug-nexus' && nexusEvents && (
+        <div className="space-y-4">
+          <div className="p-4 border rounded-lg bg-card">
+            <h3 className="text-lg font-semibold mb-4">Available Nexus Events</h3>
+            <div className="space-y-2">
+              {Object.entries(nexusEvents).map(([eventCode, eventData]) => (
+                <div key={eventCode} className="p-3 border rounded bg-muted/50">
+                  <div className="font-medium">{eventCode}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {JSON.stringify(eventData, null, 2)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Validation Testing */}
+      {dataType === 'validation-testing' && eventKey && (
+        <ValidationTesting eventKey={eventKey} tbaApiKey={apiKey} />
       )}
 
       {/* Event Switch Confirmation Dialog */}

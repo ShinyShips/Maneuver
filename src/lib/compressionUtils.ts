@@ -168,10 +168,6 @@ function buildEventDict(data: ScoutingDataEntry[]): EventDictionaries {
  * Preserves original IDs and provides excellent compression ratios
  */
 export function compressScoutingData(data: ScoutingDataCollection | ScoutingDataEntry[], originalJson?: string): Uint8Array {
-  if (import.meta.env.DEV) {
-    console.log('🔄 Starting smart compression...');
-  }
-  
   const startTime = performance.now();
   // Cache JSON string to avoid duplicate serialization
   const jsonString = originalJson || JSON.stringify(data);
@@ -194,20 +190,21 @@ export function compressScoutingData(data: ScoutingDataCollection | ScoutingData
   const { eventDict, eventReverse } = buildEventDict(entries);
   
   // Compress entries using smart JSON optimization
-  const compressedEntries = entries.map((entry: ScoutingDataEntry, index: number) => {
+  const compressedEntries = entries.map((entry: ScoutingDataEntry) => {
     const scoutingData = extractScoutingData(entry);
     
-    if (import.meta.env.DEV && index === 0) {
-      console.log(`🔍 Sample entry structure:`, entry);
-      console.log(`🔍 Sample scouting data keys:`, Object.keys(scoutingData || {}));
-      console.log(`🔍 Sample scoring fields:`, {
-        autoCoralL1: scoutingData?.autoCoralPlaceL1Count,
-        teleopCoralL1: scoutingData?.teleopCoralPlaceL1Count,
-        autoAlgaeNet: scoutingData?.autoAlgaePlaceNetShot,
-        teleopAlgaeNet: scoutingData?.teleopAlgaePlaceNetShot,
-        autoPassedStartLine: scoutingData?.autoPassedStartLine
-      });
-    }
+    // Verbose logging disabled - uncomment for debugging
+    // if (import.meta.env.DEV && index === 0) {
+    //   console.log(`🔍 Sample entry structure:`, entry);
+    //   console.log(`🔍 Sample scouting data keys:`, Object.keys(scoutingData || {}));
+    //   console.log(`🔍 Sample scoring fields:`, {
+    //     autoCoralL1: scoutingData?.autoCoralPlaceL1Count,
+    //     teleopCoralL1: scoutingData?.teleopCoralPlaceL1Count,
+    //     autoAlgaeNet: scoutingData?.autoAlgaePlaceNetShot,
+    //     teleopAlgaeNet: scoutingData?.teleopAlgaePlaceNetShot,
+    //     autoPassedStartLine: scoutingData?.autoPassedStartLine
+    //   });
+    // }
     
     const optimized: Record<string, unknown> = {};
     
@@ -315,13 +312,10 @@ export function compressScoutingData(data: ScoutingDataCollection | ScoutingData
   
   const compressionTime = performance.now() - startTime;
   const totalReduction = ((1 - finalSize / originalSize) * 100).toFixed(1);
-  const jsonReduction = ((1 - optimizedJson.length / originalSize) * 100).toFixed(1);
   
+  // Only log summary in dev mode
   if (import.meta.env.DEV) {
-    console.log(`✅ Smart compression: ${originalSize} → ${finalSize} bytes (${totalReduction}% total reduction)`);
-    console.log(`📊 JSON optimization: ${originalSize} → ${optimizedJson.length} bytes (${jsonReduction}% reduction)`);
-    console.log(`🗜️ Gzip final: ${optimizedJson.length} → ${finalSize} bytes`);
-    console.log(`⏱️ Compression time: ${compressionTime.toFixed(1)}ms`);
+    console.log(`✅ Compressed: ${originalSize} → ${finalSize} bytes (${totalReduction}% reduction, ${compressionTime.toFixed(0)}ms)`);
   }
 
   return gzipCompressed;
@@ -334,11 +328,7 @@ export function compressScoutingData(data: ScoutingDataCollection | ScoutingData
  * handles dictionary expansion and field reconstruction.
  */
 export function decompressScoutingData(compressedData: Uint8Array): { entries: CompressedEntry[] } {
-  if (import.meta.env.DEV) {
-    console.log('🔄 Decompressing data...');
-  }
-  
-  // Decompress gzip and parse JSON directly
+  // Decompress quietly
   const binaryData = pako.ungzip(compressedData);
   const jsonString = new TextDecoder().decode(binaryData);
   const data = JSON.parse(jsonString) as CompressedData;

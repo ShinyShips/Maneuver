@@ -31,6 +31,7 @@ import StrategyOverviewPage from "./pages/StrategyOverviewPage";
 import ScoutManagementDashboardPage from "./pages/ScoutManagementDashboardPage";
 import AchievementsPage from "./pages/AchievementsPage";
 import DevUtilitiesPage from "./pages/DevUtilitiesPage";
+import { MatchValidationPage } from "./pages/MatchValidationPage";
 import { InstallPrompt } from '@/components/InstallPrompt';
 import { StatusBarSpacer } from '@/components/StatusBarSpacer';
 import { SplashScreen } from '@/components/SplashScreen';
@@ -61,6 +62,7 @@ function App() {
         <Route path="/pit-assignments" element={<PitAssignmentsPage />} />
         <Route path="/strategy-overview" element={<StrategyOverviewPage />} />
         <Route path="/pick-list" element={<PickListPage />} />
+        <Route path="/match-validation" element={<MatchValidationPage />} />
         <Route path="/scout-management" element={<ScoutManagementDashboardPage />} />
         <Route path="/achievements" element={<AchievementsPage />} />
         <Route path="/dev-utilities" element={<DevUtilitiesPage />} />

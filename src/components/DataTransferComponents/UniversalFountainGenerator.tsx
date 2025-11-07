@@ -102,13 +102,21 @@ const UniversalFountainGenerator = ({
 
   // Initialize filtering when data loads
   useEffect(() => {
-    const shouldShow = dataType === 'scouting' && 
-                      isScoutingDataCollection(data) &&
-                      data.entries.length > 50;
+    const isCombinedData = dataType === 'combined' && 
+                          data && 
+                          typeof data === 'object' && 
+                          'entries' in data;
+    
+    const shouldShow = ((dataType === 'scouting' && isScoutingDataCollection(data)) || 
+                       isCombinedData) &&
+                      data && 
+                      typeof data === 'object' && 
+                      'entries' in data &&
+                      (data as { entries: unknown[] }).entries.length > 50;
     
     if (shouldShow) {
       setShowFiltering(true);
-      setFilteredData(data);
+      setFilteredData(data as ScoutingDataCollection);
     } else {
       setShowFiltering(false);
       setFilteredData(null);
@@ -132,8 +140,41 @@ const UniversalFountainGenerator = ({
   // Get the data to use for QR generation (filtered or original)
   const getDataForGeneration = (): unknown => {
     if (showFiltering && filteredData) {
+      // For combined data type, reconstruct the full structure with filtered entries
+      if (dataType === 'combined' && data && typeof data === 'object' && 'scoutProfiles' in data) {
+        return {
+          type: "combined_export",
+          scoutingData: {
+            entries: filteredData.entries
+          },
+          scoutProfiles: (data as { scoutProfiles: unknown }).scoutProfiles,
+          metadata: {
+            exportedAt: new Date().toISOString(),
+            version: "1.0",
+            scoutingEntriesCount: filteredData.entries.length,
+            scoutsCount: (data as { metadata?: { scoutsCount?: number } }).metadata?.scoutsCount || 0,
+            predictionsCount: (data as { metadata?: { predictionsCount?: number } }).metadata?.predictionsCount || 0
+          }
+        };
+      }
       return filteredData;
     }
+    
+    // For combined data type with no filtering, reconstruct the original structure
+    if (dataType === 'combined' && data && typeof data === 'object' && 'entries' in data && 'scoutProfiles' in data) {
+      return {
+        type: "combined_export",
+        scoutingData: {
+          entries: (data as { entries: unknown[] }).entries
+        },
+        scoutProfiles: (data as { scoutProfiles: unknown }).scoutProfiles,
+        metadata: (data as { metadata?: unknown }).metadata || {
+          exportedAt: new Date().toISOString(),
+          version: "1.0"
+        }
+      };
+    }
+    
     return data;
   };
 
@@ -147,8 +188,18 @@ const UniversalFountainGenerator = ({
     // Cache JSON string to avoid duplicate serialization
     const jsonString = JSON.stringify(dataToUse);
     
+    const debugEntries = (dataToUse && typeof dataToUse === 'object' && 'entries' in dataToUse) 
+      ? (dataToUse as { entries: unknown[] }).entries.length 
+      : 'unknown';
+    console.log('🎯 QR Generator - Data to encode:', {
+      isFiltered: showFiltering && filteredData !== null,
+      dataSize: jsonString.length,
+      entryCount: debugEntries
+    });
+    
     // Determine if we should use advanced compression
-    const useCompression = shouldUseCompression(dataToUse, jsonString) && dataType === 'scouting';
+    const useCompression = shouldUseCompression(dataToUse, jsonString) && 
+                          (dataType === 'scouting' || dataType === 'combined');
     
     let encodedData: Uint8Array;
     let currentCompressionInfo = '';
@@ -195,13 +246,17 @@ const UniversalFountainGenerator = ({
     
     // Calculate how many blocks we have for intelligent packet generation
     const estimatedBlocks = Math.ceil(encodedData.length / blockSize);
-    // Generate enough packets for successful decoding: k blocks + 20% overhead for redundancy
-    const targetPackets = Math.ceil(estimatedBlocks * 1.2);
+    
+    // For small datasets, we need MORE redundancy because fountain codes work better with larger datasets
+    // Small datasets (< 20 blocks) need 50% redundancy, larger datasets need 30%
+    const redundancyFactor = estimatedBlocks < 20 ? 1.5 : 1.3;
+    const targetPackets = Math.ceil(estimatedBlocks * redundancyFactor);
+    
     // Cap maximum iterations to prevent infinite loops (generous safety limit)
     const maxIterations = targetPackets * 5;
 
     if (import.meta.env.DEV) {
-      console.log(`📊 Fountain code generation: ${estimatedBlocks} blocks, targeting ${targetPackets} packets`);
+      console.log(`📊 Fountain code generation: ${estimatedBlocks} blocks, targeting ${targetPackets} packets (${Math.round((redundancyFactor - 1) * 100)}% redundancy)`);
     }
 
     for (const block of ltEncoder.fountain()) {
@@ -209,7 +264,8 @@ const UniversalFountainGenerator = ({
       
       // Safety check to prevent infinite loops
       if (iterationCount > maxIterations) {
-        console.warn(`Reached maximum iterations (${maxIterations}), stopping generation with ${generatedPackets.length} packets`);
+        console.warn(`⚠️ Reached maximum iterations (${maxIterations}), stopping generation with ${generatedPackets.length} packets`);
+        console.warn(`Target was ${targetPackets} packets, achieved ${Math.round((generatedPackets.length / targetPackets) * 100)}%`);
         break;
       }
       
@@ -224,7 +280,7 @@ const UniversalFountainGenerator = ({
       try {
         const indicesKey = block.indices.sort().join(',');
         if (seenIndicesCombinations.has(indicesKey)) {
-          console.log(`Skipping duplicate indices combination: [${indicesKey}]`);
+          console.log(`⏭️ Skipping duplicate indices combination: [${indicesKey}] (${generatedPackets.length}/${targetPackets} packets so far)`);
           continue;
         }
         seenIndicesCombinations.add(indicesKey);
@@ -246,7 +302,7 @@ const UniversalFountainGenerator = ({
         const packetJson = JSON.stringify(packet);
 
         if (packetJson.length > (QR_CODE_SIZE_BYTES * 0.9)) { // 90% of QR capacity to leave room for encoding overhead
-          console.warn(`Packet ${packetId} too large (${packetJson.length} chars), skipping`);
+          console.warn(`📦 Packet ${packetId} too large (${packetJson.length} chars), skipping (${generatedPackets.length}/${targetPackets} packets so far)`);
           continue;
         }
 
@@ -264,7 +320,7 @@ const UniversalFountainGenerator = ({
     setJumpToPacket(''); // Clear jump input
     
     // Track the last exported match for "from last export" filtering
-    if (isScoutingDataCollection(dataToUse) && dataType === 'scouting') {
+    if (isScoutingDataCollection(dataToUse) && (dataType === 'scouting' || dataType === 'combined')) {
       const matchRange = extractMatchRange(dataToUse);
       setLastExportedMatch(matchRange.max);
     }
@@ -326,7 +382,8 @@ const UniversalFountainGenerator = ({
     const jsonString = JSON.stringify(dataToCheck);
     
     // Check if compression would be used
-    const useCompression = shouldUseCompression(dataToCheck, jsonString) && dataType === 'scouting';
+    const useCompression = shouldUseCompression(dataToCheck, jsonString) && 
+                          (dataType === 'scouting' || dataType === 'combined');
     const minSize = useCompression ? MIN_FOUNTAIN_SIZE_COMPRESSED : MIN_FOUNTAIN_SIZE_UNCOMPRESSED;
     
     if (useCompression && isScoutingDataCollection(dataToCheck)) {
@@ -358,7 +415,8 @@ const UniversalFountainGenerator = ({
     
     // Cache JSON string to avoid duplicate serialization
     const jsonString = JSON.stringify(dataToCheck);
-    const useCompression = shouldUseCompression(dataToCheck, jsonString) && dataType === 'scouting';
+    const useCompression = shouldUseCompression(dataToCheck, jsonString) && 
+                          (dataType === 'scouting' || dataType === 'combined');
     const minSize = useCompression ? MIN_FOUNTAIN_SIZE_COMPRESSED : MIN_FOUNTAIN_SIZE_UNCOMPRESSED;
     
     const encodedData = new TextEncoder().encode(jsonString);
@@ -413,7 +471,7 @@ const UniversalFountainGenerator = ({
                 filters={filters}
                 onFiltersChange={handleFiltersChange}
                 onApplyFilters={handleApplyFilters}
-                useCompression={shouldUseCompression(data) && dataType === 'scouting'}
+                useCompression={shouldUseCompression(data) && (dataType === 'scouting' || dataType === 'combined')}
                 filteredData={filteredData}
               />
             </CardContent>

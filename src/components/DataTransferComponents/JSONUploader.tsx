@@ -4,10 +4,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { detectDataType } from "@/lib/uploadHandlers/dataTypeDetector";
-import { handleScoutingDataUpload, type UploadMode } from "@/lib/uploadHandlers/scoutingDataUploadHandler";
+import { 
+  handleScoutingDataUpload, 
+  type UploadMode 
+} from "@/lib/uploadHandlers/scoutingDataUploadHandler";
 import { handleScoutProfilesUpload } from "@/lib/uploadHandlers/scoutProfilesUploadHandler";
 import { handlePitScoutingUpload } from "@/lib/uploadHandlers/pitScoutingUploadHandler";
 import { handlePitScoutingImagesUpload } from "@/lib/uploadHandlers/pitScoutingImagesUploadHandler";
+import ConflictResolutionDialog from "./ConflictResolutionDialog";
+import { BatchConflictDialog } from "./BatchConflictDialog";
+import type { ConflictInfo, ScoutingDataWithId } from "@/lib/scoutingDataUtils";
+import { useConflictResolution } from "@/hooks/useConflictResolution";
 
 type JSONUploaderProps = {
   onBack: () => void;
@@ -16,6 +23,28 @@ type JSONUploaderProps = {
 const JSONUploader: React.FC<JSONUploaderProps> = ({ onBack }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [detectedDataType, setDetectedDataType] = useState<'scouting' | 'scoutProfiles' | 'pitScouting' | 'pitScoutingImagesOnly' | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  
+  // Batch review state
+  const [showBatchDialog, setShowBatchDialog] = useState(false);
+  const [batchReviewEntries, setBatchReviewEntries] = useState<ScoutingDataWithId[]>([]);
+  const [pendingConflicts, setPendingConflicts] = useState<ConflictInfo[]>([]);
+  
+  // Use conflict resolution hook
+  const {
+    showConflictDialog,
+    setShowConflictDialog,
+    currentConflicts,
+    setCurrentConflicts,
+    currentConflictIndex,
+    setCurrentConflictIndex,
+    setConflictResolutions,
+    handleConflictResolution: handleConflictResolutionBase,
+    handleBatchResolve: handleBatchResolveBase,
+    handleUndo,
+    canUndo,
+    handleBatchReviewDecision: handleBatchReviewDecisionBase
+  } = useConflictResolution();
 
   type FileSelectEvent = React.ChangeEvent<HTMLInputElement>
 
@@ -50,6 +79,7 @@ const JSONUploader: React.FC<JSONUploaderProps> = ({ onBack }) => {
       
       toast.info(`Selected: ${file.name} (${dataTypeNames[dataType]})`);
     } catch (error) {
+      setIsProcessing(false);
       toast.error("Invalid JSON file");
       console.error("File parsing error:", error);
     }
@@ -60,13 +90,39 @@ const JSONUploader: React.FC<JSONUploaderProps> = ({ onBack }) => {
       toast.error("Please select a file first");
       return;
     }
+    
+    if (isProcessing) {
+      return;
+    }
+    
+    setIsProcessing(true);
 
     try {
       const text = await selectedFile.text();
       const jsonData: unknown = JSON.parse(text);
 
       if (detectedDataType === 'scouting') {
-        await handleScoutingDataUpload(jsonData, mode);
+        const result = await handleScoutingDataUpload(jsonData, mode);
+        
+        // Check if there are batch review entries first
+        if (result.hasBatchReview && result.batchReviewEntries) {
+          setBatchReviewEntries(result.batchReviewEntries);
+          setPendingConflicts(result.conflicts || []);
+          setShowBatchDialog(true);
+          setIsProcessing(false); // Re-enable for batch review
+          return; // Don't reset file yet
+        }
+        
+        // Check if there are conflicts to resolve
+        if (result.hasConflicts && result.conflicts) {
+          setCurrentConflicts(result.conflicts);
+          setCurrentConflictIndex(0);
+          setConflictResolutions(new Map());
+          setShowConflictDialog(true);
+          setIsProcessing(false); // Re-enable for conflict resolution
+          return; // Don't reset file yet, we need it for context
+        }
+        
       } else if (detectedDataType === 'scoutProfiles') {
         await handleScoutProfilesUpload(jsonData, mode);
       } else if (detectedDataType === 'pitScouting') {
@@ -77,6 +133,7 @@ const JSONUploader: React.FC<JSONUploaderProps> = ({ onBack }) => {
 
       setSelectedFile(null);
       setDetectedDataType(null);
+      setIsProcessing(false);
       // Reset file input
       const fileInput = document.getElementById("jsonFileInput") as HTMLInputElement | null;
       if (fileInput) fileInput.value = "";
@@ -84,6 +141,51 @@ const JSONUploader: React.FC<JSONUploaderProps> = ({ onBack }) => {
     } catch (error) {
       toast.error("Error processing file");
       console.error("Upload error:", error);
+      setIsProcessing(false);
+    }
+  };
+  
+  // Wrapper for conflict resolution that also handles file reset
+  const handleConflictResolution = async (action: 'replace' | 'skip') => {
+    await handleConflictResolutionBase(action);
+    
+    // Check if all conflicts are resolved
+    if (currentConflictIndex >= currentConflicts.length - 1) {
+      // Reset file after all conflicts resolved
+      setSelectedFile(null);
+      setDetectedDataType(null);
+      const fileInput = document.getElementById("jsonFileInput") as HTMLInputElement | null;
+      if (fileInput) fileInput.value = "";
+    }
+  };
+
+  // Wrapper for batch resolve that also handles file reset
+  const handleBatchResolve = async (action: 'replace' | 'skip') => {
+    await handleBatchResolveBase(action);
+    
+    // Reset file after batch operation
+    setSelectedFile(null);
+    setDetectedDataType(null);
+    const fileInput = document.getElementById("jsonFileInput") as HTMLInputElement | null;
+    if (fileInput) fileInput.value = "";
+  };
+
+  // Wrapper for batch review that handles closing dialog and resetting state, plus file cleanup
+  const handleBatchReviewDecision = async (decision: 'replace-all' | 'skip-all' | 'review-each') => {
+    const result = await handleBatchReviewDecisionBase(batchReviewEntries, pendingConflicts, decision);
+    
+    // Close batch dialog if no more conflicts
+    if (!result.hasMoreConflicts) {
+      setShowBatchDialog(false);
+      setBatchReviewEntries([]);
+      setPendingConflicts([]);
+      setSelectedFile(null);
+      setDetectedDataType(null);
+      const fileInput = document.getElementById("jsonFileInput") as HTMLInputElement | null;
+      if (fileInput) fileInput.value = "";
+    } else {
+      // Move to conflict dialog
+      setShowBatchDialog(false);
     }
   };
 
@@ -155,9 +257,10 @@ const JSONUploader: React.FC<JSONUploaderProps> = ({ onBack }) => {
                   <div className="space-y-3">
                     <Button
                       onClick={() => handleUpload("smart-merge")}
-                      className="w-full h-16 text-xl bg-green-500 hover:bg-green-600 text-white"
+                      disabled={isProcessing}
+                      className="w-full h-16 text-xl bg-green-500 hover:bg-green-600 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      🧠 Smart Merge (Recommended)
+                      {isProcessing ? '⏳ Processing...' : '🧠 Smart Merge (Recommended)'}
                     </Button>
                      <p><strong>Smart Merge</strong>: Skip duplicates, add only new entries</p>
                     <div className="flex items-center gap-4">
@@ -168,15 +271,17 @@ const JSONUploader: React.FC<JSONUploaderProps> = ({ onBack }) => {
                     
                     <Button
                       onClick={() => handleUpload("append")}
-                      className="w-full h-16 text-xl bg-blue-500 hover:bg-blue-600 text-white"
+                      disabled={isProcessing}
+                      className="w-full h-16 text-xl bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       📤 Force Append
                     </Button>
                      <p className="pb-4"><strong>Force Append</strong>: Add all data (may create duplicates)</p>
                     <Button
                       onClick={() => handleUpload("overwrite")}
+                      disabled={isProcessing}
                       variant="destructive"
-                      className="w-full h-16 text-xl text-white"
+                      className="w-full h-16 text-xl text-white disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       🔄 Replace All Data
                     </Button>
@@ -188,6 +293,24 @@ const JSONUploader: React.FC<JSONUploaderProps> = ({ onBack }) => {
           </CardContent>
         </Card>
       </div>
+      
+      <BatchConflictDialog
+        isOpen={showBatchDialog}
+        entries={batchReviewEntries}
+        onResolve={handleBatchReviewDecision}
+      />
+      
+      <ConflictResolutionDialog
+        open={showConflictDialog}
+        onOpenChange={setShowConflictDialog}
+        conflict={currentConflicts[currentConflictIndex] || null}
+        currentIndex={currentConflictIndex}
+        totalConflicts={currentConflicts.length}
+        onResolve={handleConflictResolution}
+        onBatchResolve={handleBatchResolve}
+        onUndo={handleUndo}
+        canUndo={canUndo}
+      />
     </div>
   );
 };

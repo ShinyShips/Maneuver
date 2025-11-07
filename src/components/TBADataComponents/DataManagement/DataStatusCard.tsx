@@ -1,9 +1,10 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, XCircle, Database, Calendar, Users, MapPin, AlertTriangle } from 'lucide-react';
+import { CheckCircle, XCircle, Database, Calendar, Users, MapPin, AlertTriangle, ShieldCheck } from 'lucide-react';
 import { getStoredPitAddresses, getStoredPitData, getStoredNexusTeams } from '@/lib/nexusUtils';
 import { getAllStoredEventTeams } from '@/lib/tbaUtils';
+import { getCachedTBAEventMatches, getCacheExpiration } from '@/lib/tbaCache';
 
 interface DataStatusCardProps {
   eventKey: string;
@@ -20,6 +21,36 @@ interface StatusItem {
 export const DataStatusCard: React.FC<DataStatusCardProps> = ({
   eventKey
 }) => {
+  const [validationData, setValidationData] = React.useState<{
+    count: number;
+    isExpired: boolean;
+  } | null>(null);
+
+  // Check validation data cache
+  React.useEffect(() => {
+    if (!eventKey.trim()) {
+      setValidationData(null);
+      return;
+    }
+
+    const checkValidationData = async () => {
+      try {
+        const matches = await getCachedTBAEventMatches(eventKey, true); // Include expired
+        const expiration = await getCacheExpiration(eventKey);
+        
+        setValidationData({
+          count: matches.length,
+          isExpired: expiration.isExpired
+        });
+      } catch (error) {
+        console.error('Error checking validation data:', error);
+        setValidationData(null);
+      }
+    };
+
+    checkValidationData();
+  }, [eventKey]);
+
   if (!eventKey.trim()) {
     return (
       <Card>
@@ -93,12 +124,33 @@ export const DataStatusCard: React.FC<DataStatusCardProps> = ({
     pitDetails = hasPitAddresses ? `${pitAddressCount} addresses` : 'Map only';
   }
 
+  // Determine validation data status
+  let validationStatus: 'loaded' | 'empty' | 'partial' = 'empty';
+  let validationDetails = '';
+  
+  if (validationData && validationData.count > 0) {
+    if (validationData.isExpired) {
+      validationStatus = 'partial';
+      validationDetails = 'Cache expired (offline-first preserved)';
+    } else {
+      validationStatus = 'loaded';
+      validationDetails = 'Fresh data from TBA';
+    }
+  }
+
   const statusItems: StatusItem[] = [
     {
       label: 'Match Schedule',
       status: hasMatchData ? 'loaded' : 'empty',
       count: hasMatchData ? (JSON.parse(localStorage.getItem('matchData') || '[]')).length : 0,
       icon: Calendar
+    },
+    {
+      label: 'Match Validation Data',
+      status: validationStatus,
+      count: validationData?.count || 0,
+      details: validationDetails,
+      icon: ShieldCheck
     },
     {
       label: 'Prediction Processing',

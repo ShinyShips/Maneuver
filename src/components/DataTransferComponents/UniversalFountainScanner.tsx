@@ -29,7 +29,7 @@ interface UniversalFountainScannerProps {
   onSwitchToGenerator?: () => void;
   dataType: 'scouting' | 'match' | 'scout' | 'combined' | 'pit-scouting' | 'pit-images';
   expectedPacketType: string;
-  saveData: (data: unknown) => void;
+  saveData: (data: unknown) => void | Promise<void>;
   validateData: (data: unknown) => boolean;
   getDataSummary: (data: unknown) => string;
   title: string;
@@ -101,7 +101,7 @@ const UniversalFountainScanner = ({
     return missing;
   };
 
-  const handleQRScan = (result: { rawValue: string; }[]) => {
+  const handleQRScan = async (result: { rawValue: string; }[]) => {
     try {
       const packet: FountainPacket = JSON.parse(result[0].rawValue);
       addDebugMsg(`🎯 Scanned packet ${packet.packetId} with indices [${packet.indices.join(',')}]`);
@@ -391,7 +391,7 @@ const UniversalFountainScanner = ({
               setIsComplete(true);
               setProgress({ received: packetsRef.current.size, needed: packetsRef.current.size, percentage: 100 });
               
-              saveData(parsedData);
+              await saveData(parsedData);
               toast.success(completionMessage);
             } else {
               addDebugMsg("❌ Reconstructed data failed validation");

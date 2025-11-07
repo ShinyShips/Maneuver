@@ -213,6 +213,24 @@ export const parseMatchKey = (matchKey: string): {
   return { eventKey, compLevel, matchNumber };
 };
 
+/**
+ * Extract team number from TBA team key
+ * @param teamKey - TBA team key (e.g., "frc1234")
+ * @returns Team number as string (e.g., "1234")
+ */
+export const extractTeamNumber = (teamKey: string): string => {
+  return teamKey.replace('frc', '');
+};
+
+/**
+ * Extract team numbers from array of TBA team keys
+ * @param teamKeys - Array of TBA team keys
+ * @returns Array of team numbers as strings
+ */
+export const extractTeamNumbers = (teamKeys: string[]): string[] => {
+  return teamKeys.map(extractTeamNumber);
+};
+
 // Validate TBA API key (simple test)
 export const validateAPIKey = async (): Promise<boolean> => {
   try {

@@ -146,6 +146,7 @@ const ScoringPage = ({ phase }: ScoringPageProps) => {
           [`${phase}PassedStartLine`]: passedStartLine,
           [`${phase}PlayedDefense`]: playedDefense,
         },
+        ...(states?.rescout && { rescout: states.rescout }),
       },
     });
   };
@@ -160,6 +161,7 @@ const ScoringPage = ({ phase }: ScoringPageProps) => {
           [`${phase}PassedStartLine`]: passedStartLine,
           [`${phase}PlayedDefense`]: playedDefense,
         },
+        ...(states?.rescout && { rescout: states.rescout }),
       },
     });
   };
