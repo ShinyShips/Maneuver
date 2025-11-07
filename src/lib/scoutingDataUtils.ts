@@ -403,7 +403,7 @@ export const computeChangedFields = (
     if (incomingValue === null || incomingValue === undefined) continue;
     
     // Skip if local is null/undefined and incoming exists (new data, not a change)
-    if ((localValue === null || localValue === undefined) && incomingValue !== null && incomingValue !== undefined) continue;
+    if (localValue === null || localValue === undefined) continue;
     
     // Compare values (use JSON.stringify for deep comparison)
     if (JSON.stringify(localValue) !== JSON.stringify(incomingValue)) {

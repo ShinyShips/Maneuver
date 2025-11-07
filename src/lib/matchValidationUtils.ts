@@ -856,7 +856,7 @@ export function compareAllianceData(
   
   const scoutedAutoAlgaePoints = 
     (scoutedData.autoAlgaeNet * 4) + 
-    (scoutedData.autoAlgaeProcessor * 6);  // Processor is worth 6 pts (not 2)
+    (scoutedData.autoAlgaeProcessor * 6);
   
   const scoutedMobilityPoints = scoutedData.autoMobility * 3;
   
@@ -869,7 +869,7 @@ export function compareAllianceData(
   
   const scoutedTeleopAlgaePoints = 
     (scoutedData.teleopAlgaeNet * 4) + 
-    (scoutedData.teleopAlgaeProcessor * 6);  // Processor is worth 6 pts (not 2)
+    (scoutedData.teleopAlgaeProcessor * 6);
   
   // Endgame points
   const scoutedEndgamePoints = 
@@ -899,36 +899,35 @@ export function compareAllianceData(
     console.log(`[${scoutedData.alliance.toUpperCase()}] Score Calculation Debug:`, {
       match: scoutedData.matchNumber,
       scoutedBreakdown: {
-        autoCoralPts: scoutedAutoCoralPoints,
-        autoAlgaePts: scoutedAutoAlgaePoints,
-        mobilityPts: scoutedMobilityPoints,
-        teleopCoralPts: scoutedTeleopCoralPoints,
-        teleopAlgaePts: scoutedTeleopAlgaePoints,
-        endgamePts: scoutedEndgamePoints,
-        total: estimatedScoutedScore
+      autoCoralPts: scoutedAutoCoralPoints,
+      autoAlgaePts: scoutedAutoAlgaePoints,
+      mobilityPts: scoutedMobilityPoints,
+      teleopCoralPts: scoutedTeleopCoralPoints,
+      teleopAlgaePts: scoutedTeleopAlgaePoints,
+      endgamePts: scoutedEndgamePoints,
+      total: estimatedScoutedScore
       },
       tbaBreakdown: {
-        autoCoralPts: tbaData.autoCoralPoints,
-        autoAlgaePts: tbaData.algaePoints - tbaData.algaePoints, // This is wrong but let's see
-        mobilityPts: tbaData.mobilityPoints,
-        teleopCoralPts: tbaData.teleopCoralPoints,
-        teleopAlgaePts: tbaData.algaePoints, // TBA combines auto+teleop algae
-        endgamePts: tbaData.endgamePoints,
-        total: tbaBreakdownScore
+      autoCoralPts: tbaData.autoCoralPoints,
+      algaePts: tbaData.algaePoints, // TBA combines auto+teleop algae
+      mobilityPts: tbaData.mobilityPoints,
+      teleopCoralPts: tbaData.teleopCoralPoints,
+      endgamePts: tbaData.endgamePoints,
+      total: tbaBreakdownScore
       },
       scoutedPieceCounts: {
-        teleopL1: scoutedData.teleopCoralL1,
-        teleopL2: scoutedData.teleopCoralL2,
-        teleopL3: scoutedData.teleopCoralL3,
-        teleopL4: scoutedData.teleopCoralL4,
-        teleopTotal: scoutedData.teleopCoralTotal
+      teleopL1: scoutedData.teleopCoralL1,
+      teleopL2: scoutedData.teleopCoralL2,
+      teleopL3: scoutedData.teleopCoralL3,
+      teleopL4: scoutedData.teleopCoralL4,
+      teleopTotal: scoutedData.teleopCoralTotal
       },
       tbaPieceCounts: {
-        teleopL1: tbaData.teleopCoralL1,
-        teleopL2: tbaData.teleopCoralL2,
-        teleopL3: tbaData.teleopCoralL3,
-        teleopL4: tbaData.teleopCoralL4,
-        teleopTotal: tbaData.teleopCoralTotal
+      teleopL1: tbaData.teleopCoralL1,
+      teleopL2: tbaData.teleopCoralL2,
+      teleopL3: tbaData.teleopCoralL3,
+      teleopL4: tbaData.teleopCoralL4,
+      teleopTotal: tbaData.teleopCoralTotal
       },
       difference: estimatedScoutedScore - tbaBreakdownScore
     });
