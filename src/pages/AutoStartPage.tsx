@@ -81,6 +81,7 @@ const AutoStartPage = () => {
             ? [null, null, null, null, null, null]
             : startPoses,
         },
+        ...(states?.rescout && { rescout: states.rescout }),
       },
     });
   };

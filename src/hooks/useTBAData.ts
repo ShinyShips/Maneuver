@@ -212,7 +212,17 @@ export const useTBAData = () => {
       // If not stored, fetch from API
       const fetchedTeams = await getEventTeams(tbaEventKey, tbaApiKey);
       setTeams(fetchedTeams);
-      setIsStored(false);
+      
+      // Automatically store teams to localStorage for persistence
+      try {
+        storeEventTeams(tbaEventKey, fetchedTeams);
+        setIsStored(true);
+        console.log(`Auto-stored ${fetchedTeams.length} teams for event ${tbaEventKey}`);
+      } catch (storeError) {
+        console.warn('Failed to auto-store teams:', storeError);
+        // Don't fail the whole operation if storage fails
+        setIsStored(false);
+      }
       
       toast.success(`Loaded ${fetchedTeams.length} teams from TBA API`);
       

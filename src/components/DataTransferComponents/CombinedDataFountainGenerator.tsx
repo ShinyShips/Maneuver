@@ -27,22 +27,21 @@ const CombinedDataFountainGenerator = ({ onBack, onSwitchToScanner }: CombinedDa
         return null;
       }
       
-      // Combine all data into a single structure
+      // Return the combined data in ScoutingDataCollection format for filtering support
+      // This allows the UniversalFountainGenerator to apply filters to the scouting entries
       const combinedData = {
-        type: "combined_export",
-        scoutingData: {
-          entries: scoutingDataWithIds.entries
-        },
-        scoutProfiles: {
-          scouts: scoutsData,
-          predictions: predictionsData
-        },
+        entries: scoutingDataWithIds.entries,
         metadata: {
           exportedAt: new Date().toISOString(),
           version: "1.0",
           scoutingEntriesCount: scoutingDataWithIds.entries.length,
           scoutsCount: scoutsData.length,
           predictionsCount: predictionsData.length
+        },
+        // Store scout profiles in metadata so they're preserved after filtering
+        scoutProfiles: {
+          scouts: scoutsData,
+          predictions: predictionsData
         }
       };
       

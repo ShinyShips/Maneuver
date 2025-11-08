@@ -44,6 +44,14 @@ export interface ScoutingEntryDB {
   eventName?: string;
   data: Record<string, unknown>;
   timestamp: number;
+  
+  // Correction tracking fields
+  isCorrected?: boolean;         // Has this been re-scouted?
+  correctionCount?: number;      // Number of times corrected (1, 2, 3...)
+  lastCorrectedAt?: number;      // Timestamp of last correction
+  lastCorrectedBy?: string;      // Scout name who did correction
+  correctionNotes?: string;      // Why it was corrected
+  originalScoutName?: string;    // Original scout (preserved on first correction)
 }
 
 export class SimpleScoutingAppDB extends Dexie {
@@ -54,6 +62,19 @@ export class SimpleScoutingAppDB extends Dexie {
     
     this.version(1).stores({
       scoutingData: 'id, teamNumber, matchNumber, alliance, scoutName, eventName, timestamp'
+    });
+    
+    // Version 2: Add correction tracking fields
+    this.version(2).stores({
+      scoutingData: 'id, teamNumber, matchNumber, alliance, scoutName, eventName, timestamp, isCorrected'
+    }).upgrade(tx => {
+      // Add default values for correction tracking fields on existing records
+      return tx.table('scoutingData').toCollection().modify(entry => {
+        if (entry.isCorrected === undefined) {
+          entry.isCorrected = false;
+          entry.correctionCount = 0;
+        }
+      });
     });
   }
 }
@@ -121,10 +142,35 @@ const enhanceEntry = (entry: ScoutingDataWithId): ScoutingEntryDB => {
   }
   
   const matchNumber = safeStringify(actualData?.matchNumber);
-  const alliance = safeStringify(actualData?.alliance);
+  let alliance = safeStringify(actualData?.alliance);
   const scoutName = safeStringify(actualData?.scoutName);
   const teamNumber = safeStringify(actualData?.selectTeam);
-  const eventName = safeStringify(actualData?.eventName);
+  let eventName = safeStringify(actualData?.eventName);
+  
+  // Normalize alliance value: "redAlliance" -> "red", "blueAlliance" -> "blue"
+  if (alliance) {
+    alliance = alliance.toLowerCase().replace('alliance', '').trim();
+  }
+  
+  // Normalize event name to lowercase for consistency
+  // This prevents "2025MRcmp" and "2025mrcmp" from being treated as different events
+  if (eventName) {
+    eventName = eventName.toLowerCase().trim();
+  }
+
+  // Extract correction metadata from data if present
+  const isCorrected = Boolean(actualData?.isCorrected);
+  const correctionCount = typeof actualData?.correctionCount === 'number' ? actualData.correctionCount : undefined;
+  const lastCorrectedAt = typeof actualData?.lastCorrectedAt === 'number' ? actualData.lastCorrectedAt : undefined;
+  const lastCorrectedBy = typeof actualData?.lastCorrectedBy === 'string' ? actualData.lastCorrectedBy : undefined;
+  const correctionNotes = typeof actualData?.correctionNotes === 'string' ? actualData.correctionNotes : undefined;
+
+  // Update the data object with normalized values for consistency
+  const normalizedData = {
+    ...actualData,
+    eventName,  // Use normalized lowercase eventName
+    alliance,   // Use normalized alliance (already normalized above)
+  };
 
   return {
     id: entry.id,
@@ -133,8 +179,13 @@ const enhanceEntry = (entry: ScoutingDataWithId): ScoutingEntryDB => {
     alliance,
     scoutName,
     eventName,
-    data: actualData || data,
-    timestamp: entry.timestamp || Date.now()
+    data: normalizedData || data,
+    timestamp: entry.timestamp || Date.now(),
+    isCorrected,
+    correctionCount,
+    lastCorrectedAt,
+    lastCorrectedBy,
+    correctionNotes
   };
 };
 
@@ -172,6 +223,150 @@ export const loadScoutingEntriesByTeamAndEvent = async (
     .where('[teamNumber+eventName]')
     .equals([teamNumber, eventName])
     .toArray();
+};
+
+// Clean up duplicate entries (keep most recent version)
+export const cleanupDuplicateEntries = async () => {
+  console.log('[Cleanup] Starting duplicate entry cleanup...');
+  
+  try {
+    const allEntries = await db.scoutingData.toArray();
+    console.log(`[Cleanup] Found ${allEntries.length} total entries`);
+    
+    // Group by match-team-alliance-event
+    const entriesByKey = new Map<string, ScoutingEntryDB[]>();
+    
+    allEntries.forEach(entry => {
+      const key = `${entry.eventName}-${entry.matchNumber}-${entry.alliance}-${entry.teamNumber}`;
+      if (!entriesByKey.has(key)) {
+        entriesByKey.set(key, []);
+      }
+      entriesByKey.get(key)!.push(entry);
+    });
+    
+    // Find duplicates
+    const idsToDelete: string[] = [];
+    
+    entriesByKey.forEach((entries, key) => {
+      if (entries.length > 1) {
+        console.log(`[Cleanup] Found ${entries.length} duplicates for ${key}`);
+        
+        // Sort by timestamp (most recent first)
+        entries.sort((a, b) => {
+          const timeA = a.lastCorrectedAt || a.timestamp || 0;
+          const timeB = b.lastCorrectedAt || b.timestamp || 0;
+          return timeB - timeA;
+        });
+        
+        // Keep the first (most recent), delete the rest
+        const [keep, ...remove] = entries;
+        console.log(`[Cleanup] Keeping entry ${keep.id}, removing ${remove.length} older entries`);
+        idsToDelete.push(...remove.map(e => e.id));
+      }
+    });
+    
+    if (idsToDelete.length > 0) {
+      console.log(`[Cleanup] Deleting ${idsToDelete.length} duplicate entries:`, idsToDelete);
+      await db.scoutingData.bulkDelete(idsToDelete);
+      console.log('[Cleanup] ✅ Cleanup complete!');
+      return { deleted: idsToDelete.length, total: allEntries.length };
+    } else {
+      console.log('[Cleanup] No duplicates found');
+      return { deleted: 0, total: allEntries.length };
+    }
+  } catch (error) {
+    console.error('[Cleanup] Error during cleanup:', error);
+    throw error;
+  }
+};
+
+// Fix alliance values in existing data (redAlliance -> red, blueAlliance -> blue)
+export const normalizeAllianceValues = async () => {
+  console.log('[Normalize] Fixing alliance values...');
+  
+  try {
+    const allEntries = await db.scoutingData.toArray();
+    let fixedCount = 0;
+    
+    for (const entry of allEntries) {
+      if (entry.alliance && (entry.alliance.includes('Alliance') || entry.alliance.includes('alliance'))) {
+        const normalizedAlliance = entry.alliance.toLowerCase().replace('alliance', '').trim();
+        await db.scoutingData.update(entry.id, { alliance: normalizedAlliance });
+        fixedCount++;
+      }
+    }
+    
+    console.log(`[Normalize] Fixed ${fixedCount} entries out of ${allEntries.length} total`);
+    return { fixed: fixedCount, total: allEntries.length };
+  } catch (error) {
+    console.error('[Normalize] Error during normalization:', error);
+    throw error;
+  }
+};
+
+export const findExistingScoutingEntry = async (
+  matchNumber: string,
+  teamNumber: string,
+  alliance: string,
+  eventName: string
+): Promise<ScoutingEntryDB | undefined> => {
+  const entries = await db.scoutingData
+    .where({ matchNumber, teamNumber, alliance, eventName })
+    .toArray();
+  
+  // Log if there are duplicates
+  if (entries.length > 1) {
+    console.warn(`Found ${entries.length} duplicate entries for match ${matchNumber}, team ${teamNumber}, alliance ${alliance}`);
+    console.warn('Entry IDs:', entries.map(e => e.id));
+  }
+  
+  return entries[0];
+};
+
+export const updateScoutingEntryWithCorrection = async (
+  id: string,
+  newData: ScoutingDataWithId,
+  correctionNotes: string,
+  correctedBy: string
+): Promise<void> => {
+  const existing = await db.scoutingData.get(id);
+  if (!existing) {
+    throw new Error('Entry not found');
+  }
+
+  // Find and delete ALL other entries for the same match/team/alliance to prevent duplicates
+  const matchNumber = newData.data.matchNumber as string;
+  const teamNumber = newData.data.selectTeam as string;
+  const alliance = newData.data.alliance as string;
+  const eventName = newData.data.eventName as string;
+  
+  const duplicates = await db.scoutingData
+    .where({ matchNumber, teamNumber, alliance, eventName })
+    .toArray();
+  
+  // Delete all duplicates except the one we're updating
+  const duplicateIds = duplicates
+    .filter(entry => entry.id !== id)
+    .map(entry => entry.id!);
+  
+  if (duplicateIds.length > 0) {
+    console.warn(`Deleting ${duplicateIds.length} duplicate entries:`, duplicateIds);
+    await db.scoutingData.bulkDelete(duplicateIds);
+  }
+
+  const enhancedEntry = enhanceEntry(newData);
+  
+  // Completely replace the entry with new data, keeping only correction metadata
+  await db.scoutingData.put({
+    ...enhancedEntry,
+    id: id, // Keep the same ID to replace the existing entry
+    lastCorrectedAt: Date.now(),
+    lastCorrectedBy: correctedBy,
+    correctionNotes: correctionNotes || undefined,
+    isCorrected: true,
+    correctionCount: (existing.correctionCount || 0) + 1,
+    originalScoutName: existing.originalScoutName || existing.scoutName,
+  });
 };
 
 export const deleteScoutingEntry = async (id: string): Promise<void> => {
@@ -775,3 +970,143 @@ export const clearGameData = async (): Promise<void> => {
   await gameDB.scouts.clear();
   await gameDB.predictions.clear();
 };
+
+/**
+ * Migration: Regenerate IDs for all scouting entries to use composite key format
+ * This converts old hash-based IDs to the new event::match::team::alliance format
+ * for faster lookups and natural collision detection
+ */
+export const migrateScoutingEntryIds = async (): Promise<{ updated: number; errors: number }> => {
+  console.log('🔄 [Migration] Starting scouting entry ID migration...');
+  
+  try {
+    const allEntries = await db.scoutingData.toArray();
+    console.log(`📊 [Migration] Found ${allEntries.length} entries to migrate`);
+    
+    let updated = 0;
+    let errors = 0;
+    
+    for (const entry of allEntries) {
+      try {
+        // Skip entries missing required fields
+        if (!entry.matchNumber || !entry.teamNumber || !entry.alliance || !entry.eventName) {
+          console.warn(`⚠️ [Migration] Skipping entry ${entry.id} - missing required fields`);
+          errors++;
+          continue;
+        }
+        
+        // Generate new composite ID from the entry's fields
+        const { generateDeterministicEntryId } = await import('./scoutingDataUtils');
+        const newId = generateDeterministicEntryId(
+          entry.matchNumber,
+          entry.teamNumber,
+          entry.alliance,
+          entry.eventName
+        );
+        
+        // Only update if ID changed
+        if (entry.id !== newId) {
+          // Delete old entry
+          await db.scoutingData.delete(entry.id);
+          
+          // Add with new ID
+          await db.scoutingData.add({
+            ...entry,
+            id: newId
+          });
+          
+          updated++;
+          
+          if (updated % 100 === 0) {
+            console.log(`✅ [Migration] Migrated ${updated} entries...`);
+          }
+        }
+      } catch (error) {
+        console.error(`❌ [Migration] Error migrating entry ${entry.id}:`, error);
+        errors++;
+      }
+    }
+    
+    console.log(`✅ [Migration] Complete! Updated: ${updated}, Errors: ${errors}`);
+    return { updated, errors };
+  } catch (error) {
+    console.error('❌ [Migration] Fatal error during migration:', error);
+    throw error;
+  }
+};
+
+/**
+ * Migrate existing entries to populate top-level scoutName and timestamp fields
+ * This fixes entries where these fields are only in the data object
+ */
+export const migrateScoutingMetadata = async (): Promise<{ updated: number; errors: number }> => {
+  try {
+    console.log('🔄 [Metadata Migration] Starting migration to populate top-level fields...');
+    
+    const allEntries = await db.scoutingData.toArray();
+    console.log(`📊 [Metadata Migration] Found ${allEntries.length} entries to check`);
+    
+    let updated = 0;
+    let errors = 0;
+    
+    for (const entry of allEntries) {
+      try {
+        const data = entry.data as Record<string, unknown>;
+        let needsUpdate = false;
+        const updates: Partial<ScoutingEntryDB> = {};
+        
+        // Debug first entry to see structure
+        if (updated === 0 && errors === 0) {
+          console.log('🔍 [Metadata Migration] Sample entry structure:', {
+            id: entry.id,
+            topLevelScoutName: entry.scoutName,
+            topLevelTimestamp: entry.timestamp,
+            hasData: !!data,
+            dataScoutName: data?.scoutName,
+            dataTimestamp: data?.timestamp,
+            scoutNameType: typeof entry.scoutName,
+            timestampType: typeof entry.timestamp
+          });
+        }
+        
+        // Check if scoutName is missing at top level but exists in data
+        if (!entry.scoutName && data?.scoutName) {
+          updates.scoutName = String(data.scoutName);
+          needsUpdate = true;
+          console.log(`📝 [Metadata Migration] Will update scoutName for ${entry.id}`);
+        }
+        
+        // Check if timestamp is missing or zero
+        if ((!entry.timestamp || entry.timestamp === 0) && typeof data?.timestamp === 'number') {
+          updates.timestamp = data.timestamp;
+          needsUpdate = true;
+          console.log(`📝 [Metadata Migration] Will update timestamp for ${entry.id}`);
+        } else if (!entry.timestamp || entry.timestamp === 0) {
+          // If no timestamp anywhere, use current time
+          updates.timestamp = Date.now();
+          needsUpdate = true;
+          console.log(`📝 [Metadata Migration] Will set current timestamp for ${entry.id}`);
+        }
+        
+        if (needsUpdate) {
+          await db.scoutingData.update(entry.id, updates);
+          updated++;
+          
+          if (updated % 100 === 0) {
+            console.log(`✅ [Metadata Migration] Updated ${updated} entries...`);
+          }
+        }
+      } catch (error) {
+        console.error(`❌ [Metadata Migration] Error updating entry ${entry.id}:`, error);
+        errors++;
+      }
+    }
+    
+    console.log(`✅ [Metadata Migration] Complete! Updated: ${updated}, Errors: ${errors}`);
+    return { updated, errors };
+  } catch (error) {
+    console.error('❌ [Metadata Migration] Fatal error during migration:', error);
+    throw error;
+  }
+};
+

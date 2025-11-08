@@ -68,10 +68,8 @@ const HomePage = () => {
       ];
       localStorage.setItem("scoutsList", JSON.stringify(scoutNames.sort()));
 
-      const verifyData = await loadScoutingData();
-      console.log("HomePage - Verification: loaded", verifyData.entries.length, "entries from IndexedDB");
-      console.log("HomePage - Loaded all demo data successfully");
-
+      await loadScoutingData();
+      
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       setIsLoaded(true);
@@ -154,7 +152,7 @@ const HomePage = () => {
           />
           <div className="text-center space-y-2">
             <p>
-              <strong>Version</strong>: 2025.1.3
+              <strong>Version</strong>: 2025.1.4
             </p>
             <DataAttribution sources={['tba', 'nexus']} variant="compact" />
           </div>

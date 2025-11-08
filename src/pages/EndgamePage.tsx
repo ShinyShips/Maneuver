@@ -5,10 +5,21 @@ import Button from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "../components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { transformToObjectFormat } from "@/lib/dataTransformation";
 import { generateEntryId } from "@/lib/scoutingDataUtils";
-import { saveScoutingEntry } from "@/lib/dexieDB";
+import { 
+  saveScoutingEntry,
+  db
+} from "@/lib/dexieDB";
 import type { ScoutingDataWithId } from "@/lib/scoutingDataUtils";
 import { ArrowRight } from "lucide-react";
 
@@ -17,12 +28,28 @@ const EndgamePage = () => {
   const navigate = useNavigate();
   const states = location.state;
 
+  // Rescout mode detection
+  const rescoutData = states?.rescout;
+  const isRescoutMode = rescoutData?.isRescout || false;
+  const rescoutTeams = rescoutData?.teams || [];
+  const currentTeamIndex = rescoutData?.currentTeamIndex || 0;
+  const rescoutEventKey = rescoutData?.eventKey;
+
   const [shallowClimbAttempted, setShallowClimbAttempted] = useState(false);
   const [deepClimbAttempted, setDeepClimbAttempted] = useState(false);
   const [parkAttempted, setParkAttempted] = useState(false);
   const [climbFailed, setClimbFailed] = useState(false);
   const [brokeDown, setBrokeDown] = useState(false);
   const [comment, setComment] = useState("");
+
+  // Correction dialog state
+  const [showCorrectionDialog, setShowCorrectionDialog] = useState(false);
+  const [correctionNotes, setCorrectionNotes] = useState("");
+  const [pendingSubmission, setPendingSubmission] = useState<{
+    entryWithId: ScoutingDataWithId;
+    existingEntryId: string;
+    idsToDelete?: string[];
+  } | null>(null);
 
   const getActionsFromLocalStorage = (phase: string) => {
     const saved = localStorage.getItem(`${phase}StateStack`);
@@ -62,22 +89,150 @@ const EndgamePage = () => {
         timestamp: Date.now()
       };
 
+      // Check for existing entries with same match/team/alliance/event
+      const allEntries = await db.scoutingData.toArray();
+      
+      const existingEntries = allEntries.filter(entry => 
+        entry.matchNumber === scoutingInputs.matchNumber &&
+        entry.teamNumber === scoutingInputs.selectTeam &&
+        entry.alliance === scoutingInputs.alliance &&
+        entry.eventName === scoutingInputs.eventName
+      );
+
+      // Check if we're in rescout mode and there are existing entries
+      if (isRescoutMode && existingEntries.length > 0) {
+        // Store the IDs to delete later, show correction dialog for notes
+        setPendingSubmission({ 
+          entryWithId, 
+          existingEntryId: existingEntries[0].id,
+          idsToDelete: existingEntries.map((e: { id: string }) => e.id)
+        });
+        setShowCorrectionDialog(true);
+        return;
+      }
+
+      // If not in rescout mode but there are duplicates, delete them
+      if (existingEntries.length > 0) {
+        const idsToDelete = existingEntries.map((e: { id: string }) => e.id);
+        await db.scoutingData.bulkDelete(idsToDelete);
+      }
+
+      // Save the new entry
       await saveScoutingEntry(entryWithId);
 
       localStorage.removeItem("autoStateStack");
       localStorage.removeItem("teleopStateStack");
+
+      // Handle batch rescout navigation
+      if (isRescoutMode && rescoutTeams.length > 0 && currentTeamIndex < rescoutTeams.length - 1) {
+        // Move to next team in batch
+        const nextIndex = currentTeamIndex + 1;
+        const nextTeamNumber = rescoutTeams[nextIndex];
+        
+        toast.success(`Match data saved! Moving to team ${nextTeamNumber} (${nextIndex + 1}/${rescoutTeams.length})...`);
+        
+        navigate("/game-start", {
+          state: {
+            rescout: {
+              isRescout: true,
+              matchNumber: rescoutData.matchNumber,
+              alliance: rescoutData.alliance,
+              eventKey: rescoutEventKey,
+              teams: rescoutTeams,
+              currentTeamIndex: nextIndex,
+            },
+          },
+        });
+        return;
+      }
 
       const currentMatchNumber = localStorage.getItem("currentMatchNumber") || "1";
       const nextMatchNumber = (parseInt(currentMatchNumber) + 1).toString();
       localStorage.setItem("currentMatchNumber", nextMatchNumber);
 
       toast.success("Match data saved successfully!");
-      navigate("/game-start");
+      
+      // Navigate back to validation detail if in rescout mode, otherwise game-start
+      if (isRescoutMode) {
+        navigate("/match-validation");
+      } else {
+        navigate("/game-start");
+      }
       
     } catch (error) {
       console.error("Error saving match data:", error);
       toast.error("Error saving match data");
     }
+  };
+
+  const handleConfirmCorrection = async () => {
+    if (!pendingSubmission) return;
+
+    try {
+      const currentScout = states?.inputs?.scoutName || "";
+      
+      // First, delete all existing entries
+      if (pendingSubmission.idsToDelete && pendingSubmission.idsToDelete.length > 0) {
+        await db.scoutingData.bulkDelete(pendingSubmission.idsToDelete);
+      }
+      
+      // Then save the new entry with correction metadata added to the data
+      const correctedEntry: ScoutingDataWithId = {
+        ...pendingSubmission.entryWithId,
+        data: {
+          ...pendingSubmission.entryWithId.data,
+          isCorrected: true,
+          correctionCount: 1,
+          lastCorrectedAt: Date.now(),
+          lastCorrectedBy: currentScout,
+          correctionNotes: correctionNotes || undefined,
+        }
+      };
+      
+      await saveScoutingEntry(correctedEntry);
+
+      localStorage.removeItem("autoStateStack");
+      localStorage.removeItem("teleopStateStack");
+
+      setShowCorrectionDialog(false);
+      setPendingSubmission(null);
+      setCorrectionNotes("");
+
+      // Handle batch rescout navigation
+      if (isRescoutMode && rescoutTeams.length > 0 && currentTeamIndex < rescoutTeams.length - 1) {
+        const nextIndex = currentTeamIndex + 1;
+        const nextTeamNumber = rescoutTeams[nextIndex];
+        
+        toast.success(`Correction saved! Moving to team ${nextTeamNumber} (${nextIndex + 1}/${rescoutTeams.length})...`);
+        
+        navigate("/game-start", {
+          state: {
+            rescout: {
+              isRescout: true,
+              matchNumber: rescoutData.matchNumber,
+              alliance: rescoutData.alliance,
+              eventKey: rescoutEventKey,
+              teams: rescoutTeams,
+              currentTeamIndex: nextIndex,
+            },
+          },
+        });
+        return;
+      }
+
+      toast.success("Match data corrected successfully!");
+      navigate("/match-validation");
+      
+    } catch (error) {
+      console.error("Error updating match data:", error);
+      toast.error("Error updating match data");
+    }
+  };
+
+  const handleCancelCorrection = () => {
+    setShowCorrectionDialog(false);
+    setPendingSubmission(null);
+    setCorrectionNotes("");
   };
 
   const handleBack = () => {
@@ -269,6 +424,39 @@ const EndgamePage = () => {
           </Button>
         </div>
       </div>
+
+      {/* Correction Notes Dialog */}
+      <Dialog open={showCorrectionDialog} onOpenChange={setShowCorrectionDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Correction Confirmation</DialogTitle>
+            <DialogDescription>
+              This will overwrite existing data for this match and team. 
+              Please provide a reason for the correction (optional but recommended).
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="correction-notes">Correction Notes</Label>
+              <Textarea
+                id="correction-notes"
+                placeholder="e.g., Original data was inaccurate, missed actions, incorrect count..."
+                value={correctionNotes}
+                onChange={(e) => setCorrectionNotes(e.target.value)}
+                className="min-h-24"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={handleCancelCorrection} className="p-2">
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmCorrection} className="p-2">
+              Confirm Correction
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -74,6 +74,10 @@ const data = {
           url: "/match-strategy",
         },
         {
+          title: "Match Validation",
+          url: "/match-validation",
+        },
+        {
           title: "Team Stats",
           url: "/team-stats",
         },

@@ -105,6 +105,20 @@ const InitialSelectTeam = ({
   const [customTeamValue, setCustomTeamValue] = useState(
     initialSelection.custom && defaultSelectTeam ? defaultSelectTeam : ""
   );
+  
+  // Sync customTeamValue with defaultSelectTeam prop changes (important for batch re-scout)
+  useEffect(() => {
+    if (defaultSelectTeam && 
+        defaultSelectTeam !== baseTeams[0] && 
+        defaultSelectTeam !== baseTeams[1] && 
+        defaultSelectTeam !== baseTeams[2]) {
+      setCustomTeamValue(defaultSelectTeam);
+      setCustomTeamStatus(true);
+      setTeam1Status(false);
+      setTeam2Status(false);
+      setTeam3Status(false);
+    }
+  }, [defaultSelectTeam, baseTeams]);
 
   // Function to handle team selection
   const clickTeam = (currentTeamType: string, currentTeamStatus: boolean) => {
