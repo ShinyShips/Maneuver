@@ -1,3 +1,12 @@
+/**
+ * Normalize event name for consistent storage and comparison
+ * Prevents issues where users enter same event with different capitalization
+ * Example: "2025MRcmp" and "2025mrcmp" both normalize to "2025mrcmp"
+ */
+export const normalizeEventName = (eventName: string): string => {
+  return String(eventName).toLowerCase().trim();
+};
+
 // Generate a deterministic ID based on match, team, alliance, and event
 // Uses a composite key format for fast lookups and natural collision detection
 export const generateDeterministicEntryId = (
@@ -7,7 +16,7 @@ export const generateDeterministicEntryId = (
   eventName: string
 ): string => {
   // Normalize all components for consistent matching
-  const event = String(eventName).toLowerCase().trim();
+  const event = normalizeEventName(eventName);
   const match = String(matchNumber).toLowerCase().trim();
   const team = String(teamNumber).trim();
   
@@ -362,15 +371,6 @@ export interface ConflictDetectionResult {
 }
 
 /**
- * Normalize alliance value by removing "Alliance" suffix and converting to lowercase
- * Handles: "blueAlliance" → "blue", "redAlliance" → "red", "Blue" → "blue"
- */
-const normalizeAlliance = (alliance?: string): string => {
-  if (!alliance) return '';
-  return alliance.toLowerCase().replace('alliance', '').trim();
-};
-
-/**
  * Compare two data objects and return list of fields that differ
  * Excludes metadata fields (id, timestamp, correction fields)
  */
@@ -439,35 +439,45 @@ export const detectConflicts = async (
   const batchReview: ScoutingDataWithId[] = [];
   const conflicts: ConflictInfo[] = [];
   
-  // Build a Map of local entries by ID for O(1) lookups
+  // Build TWO maps for O(1) lookups:
+  // 1. By composite ID (for new format entries)
+  // 2. By field-based key (for legacy entries with hash IDs)
   const allLocalEntries = await db.scoutingData.toArray();
   const localEntriesById = new Map(
     allLocalEntries.map(entry => [entry.id, entry])
   );
   
+  // Build secondary map using field-based keys for legacy data lookup
+  // Key format: "event::match::team::alliance" (same as generateDeterministicEntryId)
+  const localEntriesByFields = new Map(
+    allLocalEntries.map(entry => {
+      const key = generateDeterministicEntryId(
+        entry.matchNumber || '',
+        entry.teamNumber || '',
+        entry.alliance || '',
+        entry.eventName || ''
+      );
+      return [key, entry];
+    })
+  );
+  
   for (const incomingEntry of incomingData) {
     const incomingData = incomingEntry.data;
     
-    // Try direct ID lookup first (O(1))
+    // Try direct ID lookup first (O(1)) - for entries with composite IDs
     let matchingLocal = localEntriesById.get(incomingEntry.id);
     
-    // Fallback: If no direct match, try field-based lookup for legacy data
+    // Fallback: Field-based lookup for legacy data (O(1) using Map)
     // This handles cases where old entries have hash-based IDs
     if (!matchingLocal) {
-      const incomingMatch = String(incomingData.matchNumber || '');
-      const incomingTeam = String(incomingData.selectTeam || incomingData.teamNumber || '');
-      const incomingAlliance = normalizeAlliance(String(incomingData.alliance || ''));
-      const incomingEvent = String(incomingData.eventName || '');
+      const fieldBasedKey = generateDeterministicEntryId(
+        String(incomingData.matchNumber || ''),
+        String(incomingData.selectTeam || incomingData.teamNumber || ''),
+        String(incomingData.alliance || ''),
+        String(incomingData.eventName || '')
+      );
       
-      matchingLocal = allLocalEntries.find(local => {
-        const localAlliance = normalizeAlliance(local.alliance);
-        return (
-          local.matchNumber === incomingMatch &&
-          local.teamNumber === incomingTeam &&
-          localAlliance === incomingAlliance &&
-          local.eventName === incomingEvent
-        );
-      });
+      matchingLocal = localEntriesByFields.get(fieldBasedKey);
     }
     
     // Scenario 1: No local entry exists → autoImport

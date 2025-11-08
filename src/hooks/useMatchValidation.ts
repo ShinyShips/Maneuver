@@ -14,6 +14,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { db } from '@/lib/dexieDB';
 import type { ScoutingEntry } from '@/lib/scoutingTypes';
+import type { ScoutingEntryDB } from '@/lib/dexieDB';
 import type {
   MatchValidationResult,
   ValidationSummary,
@@ -141,8 +142,8 @@ async function fetchScoutedMatchData(
 ): Promise<{ 
   red: ScoutingEntry[]; 
   blue: ScoutingEntry[];
-  redRaw: typeof entries;
-  blueRaw: typeof entries;
+  redRaw: ScoutingEntryDB[];
+  blueRaw: ScoutingEntryDB[];
 }> {
   const entries = await db.scoutingData
     .where('eventName')
@@ -152,8 +153,8 @@ async function fetchScoutedMatchData(
 
   const redEntries: ScoutingEntry[] = [];
   const blueEntries: ScoutingEntry[] = [];
-  const redRaw: typeof entries = [];
-  const blueRaw: typeof entries = [];
+  const redRaw: ScoutingEntryDB[] = [];
+  const blueRaw: ScoutingEntryDB[] = [];
 
   entries.forEach(entry => {
     const parsed = parseScoutingEntry(entry.data);

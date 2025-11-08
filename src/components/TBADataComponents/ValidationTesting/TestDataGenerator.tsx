@@ -147,18 +147,23 @@ export const TestDataGenerator: React.FC<TestDataGeneratorProps> = ({ eventKey, 
         console.error('Match diagnostics:', diagnostics);
         
         throw new Error(
-          `No played qualification matches found for this event.\n\n` +
-          `Total matches: ${diagnostics.totalMatches}\n` +
-          `Qual matches: ${diagnostics.qualMatches}\n` +
-          `Played matches: ${diagnostics.playedMatches}\n` +
-          `With score breakdown: ${diagnostics.withBreakdown}\n\n` +
-          `This could mean:\n` +
-          `1. Event hasn't started yet (no matches played)\n` +
-          `2. Event is scheduled but matches haven't been played\n` +
-          `3. TBA hasn't published score breakdowns yet\n\n` +
-          `Try a different event that has completed matches, like:\n` +
-          `- Past events from 2024 season\n` +
-          `- Events that have already finished in 2025`
+          [
+            'No played qualification matches found for this event.',
+            '',
+            `Total matches: ${diagnostics.totalMatches}`,
+            `Qual matches: ${diagnostics.qualMatches}`,
+            `Played matches: ${diagnostics.playedMatches}`,
+            `With score breakdown: ${diagnostics.withBreakdown}`,
+            '',
+            'This could mean:',
+            '1. Event hasn\'t started yet (no matches played)',
+            '2. Event is scheduled but matches haven\'t been played',
+            '3. TBA hasn\'t published score breakdowns yet',
+            '',
+            'Try a different event that has completed matches, like:',
+            '- Past events from 2024 season',
+            '- Events that have already finished in 2025'
+          ].join('\n')
         );
       }
 

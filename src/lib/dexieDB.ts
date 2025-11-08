@@ -145,11 +145,17 @@ const enhanceEntry = (entry: ScoutingDataWithId): ScoutingEntryDB => {
   let alliance = safeStringify(actualData?.alliance);
   const scoutName = safeStringify(actualData?.scoutName);
   const teamNumber = safeStringify(actualData?.selectTeam);
-  const eventName = safeStringify(actualData?.eventName);
+  let eventName = safeStringify(actualData?.eventName);
   
   // Normalize alliance value: "redAlliance" -> "red", "blueAlliance" -> "blue"
   if (alliance) {
     alliance = alliance.toLowerCase().replace('alliance', '').trim();
+  }
+  
+  // Normalize event name to lowercase for consistency
+  // This prevents "2025MRcmp" and "2025mrcmp" from being treated as different events
+  if (eventName) {
+    eventName = eventName.toLowerCase().trim();
   }
 
   // Extract correction metadata from data if present
@@ -159,6 +165,13 @@ const enhanceEntry = (entry: ScoutingDataWithId): ScoutingEntryDB => {
   const lastCorrectedBy = typeof actualData?.lastCorrectedBy === 'string' ? actualData.lastCorrectedBy : undefined;
   const correctionNotes = typeof actualData?.correctionNotes === 'string' ? actualData.correctionNotes : undefined;
 
+  // Update the data object with normalized values for consistency
+  const normalizedData = {
+    ...actualData,
+    eventName,  // Use normalized lowercase eventName
+    alliance,   // Use normalized alliance (already normalized above)
+  };
+
   return {
     id: entry.id,
     teamNumber,
@@ -166,7 +179,7 @@ const enhanceEntry = (entry: ScoutingDataWithId): ScoutingEntryDB => {
     alliance,
     scoutName,
     eventName,
-    data: actualData || data,
+    data: normalizedData || data,
     timestamp: entry.timestamp || Date.now(),
     isCorrected,
     correctionCount,
