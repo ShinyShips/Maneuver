@@ -121,8 +121,7 @@ export const useChartData = (
             eventName: team.eventName,
           };
         })
-        .sort((a, b) => b.totalPoints - a.totalPoints)
-        .slice(0, 12);
+        .sort((a, b) => b.totalPoints - a.totalPoints);
     } else {
       // Bar chart - aggregate metric by team
       const teamMap = new Map<string, {
@@ -158,8 +157,7 @@ export const useChartData = (
           value: team.valueSum / team.count,
           eventName: team.eventName,
         }))
-        .sort((a, b) => b.value - a.value)
-        .slice(0, 12); // Show top 12 teams for bar chart
+        .sort((a, b) => b.value - a.value);
     }
   }, [filteredTeamStats, chartMetric, chartType, scatterXMetric, scatterYMetric]);
 

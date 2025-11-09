@@ -308,12 +308,13 @@ export const BoxPlot: React.FC<BoxPlotProps> = ({
                 <text
                   key={team}
                   x={x}
-                  y={20}
-                  textAnchor="middle"
+                  y={16}
+                  textAnchor="end"
                   dominantBaseline="middle"
-                  fontSize="12"
+                  fontSize="10"
                   fill="currentColor"
                   className="text-foreground"
+                  transform={`rotate(-90, ${x}, 16)`}
                 >
                   {team}
                 </text>
