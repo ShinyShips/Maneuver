@@ -11,12 +11,14 @@ import { fromUint8Array } from "js-base64";
 import { Info, Play, Pause, SkipForward, SkipBack, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { 
   compressScoutingData, 
+  compressScoutProfiles,
   shouldUseCompression, 
   getCompressionStats,
   isScoutingDataCollection,
   MIN_FOUNTAIN_SIZE_COMPRESSED,
   MIN_FOUNTAIN_SIZE_UNCOMPRESSED,
   QR_CODE_SIZE_BYTES,
+  COMPRESSION_THRESHOLD_SCOUT_PROFILES,
   type ScoutingDataCollection
 } from "@/lib/compressionUtils";
 import {
@@ -185,36 +187,147 @@ const UniversalFountainGenerator = ({
       return;
     }
 
-    // Cache JSON string to avoid duplicate serialization
-    const jsonString = JSON.stringify(dataToUse);
-    
-    const debugEntries = (dataToUse && typeof dataToUse === 'object' && 'entries' in dataToUse) 
-      ? (dataToUse as { entries: unknown[] }).entries.length 
-      : 'unknown';
-    console.log('🎯 QR Generator - Data to encode:', {
-      isFiltered: showFiltering && filteredData !== null,
-      dataSize: jsonString.length,
-      entryCount: debugEntries
-    });
-    
-    // Determine if we should use advanced compression
-    const useCompression = shouldUseCompression(dataToUse, jsonString) && 
-                          (dataType === 'scouting' || dataType === 'combined');
-    
     let encodedData: Uint8Array;
     let currentCompressionInfo = '';
     
-    if (useCompression && isScoutingDataCollection(dataToUse)) {
-      // Use advanced compression for scouting data
-      if (import.meta.env.DEV) {
-        console.log('🗜️ Using Phase 3 advanced compression...');
+    // Handle compression based on data type
+    if (dataType === 'scout') {
+      // Scout profiles standalone - compress if large enough (using lower 1KB threshold)
+      if (dataToUse && typeof dataToUse === 'object' && 'scouts' in dataToUse && 'predictions' in dataToUse) {
+        const data = dataToUse as { scouts: unknown[]; predictions: unknown[]; exportedAt?: string; version?: string };
+        const jsonString = JSON.stringify(dataToUse);
+        
+        // Use lower threshold for scout profiles
+        if (jsonString.length > COMPRESSION_THRESHOLD_SCOUT_PROFILES) {
+          if (import.meta.env.DEV) {
+            console.log('🗜️ Compressing scout profiles...');
+          }
+          const compressedData = compressScoutProfiles(data.scouts, data.predictions, jsonString);
+          
+          // Wrap in structure with compression flag
+          const wrappedData = {
+            compressed: true,
+            data: fromUint8Array(compressedData),
+            exportedAt: data.exportedAt || new Date().toISOString(),
+            version: data.version || "1.0"
+          };
+          
+          const wrappedJson = JSON.stringify(wrappedData);
+          encodedData = new TextEncoder().encode(wrappedJson);
+          const stats = getCompressionStats(dataToUse, compressedData, jsonString);
+          currentCompressionInfo = `Scout profiles compressed: ${stats.originalSize} → ${stats.compressedSize} bytes (${(100 - stats.compressionRatio * 100).toFixed(1)}% reduction, ${stats.estimatedQRReduction})`;
+          toast.success(`Scout profiles compressed: ${(100 - stats.compressionRatio * 100).toFixed(1)}% size reduction!`);
+        } else {
+          encodedData = new TextEncoder().encode(jsonString);
+          currentCompressionInfo = `Scout profiles (uncompressed): ${encodedData.length} bytes`;
+        }
+      } else {
+        const jsonString = JSON.stringify(dataToUse);
+        encodedData = new TextEncoder().encode(jsonString);
+        currentCompressionInfo = `Standard JSON: ${encodedData.length} bytes`;
       }
-      encodedData = compressScoutingData(dataToUse, jsonString);
-      const stats = getCompressionStats(dataToUse, encodedData, jsonString);
-      currentCompressionInfo = `Advanced compression: ${stats.originalSize} → ${stats.compressedSize} bytes (${(100 - stats.compressionRatio * 100).toFixed(1)}% reduction, ${stats.estimatedQRReduction})`;
-      toast.success(`Advanced compression: ${(100 - stats.compressionRatio * 100).toFixed(1)}% size reduction!`);
+    } else if (dataType === 'combined') {
+      // Combined data - compress each part independently then combine
+      if (dataToUse && typeof dataToUse === 'object' && 
+          'type' in dataToUse && 
+          'scoutingData' in dataToUse && 
+          'scoutProfiles' in dataToUse) {
+        
+        const combinedData = dataToUse as {
+          type: string;
+          scoutingData: { entries: unknown[] };
+          scoutProfiles: { scouts: unknown[]; predictions: unknown[] };
+          metadata: unknown;
+        };
+        
+        let scoutingCompressed = false;
+        let scoutingData: Uint8Array | { entries: unknown[] } = combinedData.scoutingData;
+        const scoutingJson = JSON.stringify(combinedData.scoutingData);
+        
+        // Compress scouting data if it qualifies
+        if (shouldUseCompression(combinedData.scoutingData, scoutingJson) && 
+            isScoutingDataCollection(combinedData.scoutingData)) {
+          scoutingData = compressScoutingData(combinedData.scoutingData, scoutingJson);
+          scoutingCompressed = true;
+          if (import.meta.env.DEV) {
+            console.log(`🗜️ Compressed scouting data: ${scoutingJson.length} → ${scoutingData.length} bytes`);
+          }
+        }
+        
+        let profilesCompressed = false;
+        let profilesData: Uint8Array | { scouts: unknown[]; predictions: unknown[] } = combinedData.scoutProfiles;
+        const profilesJson = JSON.stringify(combinedData.scoutProfiles);
+        
+        // Compress scout profiles if they qualify (using lower 1KB threshold)
+        if (profilesJson.length > COMPRESSION_THRESHOLD_SCOUT_PROFILES) {
+          profilesData = compressScoutProfiles(
+            combinedData.scoutProfiles.scouts, 
+            combinedData.scoutProfiles.predictions,
+            profilesJson
+          );
+          profilesCompressed = true;
+          if (import.meta.env.DEV) {
+            console.log(`🗜️ Compressed scout profiles: ${profilesJson.length} → ${profilesData.length} bytes`);
+          }
+        }
+        
+        // Build the combined structure with compression flags
+        // Convert compressed Uint8Arrays to base64 to avoid massive JSON array overhead
+        const finalCombinedData = {
+          type: combinedData.type,
+          scoutingData: {
+            compressed: scoutingCompressed,
+            data: scoutingCompressed ? fromUint8Array(scoutingData as Uint8Array) : scoutingData
+          },
+          scoutProfiles: {
+            compressed: profilesCompressed,
+            data: profilesCompressed ? fromUint8Array(profilesData as Uint8Array) : profilesData
+          },
+          metadata: combinedData.metadata
+        };
+        
+        const finalJson = JSON.stringify(finalCombinedData);
+        encodedData = new TextEncoder().encode(finalJson);
+        
+        const scoutingInfo = scoutingCompressed 
+          ? `${scoutingJson.length} → ${(scoutingData as Uint8Array).length}` 
+          : `${scoutingJson.length}`;
+        const profilesInfo = profilesCompressed 
+          ? `${profilesJson.length} → ${(profilesData as Uint8Array).length}` 
+          : `${profilesJson.length}`;
+        
+        currentCompressionInfo = `Combined (Scouting: ${scoutingInfo}, Profiles: ${profilesInfo}) → ${encodedData.length} bytes total`;
+        
+        if (scoutingCompressed || profilesCompressed) {
+          const parts = [];
+          if (scoutingCompressed) parts.push('scouting data');
+          if (profilesCompressed) parts.push('scout profiles');
+          toast.success(`Compressed ${parts.join(' and ')}!`);
+        }
+      } else {
+        const jsonString = JSON.stringify(dataToUse);
+        encodedData = new TextEncoder().encode(jsonString);
+        currentCompressionInfo = `Standard JSON: ${encodedData.length} bytes`;
+      }
+    } else if (dataType === 'scouting' && isScoutingDataCollection(dataToUse)) {
+      // Scouting data standalone - use advanced compression
+      const jsonString = JSON.stringify(dataToUse);
+      
+      if (shouldUseCompression(dataToUse, jsonString)) {
+        if (import.meta.env.DEV) {
+          console.log('🗜️ Using Phase 3 advanced compression for scouting data...');
+        }
+        encodedData = compressScoutingData(dataToUse, jsonString);
+        const stats = getCompressionStats(dataToUse, encodedData, jsonString);
+        currentCompressionInfo = `Advanced compression: ${stats.originalSize} → ${stats.compressedSize} bytes (${(100 - stats.compressionRatio * 100).toFixed(1)}% reduction, ${stats.estimatedQRReduction})`;
+        toast.success(`Advanced compression: ${(100 - stats.compressionRatio * 100).toFixed(1)}% size reduction!`);
+      } else {
+        encodedData = new TextEncoder().encode(jsonString);
+        currentCompressionInfo = `Scouting data (uncompressed): ${encodedData.length} bytes`;
+      }
     } else {
-      // Use standard JSON encoding
+      // Other data types or unrecognized format - use standard JSON encoding
+      const jsonString = JSON.stringify(dataToUse);
       encodedData = new TextEncoder().encode(jsonString);
       currentCompressionInfo = `Standard JSON: ${encodedData.length} bytes`;
     }
@@ -223,8 +336,9 @@ const UniversalFountainGenerator = ({
     setCompressionInfo(currentCompressionInfo);
     
     // Validate data size - need sufficient data for meaningful fountain codes
-    // Lower threshold for compressed data since compression can be very effective
-    const minDataSize = useCompression ? MIN_FOUNTAIN_SIZE_COMPRESSED : MIN_FOUNTAIN_SIZE_UNCOMPRESSED;
+    // Use compressed threshold if compression info mentions compression
+    const isCompressed = currentCompressionInfo.toLowerCase().includes('compress');
+    const minDataSize = isCompressed ? MIN_FOUNTAIN_SIZE_COMPRESSED : MIN_FOUNTAIN_SIZE_UNCOMPRESSED;
     if (encodedData.length < minDataSize) {
       toast.error(`${dataType} data is too small (${encodedData.length} bytes). Need at least ${minDataSize} bytes for fountain code generation.`);
       console.warn(`Data too small for fountain codes: ${encodedData.length} bytes (min: ${minDataSize})`);
