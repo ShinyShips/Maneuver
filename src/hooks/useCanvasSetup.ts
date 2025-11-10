@@ -17,6 +17,8 @@ interface UseCanvasSetupProps {
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   containerRef: React.RefObject<HTMLDivElement | null>;
   fullscreenRef: React.RefObject<HTMLDivElement | null>;
+  selectedTeams?: string[];
+  onCanvasReady?: () => void;
 }
 
 export const useCanvasSetup = ({
@@ -26,10 +28,70 @@ export const useCanvasSetup = ({
   isMobile,
   canvasRef,
   containerRef,
-  fullscreenRef
+  fullscreenRef,
+  selectedTeams = [],
+  onCanvasReady
 }: UseCanvasSetupProps) => {
   const backgroundImageRef = useRef<HTMLImageElement | null>(null);
   const setupTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const drawTeamNumbersOnCanvas = useCallback((ctx: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number) => {
+    if (!selectedTeams || selectedTeams.length < 6) return;
+    
+    // Set text style - smaller font size
+    const fontSize = Math.floor(canvasWidth * 0.02);
+    ctx.font = `bold ${fontSize}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    // Blue alliance (left side with blue hexagon) - positions 3, 4, 5
+    const blueX = canvasWidth * 0.03; // Left edge
+    const blueTeams = [
+      { team: selectedTeams[3], y: canvasHeight * 0.275 }, // Position 1 at top
+      { team: selectedTeams[4], y: canvasHeight * 0.505 }, // Position 2 at middle
+      { team: selectedTeams[5], y: canvasHeight * 0.735 }, // Position 3 at bottom
+    ];
+    
+    blueTeams.forEach(({ team, y }) => {
+      if (team && team.trim()) {
+        ctx.save();
+        ctx.translate(blueX, y);
+        ctx.rotate(Math.PI / 2);
+        
+        ctx.fillStyle = 'white';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 3;
+        ctx.strokeText(team, 0, 0);
+        ctx.fillText(team, 0, 0);
+        
+        ctx.restore();
+      }
+    });
+    
+    // Red alliance (right side with red hexagon) - positions 0, 1, 2
+    const redX = canvasWidth * 0.97; // Right edge
+    const redTeams = [
+      { team: selectedTeams[0], y: canvasHeight * 0.735 }, // Position 1 at bottom
+      { team: selectedTeams[1], y: canvasHeight * 0.505 }, // Position 2 at middle
+      { team: selectedTeams[2], y: canvasHeight * 0.275 }, // Position 3 at top
+    ];
+    
+    redTeams.forEach(({ team, y }) => {
+      if (team && team.trim()) {
+        ctx.save();
+        ctx.translate(redX, y);
+        ctx.rotate(-Math.PI / 2);
+        
+        ctx.fillStyle = 'white';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 3;
+        ctx.strokeText(team, 0, 0);
+        ctx.fillText(team, 0, 0);
+        
+        ctx.restore();
+      }
+    });
+  }, [selectedTeams]);
 
   const setupCanvas = useCallback(() => {
     // Clear any pending setup calls
@@ -115,16 +177,28 @@ export const useCanvasSetup = ({
         savedImg.onload = () => {
           // Draw the saved content (which already includes background)
           ctx.drawImage(savedImg, 0, 0, canvasWidth, canvasHeight);
+          // Draw team numbers on top
+          drawTeamNumbersOnCanvas(ctx, canvasWidth, canvasHeight);
+          // Initialize undo history after canvas is ready
+          if (onCanvasReady) {
+            setTimeout(() => onCanvasReady(), 100);
+          }
         };
         savedImg.src = savedData;
       } else {
         // Only draw background if no saved data exists
         ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+        // Draw team numbers on top
+        drawTeamNumbersOnCanvas(ctx, canvasWidth, canvasHeight);
+        // Initialize undo history after canvas is ready
+        if (onCanvasReady) {
+          setTimeout(() => onCanvasReady(), 100);
+        }
       }
     };
     img.src = fieldImage;
     }, 50); // 50ms debounce
-  }, [currentStageId, isFullscreen, hideControls, isMobile, canvasRef, containerRef, fullscreenRef]);
+  }, [currentStageId, isFullscreen, hideControls, isMobile, canvasRef, containerRef, fullscreenRef, onCanvasReady, drawTeamNumbersOnCanvas]);
 
   useEffect(() => {
     setupCanvas();
@@ -158,9 +232,12 @@ export const useCanvasSetup = ({
     // Redraw just the background image
     ctx.drawImage(backgroundImageRef.current, 0, 0, canvas.width, canvas.height);
 
+    // Redraw team numbers
+    drawTeamNumbersOnCanvas(ctx, canvas.width, canvas.height);
+
     // Clear saved data
     localStorage.removeItem(`fieldStrategy_${currentStageId}`);
-  }, [currentStageId, canvasRef]);
+  }, [currentStageId, canvasRef, drawTeamNumbersOnCanvas]);
 
   return {
     backgroundImageRef,

@@ -9,11 +9,13 @@ interface DrawingControlsProps {
   currentStageId: string;
   isMobile: boolean;
   isFullscreen: boolean;
+  canUndo: boolean;
   onToggleErasing: (erasing: boolean) => void;
   onBrushSizeChange: (size: number) => void;
   onBrushColorChange: (color: string) => void;
   onClearCanvas: () => void;
   onSaveCanvas: () => void;
+  onUndo: () => void;
   onToggleFullscreen: () => void;
   onToggleHideControls: () => void;
 }
@@ -25,11 +27,13 @@ export const DrawingControls = ({
   currentStageId,
   isMobile,
   isFullscreen,
+  canUndo,
   onToggleErasing,
   onBrushSizeChange,
   onBrushColorChange,
   onClearCanvas,
   onSaveCanvas,
+  onUndo,
   onToggleFullscreen,
   onToggleHideControls
 }: DrawingControlsProps) => {
@@ -51,6 +55,15 @@ export const DrawingControls = ({
             onClick={() => onToggleErasing(true)}
           >
             Erase
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onUndo}
+            disabled={!canUndo}
+            title="Undo last action"
+          >
+            Undo
           </Button>
           
           {/* Size selector */}
@@ -117,6 +130,15 @@ export const DrawingControls = ({
           onClick={() => onToggleErasing(true)}
         >
           Erase
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onUndo}
+          disabled={!canUndo}
+          title="Undo last action"
+        >
+          Undo
         </Button>
         
         {/* Size selector */}

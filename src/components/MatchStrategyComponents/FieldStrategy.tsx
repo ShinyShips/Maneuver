@@ -5,9 +5,10 @@ import FieldCanvas from "./FieldCanvas";
 interface FieldStrategyProps {
   activeTab: string;
   onTabChange: (value: string) => void;
+  selectedTeams?: string[];
 }
 
-export const FieldStrategy = ({ activeTab, onTabChange }: FieldStrategyProps) => {
+export const FieldStrategy = ({ activeTab, onTabChange, selectedTeams = [] }: FieldStrategyProps) => {
   return (
     <Card className="w-full">
       <CardContent className="h-[500px] p-4">
@@ -24,6 +25,7 @@ export const FieldStrategy = ({ activeTab, onTabChange }: FieldStrategyProps) =>
                 key="autonomous" 
                 stageId="autonomous" 
                 onStageChange={onTabChange}
+                selectedTeams={selectedTeams}
               />
             </TabsContent>
             
@@ -32,6 +34,7 @@ export const FieldStrategy = ({ activeTab, onTabChange }: FieldStrategyProps) =>
                 key="teleop" 
                 stageId="teleop" 
                 onStageChange={onTabChange}
+                selectedTeams={selectedTeams}
               />
             </TabsContent>
             
@@ -40,6 +43,7 @@ export const FieldStrategy = ({ activeTab, onTabChange }: FieldStrategyProps) =>
                 key="endgame" 
                 stageId="endgame" 
                 onStageChange={onTabChange}
+                selectedTeams={selectedTeams}
               />
             </TabsContent>
           </div>

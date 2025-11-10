@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { getGlobalBackgroundImage } from "./useCanvasSetup";
 
 interface Point {
@@ -23,6 +23,9 @@ export const useCanvasDrawing = ({
 }: UseCanvasDrawingProps) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [lastPoint, setLastPoint] = useState<Point | null>(null);
+  const [canUndo, setCanUndo] = useState(false);
+  const historyRef = useRef<string[]>([]);
+  const historyIndexRef = useRef(-1);
 
   const getPointFromEvent = useCallback((e: React.MouseEvent | React.PointerEvent): Point => {
     const canvas = canvasRef.current;
@@ -56,6 +59,58 @@ export const useCanvasDrawing = ({
     
     ctx.restore();
   }, [canvasRef]);
+
+  const initializeHistory = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const dataURL = canvas.toDataURL();
+    historyRef.current = [dataURL];
+    historyIndexRef.current = 0;
+    setCanUndo(false);
+  }, [canvasRef]);
+
+  const saveToHistory = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const dataURL = canvas.toDataURL();
+    
+    // Remove any states after current index (for redo functionality)
+    historyRef.current = historyRef.current.slice(0, historyIndexRef.current + 1);
+    
+    // Add new state
+    historyRef.current.push(dataURL);
+    historyIndexRef.current = historyRef.current.length - 1;
+    
+    // Limit history to last 20 states to prevent memory issues
+    if (historyRef.current.length > 20) {
+      historyRef.current.shift();
+      historyIndexRef.current--;
+    }
+    
+    setCanUndo(historyIndexRef.current > 0);
+  }, [canvasRef]);
+
+  const undo = useCallback(() => {
+    if (historyIndexRef.current <= 0) return;
+    
+    historyIndexRef.current--;
+    const previousState = historyRef.current[historyIndexRef.current];
+    
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx || !previousState) return;
+    
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      setCanUndo(historyIndexRef.current > 0);
+      onSave(); // Auto-save after undo
+    };
+    img.src = previousState;
+  }, [canvasRef, onSave]);
 
   const startDrawing = useCallback((e: React.MouseEvent | React.PointerEvent) => {
     e.preventDefault();
@@ -148,12 +203,14 @@ export const useCanvasDrawing = ({
     }
     
     if (isDrawing) {
+      // Save to history after drawing is complete
+      saveToHistory();
       // Auto-save when drawing stops
       onSave();
     }
     setIsDrawing(false);
     setLastPoint(null);
-  }, [isDrawing, onSave]);
+  }, [isDrawing, onSave, saveToHistory]);
 
   const canvasStyle: React.CSSProperties = {
     userSelect: 'none',
@@ -181,6 +238,9 @@ export const useCanvasDrawing = ({
   return {
     canvasStyle,
     canvasEventHandlers,
-    isDrawing
+    isDrawing,
+    undo,
+    canUndo,
+    initializeHistory
   };
 };

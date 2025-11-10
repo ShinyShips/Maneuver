@@ -4,18 +4,22 @@ import { Eye, ChevronLeft, ChevronRight } from "lucide-react";
 interface FloatingControlsProps {
   isVisible: boolean;
   isErasing: boolean;
+  canUndo: boolean;
   onToggleControls: () => void;
   onStageSwitch: (direction: 'prev' | 'next') => void;
   onToggleErasing: (erasing: boolean) => void;
+  onUndo: () => void;
   onClearCanvas: () => void;
 }
 
 export const FloatingControls = ({
   isVisible,
   isErasing,
+  canUndo,
   onToggleControls,
   onStageSwitch,
   onToggleErasing,
+  onUndo,
   onClearCanvas
 }: FloatingControlsProps) => {
   if (!isVisible) return null;
@@ -76,6 +80,16 @@ export const FloatingControls = ({
             title="Erase mode"
           >
             Erase
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onUndo}
+            disabled={!canUndo}
+            className="shadow-lg"
+            title="Undo last action"
+          >
+            Undo
           </Button>
           <Button 
             onClick={onClearCanvas} 

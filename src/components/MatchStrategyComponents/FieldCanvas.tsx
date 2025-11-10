@@ -11,9 +11,10 @@ import { FloatingControls } from "./FloatingControls";
 interface FieldCanvasProps {
   stageId?: string;
   onStageChange?: (newStageId: string) => void;
+  selectedTeams?: string[];
 }
 
-const FieldCanvas = ({ stageId = "default", onStageChange }: FieldCanvasProps) => {
+const FieldCanvas = ({ stageId = "default", onStageChange, selectedTeams = [] }: FieldCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const fullscreenRef = useRef<HTMLDivElement>(null);
@@ -42,17 +43,6 @@ const FieldCanvas = ({ stageId = "default", onStageChange }: FieldCanvasProps) =
     }
   }, [stageId, isFullscreen]);
 
-  // Canvas setup hook
-  const { clearCanvas } = useCanvasSetup({
-    currentStageId,
-    isFullscreen,
-    hideControls,
-    isMobile,
-    canvasRef,
-    containerRef,
-    fullscreenRef
-  });
-
   // Save canvas function
   const saveCanvas = useCallback((showAlert = true) => {
     const canvas = canvasRef.current;
@@ -73,12 +63,25 @@ const FieldCanvas = ({ stageId = "default", onStageChange }: FieldCanvasProps) =
   }, [currentStageId]);
 
   // Canvas drawing hook
-  const { canvasStyle, canvasEventHandlers } = useCanvasDrawing({
+  const { canvasStyle, canvasEventHandlers, undo, canUndo, initializeHistory } = useCanvasDrawing({
     canvasRef,
     brushSize,
     brushColor,
     isErasing,
     onSave: () => saveCanvas(false)
+  });
+
+  // Canvas setup hook
+  const { clearCanvas } = useCanvasSetup({
+    currentStageId,
+    isFullscreen,
+    hideControls,
+    isMobile,
+    canvasRef,
+    containerRef,
+    fullscreenRef,
+    selectedTeams,
+    onCanvasReady: initializeHistory
   });
 
   // Handle fullscreen toggle
@@ -183,11 +186,13 @@ const FieldCanvas = ({ stageId = "default", onStageChange }: FieldCanvasProps) =
             currentStageId={currentStageId}
             isMobile={isMobile}
             isFullscreen={isFullscreen}
+            canUndo={canUndo}
             onToggleErasing={setIsErasing}
             onBrushSizeChange={setBrushSize}
             onBrushColorChange={setBrushColor}
             onClearCanvas={clearCanvas}
             onSaveCanvas={() => saveCanvas(true)}
+            onUndo={undo}
             onToggleFullscreen={toggleFullscreen}
             onToggleHideControls={() => setHideControls(!hideControls)}
           />
@@ -202,9 +207,11 @@ const FieldCanvas = ({ stageId = "default", onStageChange }: FieldCanvasProps) =
           <FloatingControls
             isVisible={hideControls && isMobile}
             isErasing={isErasing}
+            canUndo={canUndo}
             onToggleControls={() => setHideControls(false)}
             onStageSwitch={switchStage}
             onToggleErasing={setIsErasing}
+            onUndo={undo}
             onClearCanvas={clearCanvas}
           />
           
@@ -258,11 +265,13 @@ const FieldCanvas = ({ stageId = "default", onStageChange }: FieldCanvasProps) =
         currentStageId={currentStageId}
         isMobile={isMobile}
         isFullscreen={isFullscreen}
+        canUndo={canUndo}
         onToggleErasing={setIsErasing}
         onBrushSizeChange={setBrushSize}
         onBrushColorChange={setBrushColor}
         onClearCanvas={clearCanvas}
         onSaveCanvas={() => saveCanvas(true)}
+        onUndo={undo}
         onToggleFullscreen={toggleFullscreen}
         onToggleHideControls={() => setHideControls(!hideControls)}
       />
