@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Minimize2, ChevronLeft, ChevronRight, Eye, EyeOff } from "lucide-react";
+import { Minimize2, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 
 interface Stage {
   id: string;
@@ -65,16 +65,16 @@ export const FieldCanvasHeader = ({
         
         {/* Right side - Controls */}
         <div className="flex items-center justify-end gap-2">
-          {/* Show/Hide controls button - only on mobile when controls are hidden */}
+          {/* Show controls button - only on mobile when controls are hidden */}
           {isMobile && hideControls && (
             <Button
               onClick={onToggleHideControls}
               variant="outline"
               size="sm"
               className="h-8 w-8 p-0"
-              title={hideControls ? "Show controls" : "Hide controls"}
+              title="Show controls"
             >
-              {hideControls ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+              <Eye className="h-4 w-4" />
             </Button>
           )}
           

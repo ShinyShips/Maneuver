@@ -90,14 +90,16 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
         if (import.meta.env.DEV) {
           console.log('🗜️ Decompressing scouting data...');
         }
-        // Handle base64 string (new format) or number array (old format)
+        // Handle base64 string (new format), number array (old format), or Uint8Array
         let compressedArray: Uint8Array;
         if (typeof rawData.scoutingData.data === 'string') {
           compressedArray = toUint8Array(rawData.scoutingData.data);
         } else if (Array.isArray(rawData.scoutingData.data)) {
           compressedArray = new Uint8Array(rawData.scoutingData.data as number[]);
+        } else if (rawData.scoutingData.data instanceof Uint8Array) {
+          compressedArray = rawData.scoutingData.data;
         } else {
-          compressedArray = rawData.scoutingData.data as unknown as Uint8Array;
+          throw new Error('Invalid scouting data format: expected base64 string, number array, or Uint8Array');
         }
         const decompressed = decompressScoutingData(compressedArray);
         scoutingData = { entries: decompressed.entries as ScoutingDataWithId[] };
@@ -119,14 +121,16 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
         if (import.meta.env.DEV) {
           console.log('🗜️ Decompressing scout profiles...');
         }
-        // Handle base64 string (new format) or number array (old format)
+        // Handle base64 string (new format), number array (old format), or Uint8Array
         let compressedArray: Uint8Array;
         if (typeof rawData.scoutProfiles.data === 'string') {
           compressedArray = toUint8Array(rawData.scoutProfiles.data);
         } else if (Array.isArray(rawData.scoutProfiles.data)) {
           compressedArray = new Uint8Array(rawData.scoutProfiles.data as number[]);
+        } else if (rawData.scoutProfiles.data instanceof Uint8Array) {
+          compressedArray = rawData.scoutProfiles.data;
         } else {
-          compressedArray = rawData.scoutProfiles.data as unknown as Uint8Array;
+          throw new Error('Invalid scout profiles format: expected base64 string, number array, or Uint8Array');
         }
         const decompressed = decompressScoutProfiles(compressedArray);
         scoutProfiles = {

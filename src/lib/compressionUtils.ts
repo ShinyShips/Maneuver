@@ -475,8 +475,10 @@ function expandCompressedEntry(
 /**
  * Decompress scouting data and optionally expand entries to full format
  * @param compressedData - Compressed Uint8Array
- * @param expandEntries - Whether to expand compressed entries to full format (default: true for combined scanner)
- * @returns Object with entries array
+ * @param expandEntries - Whether to expand compressed entries to full format. 
+ *   - Set to `true` (default) when using CombinedDataFountainScanner, which needs fully expanded ScoutingEntry objects.
+ *   - Set to `false` when using UniversalFountainScanner, which performs its own dictionary expansion and field reconstruction.
+ * @returns Object with entries array (either compressed or fully expanded based on expandEntries parameter)
  */
 export function decompressScoutingData(
   compressedData: Uint8Array,

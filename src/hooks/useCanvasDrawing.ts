@@ -1,6 +1,9 @@
 import { useState, useCallback, useRef } from "react";
 import { getGlobalBackgroundImage } from "./useCanvasSetup";
 
+// Maximum number of undo states to keep in history to prevent excessive memory usage
+const MAX_UNDO_HISTORY_LENGTH = 20;
+
 interface Point {
   x: number;
   y: number;
@@ -83,8 +86,8 @@ export const useCanvasDrawing = ({
     historyRef.current.push(dataURL);
     historyIndexRef.current = historyRef.current.length - 1;
     
-    // Limit history to last 20 states to prevent memory issues
-    if (historyRef.current.length > 20) {
+    // Limit history to prevent memory issues
+    if (historyRef.current.length > MAX_UNDO_HISTORY_LENGTH) {
       historyRef.current.shift();
       historyIndexRef.current--;
     }

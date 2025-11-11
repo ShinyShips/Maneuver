@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useRef } from "react";
 import fieldImage from "@/assets/field.png";
 
+// Constants for team label positioning and sizing
+const TEAM_LABEL_FONT_SIZE_RATIO = 0.02; // Font size as ratio of canvas width
+const BLUE_ALLIANCE_X_POSITION = 0.03; // Left edge position for blue alliance
+const RED_ALLIANCE_X_POSITION = 0.97; // Right edge position for red alliance
+const TEAM_POSITION_TOP_Y = 0.275; // Y position for top team slot
+const TEAM_POSITION_MIDDLE_Y = 0.505; // Y position for middle team slot
+const TEAM_POSITION_BOTTOM_Y = 0.735; // Y position for bottom team slot
+
 // Global reference for background image to share with drawing hook
 let globalBackgroundImage: HTMLImageElement | null = null;
 
@@ -36,20 +44,21 @@ export const useCanvasSetup = ({
   const setupTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const drawTeamNumbersOnCanvas = useCallback((ctx: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number) => {
-    if (!selectedTeams || selectedTeams.length < 6) return;
+    // Only draw team numbers if exactly 6 teams are selected (3 per alliance)
+    if (!selectedTeams || selectedTeams.length !== 6) return;
     
-    // Set text style - smaller font size
-    const fontSize = Math.floor(canvasWidth * 0.02);
+    // Set text style using defined font size ratio
+    const fontSize = Math.floor(canvasWidth * TEAM_LABEL_FONT_SIZE_RATIO);
     ctx.font = `bold ${fontSize}px Arial`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     
     // Blue alliance (left side with blue hexagon) - positions 3, 4, 5
-    const blueX = canvasWidth * 0.03; // Left edge
+    const blueX = canvasWidth * BLUE_ALLIANCE_X_POSITION;
     const blueTeams = [
-      { team: selectedTeams[3], y: canvasHeight * 0.275 }, // Position 1 at top
-      { team: selectedTeams[4], y: canvasHeight * 0.505 }, // Position 2 at middle
-      { team: selectedTeams[5], y: canvasHeight * 0.735 }, // Position 3 at bottom
+      { team: selectedTeams[3], y: canvasHeight * TEAM_POSITION_TOP_Y }, // Position 1 at top
+      { team: selectedTeams[4], y: canvasHeight * TEAM_POSITION_MIDDLE_Y }, // Position 2 at middle
+      { team: selectedTeams[5], y: canvasHeight * TEAM_POSITION_BOTTOM_Y }, // Position 3 at bottom
     ];
     
     blueTeams.forEach(({ team, y }) => {
@@ -69,11 +78,11 @@ export const useCanvasSetup = ({
     });
     
     // Red alliance (right side with red hexagon) - positions 0, 1, 2
-    const redX = canvasWidth * 0.97; // Right edge
+    const redX = canvasWidth * RED_ALLIANCE_X_POSITION;
     const redTeams = [
-      { team: selectedTeams[0], y: canvasHeight * 0.735 }, // Position 1 at bottom
-      { team: selectedTeams[1], y: canvasHeight * 0.505 }, // Position 2 at middle
-      { team: selectedTeams[2], y: canvasHeight * 0.275 }, // Position 3 at top
+      { team: selectedTeams[0], y: canvasHeight * TEAM_POSITION_BOTTOM_Y }, // Position 1 at bottom
+      { team: selectedTeams[1], y: canvasHeight * TEAM_POSITION_MIDDLE_Y }, // Position 2 at middle
+      { team: selectedTeams[2], y: canvasHeight * TEAM_POSITION_TOP_Y }, // Position 3 at top
     ];
     
     redTeams.forEach(({ team, y }) => {
@@ -178,9 +187,10 @@ export const useCanvasSetup = ({
           ctx.drawImage(savedImg, 0, 0, canvasWidth, canvasHeight);
           // Draw team numbers on top
           drawTeamNumbersOnCanvas(ctx, canvasWidth, canvasHeight);
-          // Initialize undo history after canvas is ready
+          // Initialize undo history after canvas drawing is complete
+          // Use requestAnimationFrame to ensure rendering is complete before initializing history
           if (onCanvasReady) {
-            setTimeout(() => onCanvasReady(), 100);
+            requestAnimationFrame(() => onCanvasReady());
           }
         };
         savedImg.src = savedData;
@@ -189,9 +199,10 @@ export const useCanvasSetup = ({
         ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
         // Draw team numbers on top
         drawTeamNumbersOnCanvas(ctx, canvasWidth, canvasHeight);
-        // Initialize undo history after canvas is ready
+        // Initialize undo history after canvas drawing is complete
+        // Use requestAnimationFrame to ensure rendering is complete before initializing history
         if (onCanvasReady) {
-          setTimeout(() => onCanvasReady(), 100);
+          requestAnimationFrame(() => onCanvasReady());
         }
       }
     };

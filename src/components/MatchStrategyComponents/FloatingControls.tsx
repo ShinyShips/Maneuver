@@ -3,28 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Pencil, Eraser, Undo, Trash2 } from "lucide-react";
-
-// Preset colors - 5 blue-adjacent, 5 red-adjacent, and 5 neutral (3 rows of 5)
-const PRESET_COLORS = [
-  // Blue-adjacent colors
-  { value: '#3b82f6', label: 'Blue' },           // Bright blue
-  { value: '#60a5fa', label: 'Light Blue' },     // Lighter blue
-  { value: '#1e40af', label: 'Dark Blue' },      // Darker blue
-  { value: '#8b5cf6', label: 'Purple' },         // Purple
-  { value: '#06b6d4', label: 'Cyan' },           // Cyan
-  // Red-adjacent colors
-  { value: '#ef4444', label: 'Red' },            // Bright red
-  { value: '#f87171', label: 'Light Red' },      // Lighter red
-  { value: '#dc2626', label: 'Dark Red' },       // Darker red
-  { value: '#f59e0b', label: 'Orange' },         // Orange
-  { value: '#eab308', label: 'Yellow' },         // Yellow
-  // Neutral and other colors
-  { value: '#10b981', label: 'Green' },          // Green
-  { value: '#ec4899', label: 'Pink' },           // Pink
-  { value: '#000000', label: 'Black' },          // Black
-  { value: '#6b7280', label: 'Grey' },           // Grey
-  { value: '#ffffff', label: 'White' },          // White
-];
+import { PRESET_COLORS } from "@/constants/drawingColors";
 
 interface FloatingControlsProps {
   isVisible: boolean;
@@ -122,7 +101,10 @@ export const FloatingControls = ({
                 className="h-10 w-16 p-0 shadow-lg"
                 style={{ backgroundColor: brushColor }}
                 title="Select color"
-              />
+                aria-label="Select drawing color"
+              >
+                <span className="sr-only">Select color</span>
+              </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-2">
               <div className="grid grid-cols-5 gap-1">
@@ -135,6 +117,7 @@ export const FloatingControls = ({
                     }`}
                     style={{ backgroundColor: color.value }}
                     title={color.label}
+                    aria-label={color.label}
                   />
                 ))}
               </div>
