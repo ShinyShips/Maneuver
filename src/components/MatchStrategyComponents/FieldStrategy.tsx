@@ -6,9 +6,10 @@ interface FieldStrategyProps {
   activeTab: string;
   onTabChange: (value: string) => void;
   selectedTeams?: string[];
+  matchNumber?: string;
 }
 
-export const FieldStrategy = ({ activeTab, onTabChange, selectedTeams = [] }: FieldStrategyProps) => {
+export const FieldStrategy = ({ activeTab, onTabChange, selectedTeams = [], matchNumber }: FieldStrategyProps) => {
   return (
     <Card className="w-full">
       <CardContent className="h-[500px] p-4">
@@ -26,6 +27,7 @@ export const FieldStrategy = ({ activeTab, onTabChange, selectedTeams = [] }: Fi
                 stageId="autonomous" 
                 onStageChange={onTabChange}
                 selectedTeams={selectedTeams}
+                matchNumber={matchNumber}
               />
             </TabsContent>
             
@@ -35,6 +37,7 @@ export const FieldStrategy = ({ activeTab, onTabChange, selectedTeams = [] }: Fi
                 stageId="teleop" 
                 onStageChange={onTabChange}
                 selectedTeams={selectedTeams}
+                matchNumber={matchNumber}
               />
             </TabsContent>
             
@@ -44,6 +47,7 @@ export const FieldStrategy = ({ activeTab, onTabChange, selectedTeams = [] }: Fi
                 stageId="endgame" 
                 onStageChange={onTabChange}
                 selectedTeams={selectedTeams}
+                matchNumber={matchNumber}
               />
             </TabsContent>
           </div>

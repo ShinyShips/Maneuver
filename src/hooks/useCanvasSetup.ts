@@ -121,15 +121,16 @@ export const useCanvasSetup = ({
         const viewportHeight = window.innerHeight;
         const viewportWidth = window.innerWidth;
         
-        // Account for header (estimate 120px) + footer (estimate 60px) + padding
-        let reservedHeight = 180; // Base: header + footer + padding
+        // Account for header + controls (no padding on mobile)
+        let reservedHeight = isMobile ? 100 : 180; // Mobile: compact header + controls, Desktop: larger with padding
         
         // Add space for stage switcher and controls if they're visible
         if (!hideControls || !isMobile) {
-          reservedHeight += 100; // Stage switcher (~50px) + drawing controls (~50px)
+          reservedHeight += isMobile ? 0 : 100; // Only add extra on desktop
         }
         
-        const reservedWidth = 32; // 16px padding on each side
+        // Reserve space for floating controls on mobile - increased to prevent overlap on real devices
+        const reservedWidth = isMobile ? 160 : 32; // Mobile: extra space for floating controls, Desktop: standard padding
         
         containerWidth = viewportWidth - reservedWidth;
         containerHeight = viewportHeight - reservedHeight;
@@ -157,15 +158,13 @@ export const useCanvasSetup = ({
         canvasWidth = containerHeight * imgAspectRatio;
       }
 
-      // Set canvas dimensions
+      // Set canvas dimensions (internal resolution)
       canvas.width = canvasWidth;
       canvas.height = canvasHeight;
       
-      // Set canvas display size to match calculated dimensions
+      // Set canvas display size to exactly match internal dimensions (no scaling)
       canvas.style.width = `${canvasWidth}px`;
       canvas.style.height = `${canvasHeight}px`;
-      canvas.style.maxWidth = '100%';
-      canvas.style.maxHeight = '100%';
 
       // Store background image reference for erasing
       backgroundImageRef.current = img;

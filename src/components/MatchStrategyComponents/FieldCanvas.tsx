@@ -4,7 +4,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useCanvasDrawing } from "@/hooks/useCanvasDrawing";
 import { useCanvasSetup } from "@/hooks/useCanvasSetup";
 import { FieldCanvasHeader } from "./FieldCanvasHeader";
-import { MobileStageControls } from "./MobileStageControls";
 import { DrawingControls } from "./DrawingControls";
 import { FloatingControls } from "./FloatingControls";
 
@@ -12,15 +11,16 @@ interface FieldCanvasProps {
   stageId?: string;
   onStageChange?: (newStageId: string) => void;
   selectedTeams?: string[];
+  matchNumber?: string;
 }
 
-const FieldCanvas = ({ stageId = "default", onStageChange, selectedTeams = [] }: FieldCanvasProps) => {
+const FieldCanvas = ({ stageId = "default", onStageChange, selectedTeams = [], matchNumber }: FieldCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const fullscreenRef = useRef<HTMLDivElement>(null);
   const [isErasing, setIsErasing] = useState(false);
-  const [brushSize, setBrushSize] = useState(3);
-  const [brushColor, setBrushColor] = useState('#ff0000');
+  const [brushSize, setBrushSize] = useState(5); // Default to Medium (5)
+  const [brushColor, setBrushColor] = useState('#ef4444'); // Default to Red
   const { isFullscreen, setIsFullscreen } = useFullscreen();
   const [currentStageId, setCurrentStageId] = useState(stageId);
   const [hideControls, setHideControls] = useState(false);
@@ -164,17 +164,11 @@ const FieldCanvas = ({ stageId = "default", onStageChange, selectedTeams = [] }:
         <FieldCanvasHeader
           currentStage={currentStage}
           hideControls={hideControls}
+          isMobile={isMobile}
+          matchNumber={matchNumber}
           onStageSwitch={switchStage}
           onToggleFullscreen={toggleFullscreen}
-        />
-
-        {/* Mobile Stage Controls */}
-        <MobileStageControls
-          currentStage={currentStage}
-          currentStageIndex={currentStageIndex}
-          stages={stages}
-          onStageSwitch={switchStage}
-          isVisible={isMobile && !hideControls}
+          onToggleHideControls={() => setHideControls(!hideControls)}
         />
 
         {/* Drawing Controls */}
@@ -200,17 +194,19 @@ const FieldCanvas = ({ stageId = "default", onStageChange, selectedTeams = [] }:
 
         {/* Canvas Container */}
         <div 
-          className="flex-1 flex items-center justify-center p-2 md:p-4 bg-green-50 dark:bg-green-950/20 overflow-hidden relative"
+          className="flex-1 flex items-center justify-center p-0 md:p-4 bg-green-50 dark:bg-green-950/20 overflow-hidden relative z-0"
           style={{ touchAction: 'none' }}
         >
           {/* Floating Controls */}
           <FloatingControls
             isVisible={hideControls && isMobile}
             isErasing={isErasing}
+            brushSize={brushSize}
+            brushColor={brushColor}
             canUndo={canUndo}
-            onToggleControls={() => setHideControls(false)}
-            onStageSwitch={switchStage}
             onToggleErasing={setIsErasing}
+            onBrushSizeChange={setBrushSize}
+            onBrushColorChange={setBrushColor}
             onUndo={undo}
             onClearCanvas={clearCanvas}
           />
@@ -233,20 +229,6 @@ const FieldCanvas = ({ stageId = "default", onStageChange, selectedTeams = [] }:
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="flex-shrink-0 p-2 md:p-4 border-t bg-background text-center text-xs md:text-sm text-muted-foreground">
-          <div className="flex flex-wrap justify-center gap-4">
-            {!isMobile && (
-              <>
-                <span>Press ESC to exit fullscreen</span>
-                <span>Use ← → arrows to switch stages</span>
-              </>
-            )}
-            {isMobile && (
-              <span>Tap Exit Fullscreen to return • Use Previous/Next to switch stages</span>
-            )}
-          </div>
-        </div>
       </div>
     );
   }
