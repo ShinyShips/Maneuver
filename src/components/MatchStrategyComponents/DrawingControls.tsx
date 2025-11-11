@@ -112,13 +112,28 @@ export const DrawingControls = ({
                   <button
                     key={color.value}
                     onClick={() => handleColorChange(color.value)}
-                    className={`w-8 h-8 rounded border-2 cursor-pointer transition-all hover:scale-110 ${
-                      brushColor === color.value ? 'border-white ring-2 ring-offset-2 ring-white' : 'border-gray-600'
+                    className={`w-8 h-8 rounded border-2 cursor-pointer transition-all hover:scale-110 relative ${
+                      brushColor === color.value ? 'border-black ring-2 ring-offset-2 ring-white' : 'border-gray-600'
                     }`}
                     style={{ backgroundColor: color.value }}
                     title={color.label}
                     aria-label={color.label}
-                  />
+                  >
+                    {brushColor === color.value && (
+                      <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 text-black drop-shadow"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={3}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </span>
+                    )}
+                  </button>
                 ))}
               </div>
             </PopoverContent>
@@ -214,19 +229,34 @@ export const DrawingControls = ({
                 <span className="sr-only">Select color</span>
               </Button>
             </PopoverTrigger>
-          <PopoverContent className="w-auto p-2">
-            <div className="grid grid-cols-5 gap-1">
-              {PRESET_COLORS.map((color) => (
+            <PopoverContent className="w-auto p-2">
+              <div className="grid grid-cols-5 gap-1">
+                {PRESET_COLORS.map((color) => (
                   <button
                     key={color.value}
                     onClick={() => handleColorChange(color.value)}
-                    className={`w-8 h-8 rounded border-2 cursor-pointer transition-all hover:scale-110 ${
-                      brushColor === color.value ? 'border-white ring-2 ring-offset-2 ring-white' : 'border-gray-600'
+                    className={`w-8 h-8 rounded border-2 cursor-pointer transition-all hover:scale-110 relative ${
+                      brushColor === color.value ? 'border-black ring-2 ring-offset-2 ring-white' : 'border-gray-600'
                     }`}
                     style={{ backgroundColor: color.value }}
                     title={color.label}
                     aria-label={color.label}
-                  />
+                  >
+                    {brushColor === color.value && (
+                      <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 text-black drop-shadow"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={3}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </span>
+                    )}
+                  </button>
                 ))}
               </div>
             </PopoverContent>
