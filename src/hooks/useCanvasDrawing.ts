@@ -112,6 +112,13 @@ export const useCanvasDrawing = ({
       setCanUndo(historyIndexRef.current > 0);
       onSave(); // Auto-save after undo
     };
+    img.onerror = () => {
+      // Revert the history index to undo the failed undo
+      historyIndexRef.current++;
+      setCanUndo(historyIndexRef.current > 0);
+      // Log the error for debugging
+      console.warn("Undo failed: could not load image from history (corrupted data URL).");
+    };
     img.src = previousState;
   }, [canvasRef, onSave]);
 

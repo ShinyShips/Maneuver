@@ -21,6 +21,19 @@ import {
   COMPRESSION_THRESHOLD_SCOUT_PROFILES,
   type ScoutingDataCollection
 } from "@/lib/compressionUtils";
+/**
+ * Helper to create compression wrapper with base64-encoded data
+ */
+function createCompressionWrapper<T>(
+  isCompressed: boolean,
+  data: Uint8Array | T
+): { compressed: boolean; data: string | T } {
+  return {
+    compressed: isCompressed,
+    data: isCompressed ? fromUint8Array(data as Uint8Array) : data as T
+  };
+}
+
 import {
   type DataFilters,
   createDefaultFilters,
@@ -275,14 +288,8 @@ const UniversalFountainGenerator = ({
         // Convert compressed Uint8Arrays to base64 to avoid massive JSON array overhead
         const finalCombinedData = {
           type: combinedData.type,
-          scoutingData: {
-            compressed: scoutingCompressed,
-            data: scoutingCompressed ? fromUint8Array(scoutingData as Uint8Array) : scoutingData
-          },
-          scoutProfiles: {
-            compressed: profilesCompressed,
-            data: profilesCompressed ? fromUint8Array(profilesData as Uint8Array) : profilesData
-          },
+          scoutingData: createCompressionWrapper(scoutingCompressed, scoutingData),
+          scoutProfiles: createCompressionWrapper(profilesCompressed, profilesData),
           metadata: combinedData.metadata
         };
         

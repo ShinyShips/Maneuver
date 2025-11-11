@@ -20,6 +20,22 @@ interface CombinedDataFountainScannerProps {
   onSwitchToGenerator: () => void;
 }
 
+/**
+ * Helper function to convert various compressed data formats to Uint8Array
+ * Handles base64 strings, number arrays, and Uint8Arrays
+ */
+function convertToUint8Array(data: unknown, dataLabel: string): Uint8Array {
+  if (typeof data === 'string') {
+    return toUint8Array(data);
+  } else if (Array.isArray(data)) {
+    return new Uint8Array(data as number[]);
+  } else if (data instanceof Uint8Array) {
+    return data;
+  } else {
+    throw new Error(`Invalid ${dataLabel} format: expected base64 string, number array, or Uint8Array`);
+  }
+}
+
 interface CombinedDataStructure {
   type: string;
   scoutingData: {
@@ -90,17 +106,7 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
         if (import.meta.env.DEV) {
           console.log('🗜️ Decompressing scouting data...');
         }
-        // Handle base64 string (new format), number array (old format), or Uint8Array
-        let compressedArray: Uint8Array;
-        if (typeof rawData.scoutingData.data === 'string') {
-          compressedArray = toUint8Array(rawData.scoutingData.data);
-        } else if (Array.isArray(rawData.scoutingData.data)) {
-          compressedArray = new Uint8Array(rawData.scoutingData.data as number[]);
-        } else if (rawData.scoutingData.data instanceof Uint8Array) {
-          compressedArray = rawData.scoutingData.data;
-        } else {
-          throw new Error('Invalid scouting data format: expected base64 string, number array, or Uint8Array');
-        }
+        const compressedArray = convertToUint8Array(rawData.scoutingData.data, 'scouting data');
         const decompressed = decompressScoutingData(compressedArray);
         scoutingData = { entries: decompressed.entries as ScoutingDataWithId[] };
         if (import.meta.env.DEV) {
@@ -121,17 +127,7 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
         if (import.meta.env.DEV) {
           console.log('🗜️ Decompressing scout profiles...');
         }
-        // Handle base64 string (new format), number array (old format), or Uint8Array
-        let compressedArray: Uint8Array;
-        if (typeof rawData.scoutProfiles.data === 'string') {
-          compressedArray = toUint8Array(rawData.scoutProfiles.data);
-        } else if (Array.isArray(rawData.scoutProfiles.data)) {
-          compressedArray = new Uint8Array(rawData.scoutProfiles.data as number[]);
-        } else if (rawData.scoutProfiles.data instanceof Uint8Array) {
-          compressedArray = rawData.scoutProfiles.data;
-        } else {
-          throw new Error('Invalid scout profiles format: expected base64 string, number array, or Uint8Array');
-        }
+        const compressedArray = convertToUint8Array(rawData.scoutProfiles.data, 'scout profiles');
         const decompressed = decompressScoutProfiles(compressedArray);
         scoutProfiles = {
           scouts: decompressed.scouts as Scout[],

@@ -18,6 +18,14 @@ interface FloatingControlsProps {
   onClearCanvas: () => void;
 }
 
+// Brush size to label mapping for cleaner display
+const BRUSH_SIZE_LABELS: Record<number, string> = {
+  2: 'S',
+  5: 'M',
+  10: 'L',
+  20: 'XL'
+};
+
 export const FloatingControls = ({
   isVisible,
   isErasing,
@@ -81,7 +89,7 @@ export const FloatingControls = ({
           >
             <SelectTrigger className="w-16 h-10 shadow-lg">
               <SelectValue placeholder="Size">
-                {brushSize === 2 ? "S" : brushSize === 5 ? "M" : brushSize === 10 ? "L" : "XL"}
+                {BRUSH_SIZE_LABELS[brushSize] || 'M'}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>

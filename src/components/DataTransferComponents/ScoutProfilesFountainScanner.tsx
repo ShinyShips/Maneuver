@@ -34,7 +34,16 @@ const ScoutProfilesFountainScanner = ({ onBack, onSwitchToGenerator }: ScoutProf
         if (import.meta.env.DEV) {
           console.log('🗜️ Decompressing scout profiles data...');
         }
-        const compressedWrapper = data as { compressed: boolean; data: string; exportedAt: string; version: string };
+        // Validate compressed wrapper structure
+        const compressedWrapperCandidate = data as Record<string, unknown>;
+        if (
+          typeof compressedWrapperCandidate.data !== 'string' ||
+          typeof compressedWrapperCandidate.exportedAt !== 'string' ||
+          typeof compressedWrapperCandidate.version !== 'string'
+        ) {
+          throw new Error("Malformed compressed scout profiles data: missing or invalid 'data', 'exportedAt', or 'version' fields.");
+        }
+        const compressedWrapper = compressedWrapperCandidate as { compressed: boolean; data: string; exportedAt: string; version: string };
         
         // Decode from base64
         const compressedArray = toUint8Array(compressedWrapper.data);

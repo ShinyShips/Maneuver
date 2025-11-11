@@ -9,6 +9,9 @@ const TEAM_POSITION_TOP_Y = 0.275; // Y position for top team slot
 const TEAM_POSITION_MIDDLE_Y = 0.505; // Y position for middle team slot
 const TEAM_POSITION_BOTTOM_Y = 0.735; // Y position for bottom team slot
 
+// Constants for canvas layout and spacing
+const MOBILE_RESERVED_WIDTH_FOR_CONTROLS = 160; // Reserved width on mobile for vertical floating control bar (includes buttons + margins)
+
 // Global reference for background image to share with drawing hook
 let globalBackgroundImage: HTMLImageElement | null = null;
 
@@ -139,7 +142,7 @@ export const useCanvasSetup = ({
         }
         
         // Reserve space for floating controls on mobile - increased to prevent overlap on real devices
-        const reservedWidth = isMobile ? 160 : 32; // Mobile: extra space for floating controls, Desktop: standard padding
+        const reservedWidth = isMobile ? MOBILE_RESERVED_WIDTH_FOR_CONTROLS : 32; // Mobile: extra space for floating controls, Desktop: standard padding
         
         containerWidth = viewportWidth - reservedWidth;
         containerHeight = viewportHeight - reservedHeight;

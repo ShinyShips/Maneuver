@@ -11,7 +11,7 @@ import { toUint8Array } from "js-base64";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import * as pako from 'pako';
-import { type CompressedEntry } from '@/lib/compressionUtils';
+import { type CompressedEntry, expandCompressedEntry } from '@/lib/compressionUtils';
 
 interface FountainPacket {
   type: string;
@@ -191,146 +191,15 @@ const UniversalFountainScanner = ({
                   // Rebuild dictionaries for expansion
                   const scoutDict = decompressedData.meta.scoutDict || [];
                   const eventDict = decompressedData.meta.eventDict || [];
-                  const allianceReverse = ['redAlliance', 'blueAlliance'] as const;
                   addDebugMsg(`🔍 Scout dictionary: ${scoutDict.length} entries`);
                   addDebugMsg(`🔍 Event dictionary: ${eventDict.length} entries`);
                   
-                  // Expand compressed entries back to full format
+                  // Expand compressed entries back to full format using shared function
                   const expandedEntries = decompressedData.entries.map((compressed: CompressedEntry, index: number) => {
                     addDebugMsg(`🔍 Expanding entry ${index}: ${JSON.stringify(compressed).substring(0, 100)}...`);
-                    const expanded: Record<string, unknown> = {};
                     
-                    // Expand dictionary-compressed fields
-                    if (typeof compressed.a === 'number') expanded.alliance = allianceReverse[compressed.a];
-                    if (typeof compressed.s === 'number') expanded.scoutName = scoutDict[compressed.s];
-                    if (typeof compressed.sf === 'string') expanded.scoutName = compressed.sf;
-                    if (typeof compressed.e === 'number') expanded.eventName = eventDict[compressed.e];
-                    if (typeof compressed.ef === 'string') expanded.eventName = compressed.ef;
-                    
-                    // Expand basic fields
-                    if (compressed.m) expanded.matchNumber = compressed.m;
-                    if (compressed.t) expanded.selectTeam = compressed.t;
-                    
-                    // Expand packed boolean start positions
-                    if (typeof compressed.p === 'number') {
-                      expanded.startPoses0 = !!(compressed.p & 1);
-                      expanded.startPoses1 = !!(compressed.p & 2);
-                      expanded.startPoses2 = !!(compressed.p & 4);
-                      expanded.startPoses3 = !!(compressed.p & 8);
-                      expanded.startPoses4 = !!(compressed.p & 16);
-                      expanded.startPoses5 = !!(compressed.p & 32);
-                    } else {
-                      expanded.startPoses0 = false;
-                      expanded.startPoses1 = false;
-                      expanded.startPoses2 = false;
-                      expanded.startPoses3 = false;
-                      expanded.startPoses4 = false;
-                      expanded.startPoses5 = false;
-                    }
-                    
-                    // Expand auto coral counts (default to 0 if not present)
-                    if (Array.isArray(compressed.ac)) {
-                      expanded.autoCoralPlaceL1Count = compressed.ac[0] || 0;
-                      expanded.autoCoralPlaceL2Count = compressed.ac[1] || 0;
-                      expanded.autoCoralPlaceL3Count = compressed.ac[2] || 0;
-                      expanded.autoCoralPlaceL4Count = compressed.ac[3] || 0;
-                    } else {
-                      // Ensure these fields exist even if not in compressed data
-                      expanded.autoCoralPlaceL1Count = 0;
-                      expanded.autoCoralPlaceL2Count = 0;
-                      expanded.autoCoralPlaceL3Count = 0;
-                      expanded.autoCoralPlaceL4Count = 0;
-                    }
-                    
-                    // Expand other auto counts
-                    if (Array.isArray(compressed.ao)) {
-                      expanded.autoCoralPlaceDropMissCount = compressed.ao[0] || 0;
-                      expanded.autoCoralPickPreloadCount = compressed.ao[1] || 0;
-                      expanded.autoCoralPickStationCount = compressed.ao[2] || 0;
-                      expanded.autoCoralPickMark1Count = compressed.ao[3] || 0;
-                      expanded.autoCoralPickMark2Count = compressed.ao[4] || 0;
-                      expanded.autoCoralPickMark3Count = compressed.ao[5] || 0;
-                    } else {
-                      expanded.autoCoralPlaceDropMissCount = 0;
-                      expanded.autoCoralPickPreloadCount = 0;
-                      expanded.autoCoralPickStationCount = 0;
-                      expanded.autoCoralPickMark1Count = 0;
-                      expanded.autoCoralPickMark2Count = 0;
-                      expanded.autoCoralPickMark3Count = 0;
-                    }
-                    
-                    // Expand auto algae
-                    if (Array.isArray(compressed.aa)) {
-                      expanded.autoAlgaePlaceNetShot = compressed.aa[0] || 0;
-                      expanded.autoAlgaePlaceProcessor = compressed.aa[1] || 0;
-                      expanded.autoAlgaePlaceDropMiss = compressed.aa[2] || 0;
-                      expanded.autoAlgaePlaceRemove = compressed.aa[3] || 0;
-                      expanded.autoAlgaePickReefCount = compressed.aa[4] || 0;
-                    } else {
-                      expanded.autoAlgaePlaceNetShot = 0;
-                      expanded.autoAlgaePlaceProcessor = 0;
-                      expanded.autoAlgaePlaceDropMiss = 0;
-                      expanded.autoAlgaePlaceRemove = 0;
-                      expanded.autoAlgaePickReefCount = 0;
-                    }
-                    
-                    // Expand teleop coral
-                    if (Array.isArray(compressed.tc)) {
-                      expanded.teleopCoralPlaceL1Count = compressed.tc[0] || 0;
-                      expanded.teleopCoralPlaceL2Count = compressed.tc[1] || 0;
-                      expanded.teleopCoralPlaceL3Count = compressed.tc[2] || 0;
-                      expanded.teleopCoralPlaceL4Count = compressed.tc[3] || 0;
-                      expanded.teleopCoralPlaceDropMissCount = compressed.tc[4] || 0;
-                      expanded.teleopCoralPickStationCount = compressed.tc[5] || 0;
-                      expanded.teleopCoralPickCarpetCount = compressed.tc[6] || 0;
-                    } else {
-                      expanded.teleopCoralPlaceL1Count = 0;
-                      expanded.teleopCoralPlaceL2Count = 0;
-                      expanded.teleopCoralPlaceL3Count = 0;
-                      expanded.teleopCoralPlaceL4Count = 0;
-                      expanded.teleopCoralPlaceDropMissCount = 0;
-                      expanded.teleopCoralPickStationCount = 0;
-                      expanded.teleopCoralPickCarpetCount = 0;
-                    }
-                    
-                    // Expand teleop algae
-                    if (Array.isArray(compressed.ta)) {
-                      expanded.teleopAlgaePlaceNetShot = compressed.ta[0] || 0;
-                      expanded.teleopAlgaePlaceProcessor = compressed.ta[1] || 0;
-                      expanded.teleopAlgaePlaceDropMiss = compressed.ta[2] || 0;
-                      expanded.teleopAlgaePlaceRemove = compressed.ta[3] || 0;
-                      expanded.teleopAlgaePickReefCount = compressed.ta[4] || 0;
-                      expanded.teleopAlgaePickCarpetCount = compressed.ta[5] || 0;
-                    } else {
-                      expanded.teleopAlgaePlaceNetShot = 0;
-                      expanded.teleopAlgaePlaceProcessor = 0;
-                      expanded.teleopAlgaePlaceDropMiss = 0;
-                      expanded.teleopAlgaePlaceRemove = 0;
-                      expanded.teleopAlgaePickReefCount = 0;
-                      expanded.teleopAlgaePickCarpetCount = 0;
-                    }
-                    
-                    // Expand endgame booleans (including autoPassedStartLine)
-                    if (typeof compressed.g === 'number') {
-                      expanded.shallowClimbAttempted = !!(compressed.g & 1);
-                      expanded.deepClimbAttempted = !!(compressed.g & 2);
-                      expanded.parkAttempted = !!(compressed.g & 4);
-                      expanded.climbFailed = !!(compressed.g & 8);
-                      expanded.playedDefense = !!(compressed.g & 16);
-                      expanded.brokeDown = !!(compressed.g & 32);
-                      expanded.autoPassedStartLine = !!(compressed.g & 64);
-                    } else {
-                      expanded.shallowClimbAttempted = false;
-                      expanded.deepClimbAttempted = false;
-                      expanded.parkAttempted = false;
-                      expanded.climbFailed = false;
-                      expanded.playedDefense = false;
-                      expanded.brokeDown = false;
-                      expanded.autoPassedStartLine = false;
-                    }
-                    
-                    // Keep comment
-                    if (compressed.c) expanded.comment = compressed.c;
+                    // Use shared expansion function from compressionUtils
+                    const expanded = expandCompressedEntry(compressed, scoutDict, eventDict);
                     
                     if (index === 0) {
                       addDebugMsg(`🔍 Sample expanded keys: ${Object.keys(expanded).join(', ')}`);
@@ -352,7 +221,7 @@ const UniversalFountainScanner = ({
                     return {
                       id: originalId,
                       data: expanded,
-                      timestamp: Date.now()
+                      timestamp: compressed.ts || Date.now() // Preserve original timestamp or use current time as fallback
                     };
                   });
                   

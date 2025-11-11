@@ -12,6 +12,7 @@ export type { ScoutingEntry, ScoutingDataEntry, ScoutingDataCollection };
 // Export local interfaces for external type safety
 export interface CompressedEntry {
   id?: string;
+  ts?: number; // timestamp
   a?: number; // alliance
   s?: number; // scout (dictionary index)
   sf?: string; // scout (fallback full string)
@@ -210,8 +211,9 @@ export function compressScoutingData(data: ScoutingDataCollection | ScoutingData
     
     const optimized: Record<string, unknown> = {};
     
-    // Preserve original ID - this ensures decompression can restore exact same IDs
+    // Preserve original ID and timestamp - this ensures decompression can restore exact same metadata
     if (entry.id) optimized.id = entry.id;
+    if (entry.timestamp) optimized.ts = entry.timestamp;
     
     // Use dictionary compression for categorical fields
     if (scoutingData.alliance) optimized.a = ALLIANCE_DICT[scoutingData.alliance as keyof typeof ALLIANCE_DICT];
@@ -330,7 +332,7 @@ export function compressScoutingData(data: ScoutingDataCollection | ScoutingData
  * @param eventDict - Dictionary for event names
  * @returns Fully expanded scouting entry
  */
-function expandCompressedEntry(
+export function expandCompressedEntry(
   compressed: CompressedEntry,
   scoutDict: string[],
   eventDict: string[]
@@ -501,7 +503,7 @@ export function decompressScoutingData(
   const expandedEntries = (data.entries || []).map((compressed) => {
     const expanded = expandCompressedEntry(compressed, scoutDict, eventDict);
     
-    // Preserve the original ID
+    // Preserve the original ID and timestamp
     const originalId = compressed.id;
     if (!originalId) {
       throw new Error('Missing ID in compressed entry');
@@ -510,7 +512,7 @@ export function decompressScoutingData(
     return {
       id: originalId,
       data: expanded,
-      timestamp: Date.now()
+      timestamp: compressed.ts || Date.now() // Preserve original timestamp or use current time as fallback
     };
   });
   
