@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { PageHelpTooltip } from "@/components/PageHelpTooltip";
+import { WebRTCStatus } from "@/components/WebRTCStatus";
 import { useState, useEffect } from "react";
 
 export function SiteHeader() {
@@ -112,6 +113,7 @@ export function SiteHeader() {
           className="mx-2 data-[orientation=vertical]:h-12"
         />
         <div className="ml-auto flex items-center gap-2">
+          <WebRTCStatus />
           <div className="flex items-center justify-center">
             <PageHelpTooltip />
           </div>

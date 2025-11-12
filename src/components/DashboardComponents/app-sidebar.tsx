@@ -55,6 +55,10 @@ const data = {
           url: "/qr-data-transfer",
         },
         {
+          title: "Peer Transfer (WebRTC)",
+          url: "/peer-transfer",
+        },
+        {
           title: "API Data",
           url: "/api-data",
         }
