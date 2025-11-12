@@ -252,9 +252,19 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
         
         // If there are new scouts, ask the user if they want to add them to selectable list
         if (newScoutNames.length > 0) {
+          // Show scouting import results first
+          const scoutingMessage = scoutingResults.added > 0 || scoutingResults.replaced > 0 
+            ? `Scouting: ${scoutingResults.added} new entries, ${scoutingResults.replaced} entries replaced. `
+            : '';
+          
+          if (scoutingMessage) {
+            toast.success(`${scoutingMessage}Scout profiles ready to import.`);
+          }
+          
           setPendingScoutNames(newScoutNames);
+          // Note: Don't pass scoutingData - it's already been imported above!
           setPendingImportData({ 
-            scoutingData: scoutingData.entries,
+            scoutingData: [], // Empty - data already processed
             scoutsToImport, 
             predictionsToImport 
           });
@@ -377,7 +387,7 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
   const performCombinedImport = async (scoutingData: ScoutingDataWithId[], scoutsToImport: Scout[], predictionsToImport: MatchPrediction[], addToSelectableList: boolean) => {
     let scoutingResults = { added: 0, existing: 0, duplicates: 0 };
     
-    // Process scouting data if present
+    // Process scouting data if present (typically empty when called from scout dialog since data is already imported)
     if (scoutingData && scoutingData.length > 0) {
       // Load existing scouting data
       const existingScoutingData = await loadScoutingData();
@@ -401,8 +411,8 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
     // Process scout profiles data
     const scoutResults = await performScoutImport(scoutsToImport, predictionsToImport, addToSelectableList);
     
-    // Show comprehensive summary to user
-    const scoutingMessage = scoutingResults.added > 0 || scoutingResults.existing > 0 
+    // Show results - scouting data message only if data was actually processed (non-empty)
+    const scoutingMessage = scoutingData.length > 0 && (scoutingResults.added > 0 || scoutingResults.existing > 0)
       ? `Scouting: ${scoutingResults.added} new entries added, ${scoutingResults.existing} existing entries found${scoutingResults.duplicates > 0 ? `, ${scoutingResults.duplicates} duplicates skipped` : ''}. `
       : '';
       
@@ -411,7 +421,7 @@ const CombinedDataFountainScanner = ({ onBack, onSwitchToGenerator }: CombinedDa
       : '';
     
     const addedToSelectableMessage = addToSelectableList ? " Scouts added to selectable list." : "";
-    const fullMessage = `Combined import complete! ${scoutingMessage}${scoutMessage}${addedToSelectableMessage}`;
+    const fullMessage = `Scout profiles imported! ${scoutingMessage}${scoutMessage}${addedToSelectableMessage}`;
     toast.success(fullMessage);
     
     // Notify other components that scout data has been updated
