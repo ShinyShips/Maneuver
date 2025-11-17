@@ -152,7 +152,7 @@ const HomePage = () => {
           />
           <div className="text-center space-y-2">
             <p>
-              <strong>Version</strong>: 2025.1.4
+              <strong>Version</strong>: 2025.1.5
             </p>
             <DataAttribution sources={['tba', 'nexus']} variant="compact" />
           </div>

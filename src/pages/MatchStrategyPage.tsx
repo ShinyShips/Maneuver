@@ -45,6 +45,8 @@ const MatchStrategyPage = () => {
           <FieldStrategy
             activeTab={activeTab}
             onTabChange={setActiveTab}
+            selectedTeams={selectedTeams}
+            matchNumber={matchNumber}
           />
 
           <TeamAnalysis

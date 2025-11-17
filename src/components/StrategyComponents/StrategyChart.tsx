@@ -248,12 +248,12 @@ export const StrategyChart = ({
                 tickLine={false}
                 axisLine={false}
                 className="text-xs"
-                label={{ 
-                  value: "Team", 
-                  position: 'insideBottom', 
-                  offset: -5,
-                  style: { textAnchor: 'middle', fontSize: '12px', fill: 'currentColor' }
-                }}
+                angle={-90}
+                textAnchor="end"
+                height={80}
+                interval={0}
+                tick={{ fontSize: 10 }}
+                dx={-3}
               />
               <YAxis 
                 tickLine={false}
@@ -332,12 +332,12 @@ export const StrategyChart = ({
                 tickLine={false}
                 axisLine={false}
                 className="text-xs"
-                label={{ 
-                  value: "Team", 
-                  position: 'insideBottom', 
-                  offset: -5,
-                  style: { textAnchor: 'middle', fontSize: '12px', fill: 'currentColor' }
-                }}
+                angle={-90}
+                textAnchor="end"
+                height={80}
+                interval={0}
+                tick={{ fontSize: 10 }}
+                dx={-3}
               />
               <YAxis 
                 tickLine={false}

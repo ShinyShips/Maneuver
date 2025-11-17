@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { EyeOff, Maximize2 } from "lucide-react";
+import { PRESET_COLORS } from "@/constants/drawingColors";
 
 interface DrawingControlsProps {
   isErasing: boolean;
@@ -9,11 +12,13 @@ interface DrawingControlsProps {
   currentStageId: string;
   isMobile: boolean;
   isFullscreen: boolean;
+  canUndo: boolean;
   onToggleErasing: (erasing: boolean) => void;
   onBrushSizeChange: (size: number) => void;
   onBrushColorChange: (color: string) => void;
   onClearCanvas: () => void;
   onSaveCanvas: () => void;
+  onUndo: () => void;
   onToggleFullscreen: () => void;
   onToggleHideControls: () => void;
 }
@@ -25,18 +30,27 @@ export const DrawingControls = ({
   currentStageId,
   isMobile,
   isFullscreen,
+  canUndo,
   onToggleErasing,
   onBrushSizeChange,
   onBrushColorChange,
   onClearCanvas,
   onSaveCanvas,
+  onUndo,
   onToggleFullscreen,
   onToggleHideControls
 }: DrawingControlsProps) => {
+  const [colorPickerOpen, setColorPickerOpen] = useState(false);
+
+  const handleColorChange = (color: string) => {
+    onBrushColorChange(color);
+    setColorPickerOpen(false);
+  };
+
   if (isFullscreen) {
     // Fullscreen drawing controls
     return (
-      <div className="flex-shrink-0 p-2 md:p-4 border-b bg-background">
+      <div className="flex-shrink-0 p-2 md:p-4 border-b bg-background relative z-40">
         <div className="flex flex-wrap justify-center items-center gap-2">
           <Button
             variant={!isErasing ? "default" : "outline"}
@@ -52,14 +66,23 @@ export const DrawingControls = ({
           >
             Erase
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onUndo}
+            disabled={!canUndo}
+            title="Undo last action"
+          >
+            Undo
+          </Button>
           
           {/* Size selector */}
           <Select 
             value={brushSize.toString()} 
             onValueChange={(value) => onBrushSizeChange(Number(value))}
           >
-            <SelectTrigger className="w-fit">
-              <SelectValue />
+            <SelectTrigger className="w-fit ">
+              <SelectValue placeholder="Size" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="2">Small</SelectItem>
@@ -70,12 +93,51 @@ export const DrawingControls = ({
           </Select>
           
           {/* Color selector */}
-          <input
-            type="color"
-            value={brushColor}
-            onChange={(e) => onBrushColorChange(e.target.value)}
-            className="w-8 h-8 border rounded cursor-pointer"
-          />
+          <Popover open={colorPickerOpen} onOpenChange={setColorPickerOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-8 h-8 p-0"
+                style={{ backgroundColor: brushColor }}
+                title="Select color"
+                aria-label="Select drawing color"
+              >
+                <span className="sr-only">Select color</span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-2">
+              <div className="grid grid-cols-5 gap-1">
+                {PRESET_COLORS.map((color) => (
+                  <button
+                    key={color.value}
+                    onClick={() => handleColorChange(color.value)}
+                    className={`w-8 h-8 rounded border-2 cursor-pointer transition-all hover:scale-110 relative ${
+                      brushColor === color.value ? 'border-black ring-2 ring-offset-2 ring-white' : 'border-gray-600'
+                    }`}
+                    style={{ backgroundColor: color.value }}
+                    title={color.label}
+                    aria-label={color.label}
+                  >
+                    {brushColor === color.value && (
+                      <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 text-black drop-shadow"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={3}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
           
           <Button onClick={onClearCanvas} variant="outline" size="sm">
             Clear
@@ -102,58 +164,112 @@ export const DrawingControls = ({
 
   // Normal drawing controls
   return (
-    <div className="flex justify-between items-center mb-4 flex-shrink-0 flex-wrap gap-2">
-      <div className="flex items-center gap-2 pb-2 md:pb-0">
-        <Button
-          variant={!isErasing ? "default" : "outline"}
-          size="sm"
-          onClick={() => onToggleErasing(false)}
-        >
-          Draw
-        </Button>
-        <Button
-          variant={isErasing ? "default" : "outline"}
-          size="sm"
-          onClick={() => onToggleErasing(true)}
-        >
-          Erase
-        </Button>
+    <div className="mb-4 flex-shrink-0">
+      {/* Mobile: stacked rows, Tablet+: single row with all controls */}
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+        {/* Main actions */}
+        <div className="flex items-center gap-2">
+          <Button
+            variant={!isErasing ? "default" : "outline"}
+            size="sm"
+            onClick={() => onToggleErasing(false)}
+          >
+            Draw
+          </Button>
+          <Button
+            variant={isErasing ? "default" : "outline"}
+            size="sm"
+            onClick={() => onToggleErasing(true)}
+          >
+            Erase
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onUndo}
+            disabled={!canUndo}
+            title="Undo last action"
+          >
+            Undo
+          </Button>
+          <Button onClick={onClearCanvas} variant="outline" size="sm">
+            Clear
+          </Button>
+        </div>
         
-        {/* Size selector */}
-        <Select 
-          value={brushSize.toString()} 
-          onValueChange={(value) => onBrushSizeChange(Number(value))}
-        >
-          <SelectTrigger className="w-fit">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="2">Small</SelectItem>
-            <SelectItem value="5">Medium</SelectItem>
-            <SelectItem value="10">Large</SelectItem>
-            <SelectItem value="20">X-Large</SelectItem>
-          </SelectContent>
-        </Select>
-        
-        {/* Color selector */}
-        <input
-          type="color"
-          value={brushColor}
-          onChange={(e) => onBrushColorChange(e.target.value)}
-          className="w-8 h-8 border rounded cursor-pointer"
-        />
-      </div>
-      
-      <div className="flex gap-2">
-        <Button onClick={onClearCanvas} variant="outline" size="sm">
-          Clear
-        </Button>
-        <Button onClick={onSaveCanvas} variant="outline" size="sm">
-          Save {currentStageId}
-        </Button>
-        <Button onClick={onToggleFullscreen} variant="outline" size="sm">
-          <Maximize2 className="h-4 w-4" />
-        </Button>
+        {/* Size and color */}
+        <div className="flex items-center gap-2">
+          {/* Size selector */}
+          <Select 
+            value={brushSize.toString()} 
+            onValueChange={(value) => onBrushSizeChange(Number(value))}
+          >
+            <SelectTrigger className="w-[100px]">
+              <SelectValue placeholder="Size" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="2">Small</SelectItem>
+              <SelectItem value="5">Medium</SelectItem>
+              <SelectItem value="10">Large</SelectItem>
+              <SelectItem value="20">X-Large</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          {/* Color selector */}
+          <Popover open={colorPickerOpen} onOpenChange={setColorPickerOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-8 h-8 p-0"
+                style={{ backgroundColor: brushColor }}
+                title="Select color"
+                aria-label="Select drawing color"
+              >
+                <span className="sr-only">Select color</span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-2">
+              <div className="grid grid-cols-5 gap-1">
+                {PRESET_COLORS.map((color) => (
+                  <button
+                    key={color.value}
+                    onClick={() => handleColorChange(color.value)}
+                    className={`w-8 h-8 rounded border-2 cursor-pointer transition-all hover:scale-110 relative ${
+                      brushColor === color.value ? 'border-black ring-2 ring-offset-2 ring-white' : 'border-gray-600'
+                    }`}
+                    style={{ backgroundColor: color.value }}
+                    title={color.label}
+                    aria-label={color.label}
+                  >
+                    {brushColor === color.value && (
+                      <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 text-black drop-shadow"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={3}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+          
+          <Button onClick={onSaveCanvas} variant="outline" size="sm">
+            Save {currentStageId}
+          </Button>
+          <Button onClick={onToggleFullscreen} variant="outline" size="sm">
+            <Maximize2 className="h-4 w-4 mr-2" />
+            Fullscreen
+          </Button>
+        </div>
       </div>
     </div>
   );

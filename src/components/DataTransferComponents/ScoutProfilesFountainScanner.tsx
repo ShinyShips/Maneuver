@@ -3,6 +3,8 @@ import UniversalFountainScanner from "./UniversalFountainScanner";
 import ScoutAddConfirmDialog from "./ScoutAddConfirmDialog";
 import { toast } from "sonner";
 import { useState } from "react";
+import { decompressScoutProfiles } from "@/lib/compressionUtils";
+import { toUint8Array } from "js-base64";
 
 interface ScoutProfilesFountainScannerProps {
   onBack: () => void;
@@ -25,12 +27,54 @@ const ScoutProfilesFountainScanner = ({ onBack, onSwitchToGenerator }: ScoutProf
   } | null>(null);
   const saveScoutProfilesData = async (data: unknown) => {    
     try {
-      // Validate the received data structure
-      if (!data || typeof data !== 'object') {
-        throw new Error('Invalid scout profiles data format');
-      }
+      let profilesData: ScoutProfilesData;
       
-      const profilesData = data as ScoutProfilesData;
+      // Check if data has compression flag (new format)
+      if (data && typeof data === 'object' && 'compressed' in data && (data as { compressed: boolean }).compressed) {
+        if (import.meta.env.DEV) {
+          console.log('🗜️ Decompressing scout profiles data...');
+        }
+        // Validate compressed wrapper structure
+        const compressedWrapperCandidate = data as Record<string, unknown>;
+        if (
+          typeof compressedWrapperCandidate.data !== 'string' ||
+          typeof compressedWrapperCandidate.exportedAt !== 'string' ||
+          typeof compressedWrapperCandidate.version !== 'string'
+        ) {
+          throw new Error("Malformed compressed scout profiles data: missing or invalid 'data', 'exportedAt', or 'version' fields.");
+        }
+        const compressedWrapper = compressedWrapperCandidate as { compressed: boolean; data: string; exportedAt: string; version: string };
+        
+        // Decode from base64
+        const compressedArray = toUint8Array(compressedWrapper.data);
+        const decompressed = decompressScoutProfiles(compressedArray);
+        
+        profilesData = {
+          scouts: decompressed.scouts as Scout[],
+          predictions: decompressed.predictions as MatchPrediction[],
+          exportedAt: compressedWrapper.exportedAt,
+          version: compressedWrapper.version
+        };
+      } else if (data instanceof Uint8Array) {
+        // Old format: direct Uint8Array (for backward compatibility)
+        if (import.meta.env.DEV) {
+          console.log('🗜️ Decompressing scout profiles data (old format)...');
+        }
+        const decompressed = decompressScoutProfiles(data);
+        profilesData = {
+          scouts: decompressed.scouts as Scout[],
+          predictions: decompressed.predictions as MatchPrediction[],
+          exportedAt: new Date().toISOString(),
+          version: "1.0"
+        };
+      } else {
+        // Uncompressed format
+        if (!data || typeof data !== 'object') {
+          throw new Error('Invalid scout profiles data format');
+        }
+        
+        profilesData = data as ScoutProfilesData;
+      }
       
       if (!profilesData.scouts || !Array.isArray(profilesData.scouts)) {
         throw new Error('No scouts array found in data');
@@ -179,13 +223,21 @@ const ScoutProfilesFountainScanner = ({ onBack, onSwitchToGenerator }: ScoutProf
   const validateScoutProfilesData = (data: unknown): boolean => {
     if (!data || typeof data !== 'object') return false;
     
+    // Check if this is compressed format (new structure)
+    if ('compressed' in data && (data as { compressed: boolean }).compressed) {
+      const compressed = data as { compressed: boolean; data: string; exportedAt: string; version: string };
+      // Just check that it has the compression wrapper structure
+      return typeof compressed.data === 'string' && compressed.data.length > 0;
+    }
+    
+    // Check uncompressed format
     const profilesData = data as ScoutProfilesData;
     
     // Check for required structure
     if (!profilesData.scouts || !Array.isArray(profilesData.scouts)) return false;
     if (!profilesData.predictions || !Array.isArray(profilesData.predictions)) return false;
     
-    // Validate at least one scout has required fields
+    // Validate at least one scout has required fields (if there are any scouts)
     if (profilesData.scouts.length > 0) {
       const firstScout = profilesData.scouts[0];
       const requiredFields = ['name', 'stakes', 'totalPredictions', 'correctPredictions'];
@@ -197,6 +249,11 @@ const ScoutProfilesFountainScanner = ({ onBack, onSwitchToGenerator }: ScoutProf
 
   const getScoutProfilesDataSummary = (data: unknown): string => {
     if (!data || typeof data !== 'object') return '0 profiles';
+    
+    // Check if this is compressed format - we can't get counts without decompressing
+    if ('compressed' in data && (data as { compressed: boolean }).compressed) {
+      return 'Compressed scout profiles data';
+    }
     
     const profilesData = data as ScoutProfilesData;
     
