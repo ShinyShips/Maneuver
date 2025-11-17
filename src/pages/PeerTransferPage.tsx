@@ -45,7 +45,7 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { QRCodeCanvas } from 'qrcode.react';
 import { Scanner } from '@yudiel/react-qr-scanner';
-import { Wifi, Users, Download, Upload, AlertCircle, CheckCircle2, UserCheck, QrCode, Camera, Loader2 } from 'lucide-react';
+import { Wifi, Users, Download, Upload, AlertCircle, CheckCircle2, UserCheck, QrCode, Camera, Loader2, RefreshCw } from 'lucide-react';
 import { useWebRTCQRTransfer } from '@/hooks/useWebRTCQRTransfer';
 import { detectConflicts, type ScoutingDataWithId, type ConflictInfo } from '@/lib/scoutingDataUtils';
 import { convertTeamRole } from '@/lib/utils';
@@ -379,8 +379,11 @@ const PeerTransferPage = () => {
             return;
           }
           
-          // Handle scouting data and combined (which has entries)
-          const scoutingDataObj = receivedDataObj as { entries?: ScoutingDataWithId[]; scoutProfiles?: unknown };
+          // Handle scouting data and combined (which has entries + optional scoutProfiles)
+          const scoutingDataObj = receivedDataObj as { 
+            entries?: ScoutingDataWithId[]; 
+            scoutProfiles?: { scouts?: unknown[]; predictions?: unknown[] }
+          };
           const newDataWithIds = scoutingDataObj.entries;
           
           if (!newDataWithIds || !Array.isArray(newDataWithIds)) {
@@ -388,6 +391,26 @@ const PeerTransferPage = () => {
             toast.error(`Invalid data structure from ${latest.scoutName}`);
             setImportedDataCount(receivedData.length);
             return;
+          }
+          
+          // If this is combined data, also import scout profiles
+          if (receivedDataType === 'combined' && scoutingDataObj.scoutProfiles) {
+            const { gameDB } = await import('@/lib/dexieDB');
+            let profileCount = 0;
+            
+            if (scoutingDataObj.scoutProfiles.scouts && Array.isArray(scoutingDataObj.scoutProfiles.scouts)) {
+              await gameDB.scouts.bulkPut(scoutingDataObj.scoutProfiles.scouts as never[]);
+              profileCount += scoutingDataObj.scoutProfiles.scouts.length;
+              console.log(`✅ Imported ${scoutingDataObj.scoutProfiles.scouts.length} scout profiles`);
+            }
+            
+            if (scoutingDataObj.scoutProfiles.predictions && Array.isArray(scoutingDataObj.scoutProfiles.predictions)) {
+              await gameDB.predictions.bulkPut(scoutingDataObj.scoutProfiles.predictions as never[]);
+              profileCount += scoutingDataObj.scoutProfiles.predictions.length;
+              console.log(`✅ Imported ${scoutingDataObj.scoutProfiles.predictions.length} predictions`);
+            }
+            
+            console.log(`✅ Combined data: imported ${profileCount} profile items`);
           }
           
           console.log('📊 Incoming data count:', newDataWithIds.length);
@@ -803,8 +826,21 @@ const PeerTransferPage = () => {
           <Card className="w-full">
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                Connected Scouts
-                <Badge variant="secondary">{connectedScouts.length} connected</Badge>
+                <span>Connected Scouts</span>
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      // Force a re-render by updating state
+                      console.log('🔄 Refreshing connected scouts state');
+                      setRequestingScouts(new Set(requestingScouts));
+                    }}
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
+                  <Badge variant="secondary">{connectedScouts.length} connected</Badge>
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -1139,13 +1175,38 @@ const PeerTransferPage = () => {
                       );
                     }
                     
-                    // Handle successful data transfer
-                    const entryCount = dataObj.entries?.length || 0;
+                    // Handle successful data transfer - show appropriate info based on data type
+                    const transferDataType = (log as { dataType?: string }).dataType;
+                    let displayText = '';
+                    
+                    if (transferDataType === 'scout') {
+                      const scoutData = dataObj as { scouts?: unknown[]; predictions?: unknown[]; achievements?: unknown[] };
+                      const totalItems = (scoutData.scouts?.length || 0) + 
+                                       (scoutData.predictions?.length || 0) + 
+                                       (scoutData.achievements?.length || 0);
+                      displayText = `${totalItems} profile items`;
+                    } else if (transferDataType === 'match') {
+                      const matchData = dataObj as { matches?: unknown[] };
+                      displayText = `${matchData.matches?.length || 0} matches`;
+                    } else if (transferDataType === 'pit-scouting') {
+                      const entryCount = dataObj.entries?.length || 0;
+                      displayText = `${entryCount} pit entries`;
+                    } else if (transferDataType === 'combined') {
+                      const entryCount = dataObj.entries?.length || 0;
+                      const scoutProfiles = (dataObj as { scoutProfiles?: { scouts?: unknown[]; predictions?: unknown[] } }).scoutProfiles;
+                      const profileCount = (scoutProfiles?.scouts?.length || 0) + (scoutProfiles?.predictions?.length || 0);
+                      displayText = `${entryCount} entries + ${profileCount} profiles`;
+                    } else {
+                      // Default to entries (scouting data or unknown)
+                      const entryCount = dataObj.entries?.length || 0;
+                      displayText = `${entryCount} entries`;
+                    }
+                    
                     return (
                       <div key={idx} className="text-sm border-l-2 border-green-500 pl-3 py-1">
-                        <p className="font-medium">{log.scoutName} • {entryCount} entries</p>
+                        <p className="font-medium">{log.scoutName} • {displayText}</p>
                         <p className="text-xs text-muted-foreground">
-                          {new Date(log.timestamp).toLocaleTimeString()}
+                          {transferDataType && `${transferDataType} • `}{new Date(log.timestamp).toLocaleTimeString()}
                         </p>
                       </div>
                     );
