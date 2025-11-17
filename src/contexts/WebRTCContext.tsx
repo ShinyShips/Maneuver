@@ -111,6 +111,14 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
         return; // This is handled elsewhere
       }
       
+      // Handle disconnected notification from lead
+      if (message.type === 'disconnected') {
+        console.log(`🔌 Lead has disconnected us`);
+        // Emit event for PeerTransferPage to handle
+        window.dispatchEvent(new CustomEvent('webrtc-disconnected-by-lead'));
+        return;
+      }
+      
       // Handle request declined - just log it, PeerTransferPage will handle via event/toast
       if (message.type === 'request-declined') {
         console.log(`⛔ ${scoutName} declined data request`);
@@ -649,6 +657,10 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     console.log(`🔌 Disconnecting scout ${scoutId}...`);
     const scout = connectedScoutsRef.current.find(s => s.id === scoutId);
     if (scout) {
+      // Send disconnect notification before closing
+      if (scout.dataChannel?.readyState === 'open') {
+        scout.dataChannel.send(JSON.stringify({ type: 'disconnected' }));
+      }
       scout.connection.close();
       scout.dataChannel?.close();
       connectedScoutsRef.current = connectedScoutsRef.current.filter(s => s.id !== scoutId);

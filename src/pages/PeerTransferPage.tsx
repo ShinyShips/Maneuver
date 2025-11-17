@@ -583,6 +583,21 @@ const PeerTransferPage = () => {
     }
   }, [receivedData, importedDataCount, connectedScouts, setCurrentConflicts, setCurrentConflictIndex, setConflictResolutions, setShowConflictDialog, clearReceivedData]);
 
+  // Handle disconnect notification from lead (scout mode)
+  useEffect(() => {
+    const handleDisconnect = () => {
+      toast.error('Lead has disconnected you');
+      // Reset scout mode to initial state
+      reset();
+      setMode('select');
+    };
+
+    window.addEventListener('webrtc-disconnected-by-lead', handleDisconnect);
+    return () => {
+      window.removeEventListener('webrtc-disconnected-by-lead', handleDisconnect);
+    };
+  }, [reset]);
+
   // Render main content based on mode
   const renderContent = () => {
     // Mode Selection Screen
@@ -1209,7 +1224,7 @@ const PeerTransferPage = () => {
               {!historyCollapsed && (
               <CardContent>
                 <div className="space-y-2 max-h-40 overflow-y-auto">
-                  {receivedData.map((log, idx) => {
+                  {receivedData.slice().reverse().map((log, idx) => {
                     const dataObj = log.data as { type?: string; dataType?: string; entries?: unknown[] };
                     
                     // Handle declined request
