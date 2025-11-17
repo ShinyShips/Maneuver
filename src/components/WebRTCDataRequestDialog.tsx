@@ -4,9 +4,11 @@
  */
 
 import { useState } from 'react';
-import { Download, Filter } from 'lucide-react';
+import { Download, Filter, Info } from 'lucide-react';
 import { useWebRTC } from '@/contexts/WebRTCContext';
 import { loadScoutingData } from '@/lib/scoutingDataUtils';
+import { loadPitScoutingData } from '@/lib/pitScoutingUtils';
+import { gameDB } from '@/lib/dexieDB';
 import { applyFilters } from '@/lib/dataFiltering';
 import {
   AlertDialog,
@@ -21,48 +23,118 @@ import {
 
 export function WebRTCDataRequestDialog() {
   const context = useWebRTC();
-  const { dataRequested, setDataRequested, sendData, requestFilters } = context;
+  const { dataRequested, setDataRequested, sendData, requestFilters, requestDataType } = context;
   const [transferStatus, setTransferStatus] = useState<string>('');
 
+  const getDataTypeLabel = (dataType: string | null) => {
+    switch (dataType) {
+      case 'scouting': return 'Scouting Data';
+      case 'pit-scouting': return 'Pit Scouting Data';
+      case 'match': return 'Match Schedule';
+      case 'scout': return 'Scout Profiles';
+      case 'combined': return 'Combined Data';
+      default: return 'Data';
+    }
+  };
+
   const handleAcceptRequest = async () => {
-    setTransferStatus('Loading data...');
+    setTransferStatus(`Loading ${getDataTypeLabel(requestDataType)}...`);
     try {
-      let data = await loadScoutingData();
-      const originalCount = data.entries.length;
-      
-      // Apply filters if provided
-      if (requestFilters) {
-        console.log('📋 Applying filters:', requestFilters);
-        console.log('📋 Filter type:', requestFilters.matchRange.type);
-        console.log('📋 Filter preset:', requestFilters.matchRange.preset);
-        
-        setTransferStatus(`Filtering ${originalCount} entries...`);
-        
-        // applyFilters works with ScoutingDataCollection, structure is runtime compatible
-        const filteredData = applyFilters(data as unknown as Parameters<typeof applyFilters>[0], requestFilters);
-        console.log('📊 Original entries:', originalCount);
-        console.log('📊 Filtered entries:', filteredData.entries.length);
-        data = { entries: filteredData.entries as unknown as typeof data.entries };
-        
-        console.log(`📊 Filtered: ${originalCount} entries → ${data.entries.length} entries`);
-        setTransferStatus(`Sending ${data.entries.length} of ${originalCount} entries...`);
-      } else {
-        console.log('📋 No filters applied - sending all data');
-        setTransferStatus(`Sending ${originalCount} entries...`);
+      let data: any;
+      let originalCount = 0;
+
+      // Load data based on requested type
+      switch (requestDataType) {
+        case 'scouting': {
+          let scoutingData = await loadScoutingData();
+          originalCount = scoutingData.entries.length;
+          
+          // Apply filters if provided
+          if (requestFilters) {
+            console.log('📋 Applying filters to scouting data:', requestFilters);
+            setTransferStatus(`Filtering ${originalCount} entries...`);
+            const filteredData = applyFilters(scoutingData as unknown as Parameters<typeof applyFilters>[0], requestFilters);
+            scoutingData = { entries: filteredData.entries as unknown as typeof scoutingData.entries };
+            console.log(`� Filtered: ${originalCount} entries → ${scoutingData.entries.length} entries`);
+          }
+          
+          data = scoutingData;
+          break;
+        }
+
+        case 'pit-scouting': {
+          const pitData = await loadPitScoutingData();
+          originalCount = pitData.entries?.length || 0;
+          data = pitData;
+          console.log('📊 Loaded pit scouting data:', originalCount, 'entries');
+          break;
+        }
+
+        case 'match': {
+          const matchDataStr = localStorage.getItem('matchData');
+          const matches = matchDataStr ? JSON.parse(matchDataStr) : [];
+          originalCount = Array.isArray(matches) ? matches.length : 0;
+          data = { matches };
+          console.log('📊 Loaded match data:', originalCount, 'matches');
+          break;
+        }
+
+        case 'scout': {
+          const scouts = await gameDB.scouts.toArray();
+          const predictions = await gameDB.predictions.toArray();
+          const achievements = await gameDB.scoutAchievements.toArray();
+          originalCount = scouts.length;
+          data = { scouts, predictions, achievements };
+          console.log('📊 Loaded scout profiles:', scouts.length, 'scouts,', predictions.length, 'predictions');
+          break;
+        }
+
+        case 'combined': {
+          let scoutingData = await loadScoutingData();
+          const scouts = await gameDB.scouts.toArray();
+          const predictions = await gameDB.predictions.toArray();
+
+          // Apply filters to scouting data if provided
+          if (requestFilters) {
+            const origScoutingCount = scoutingData.entries.length;
+            console.log('📋 Applying filters to combined scouting data:', requestFilters);
+            const filteredData = applyFilters(scoutingData as unknown as Parameters<typeof applyFilters>[0], requestFilters);
+            scoutingData = { entries: filteredData.entries as unknown as typeof scoutingData.entries };
+            console.log(`📊 Filtered scouting: ${origScoutingCount} → ${scoutingData.entries.length} entries`);
+          }
+
+          data = {
+            entries: scoutingData.entries,
+            metadata: {
+              exportedAt: new Date().toISOString(),
+              version: "1.0",
+              scoutingEntriesCount: scoutingData.entries.length,
+              scoutsCount: scouts.length,
+              predictionsCount: predictions.length
+            },
+            scoutProfiles: {
+              scouts,
+              predictions
+            }
+          };
+          originalCount = scoutingData.entries.length + scouts.length + predictions.length;
+          console.log('📊 Loaded combined data');
+          break;
+        }
+
+        default:
+          throw new Error(`Unknown data type: ${requestDataType}`);
       }
       
       const dataSize = JSON.stringify(data).length;
       console.log('Scout sending data:', data);
       console.log('Data size:', dataSize, 'characters');
       
-      sendData(data);
+      setTransferStatus(`Sending ${getDataTypeLabel(requestDataType)}...`);
+      sendData(data, requestDataType);
       
-      // Show success with details
-      if (requestFilters && data.entries.length < originalCount) {
-        setTransferStatus(`✅ Sent ${data.entries.length} entries (${originalCount - data.entries.length} filtered out)`);
-      } else {
-        setTransferStatus(`✅ Sent ${data.entries.length} entries`);
-      }
+      // Show success
+      setTransferStatus(`✅ Sent ${getDataTypeLabel(requestDataType)}`);
       
       setTimeout(() => {
         setTransferStatus('');
@@ -128,22 +200,40 @@ export function WebRTCDataRequestDialog() {
               <Download className="h-5 w-5" />
               Data Request from Lead Scout
             </AlertDialogTitle>
-            <AlertDialogDescription className="space-y-2">
-              <p>The lead scout is requesting your scouting data.</p>
-              {requestFilters ? (
-                <div className="flex items-center gap-2 text-sm bg-blue-50 dark:bg-blue-950 p-3 rounded border border-blue-200 dark:border-blue-800 mt-2">
-                  <Filter className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            <AlertDialogDescription className="space-y-3">
+              <p>The lead scout is requesting data from you.</p>
+
+              {/* Data Type Info */}
+              <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg border border-blue-200 dark:border-blue-800">
+                <div className="flex items-start gap-2">
+                  <Info className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
                   <div className="flex flex-col">
-                    <span className="font-medium text-blue-900 dark:text-blue-100">Filter Request</span>
-                    <span className="text-xs text-blue-700 dark:text-blue-300">{getFilterDescription()}</span>
+                    <span className="font-medium text-blue-900 dark:text-blue-100 text-sm">
+                      {getDataTypeLabel(requestDataType)}
+                    </span>
+                    {requestDataType === 'combined' && (
+                      <span className="text-xs text-blue-700 dark:text-blue-300 mt-0.5">
+                        Includes scouting data and scout profiles
+                      </span>
+                    )}
                   </div>
                 </div>
-              ) : (
-                <div className="text-sm text-muted-foreground mt-2">
-                  Requesting all available data
+              </div>
+
+              {/* Filter Info */}
+              {requestFilters && (
+                <div className="flex items-center gap-2 text-sm bg-amber-50 dark:bg-amber-950 p-3 rounded border border-amber-200 dark:border-amber-800">
+                  <Filter className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                  <div className="flex flex-col">
+                    <span className="font-medium text-amber-900 dark:text-amber-100">Filter Request</span>
+                    <span className="text-xs text-amber-700 dark:text-amber-300">{getFilterDescription()}</span>
+                  </div>
                 </div>
               )}
-              <p className="text-sm mt-2">Send your data?</p>
+
+              <p className="text-sm text-muted-foreground">
+                Send your data to the lead scout?
+              </p>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

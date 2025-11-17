@@ -39,6 +39,7 @@ import { SplashScreen } from '@/components/SplashScreen';
 import { FullscreenProvider } from '@/contexts/FullscreenContext';
 import { WebRTCProvider } from '@/contexts/WebRTCContext';
 import { WebRTCDataRequestDialog } from '@/components/WebRTCDataRequestDialog';
+import { WebRTCPushedDataDialog } from '@/components/WebRTCPushedDataDialog';
 
 
 
@@ -165,6 +166,7 @@ function App() {
             <InstallPrompt />
             <StatusBarSpacer />
             <WebRTCDataRequestDialog />
+            <WebRTCPushedDataDialog />
           </div>
         </WebRTCProvider>
       </FullscreenProvider>

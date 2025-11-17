@@ -15,6 +15,9 @@ const STUN_SERVERS: RTCIceServer[] = [
   { urls: 'stun:stun1.l.google.com:19302' }
 ];
 
+// Data types that can be transferred
+export type TransferDataType = 'scouting' | 'pit-scouting' | 'match' | 'scout' | 'combined';
+
 // Types
 export interface ConnectedScout {
   id: string;
@@ -30,6 +33,7 @@ export interface ReceivedData {
   scoutName: string;
   data: unknown;
   timestamp: number;
+  dataType?: TransferDataType; // Track what type of data was received
 }
 
 interface WebRTCContextValue {
@@ -41,17 +45,25 @@ interface WebRTCContextValue {
   connectedScouts: ConnectedScout[];
   createOfferForScout: (scoutName: string) => Promise<{ scoutId: string; offer: string }>;
   processScoutAnswer: (scoutId: string, answerString: string) => Promise<void>;
-  requestDataFromAll: (filters?: DataFilters) => void;
+  requestDataFromAll: (filters?: DataFilters, dataType?: TransferDataType) => void;
+  requestDataFromScout: (scoutId: string, filters?: DataFilters, dataType?: TransferDataType) => void;
+  pushDataToAll: (data: unknown, dataType: TransferDataType) => void;
+  pushDataToScout: (scoutId: string, data: unknown, dataType: TransferDataType) => void;
   receivedData: ReceivedData[];
   clearReceivedData: () => void;
 
   // Scout functionality
   startAsScout: (scoutName: string, offerString: string) => Promise<string>;
   requestFilters: DataFilters | null;
-  sendData: (data: unknown) => void;
+  requestDataType: TransferDataType | null;
+  sendData: (data: unknown, dataType?: TransferDataType) => void;
   sendControlMessage: (message: { type: string; [key: string]: unknown }) => void;
   dataRequested: boolean;
   setDataRequested: (requested: boolean) => void;
+  dataPushed: boolean; // Lead pushing data to scout
+  setDataPushed: (pushed: boolean) => void;
+  pushedData: unknown | null; // Data pushed from lead
+  pushedDataType: TransferDataType | null;
   connectionStatus: string;
 
   // Cleanup
@@ -65,6 +77,10 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   const [receivedData, setReceivedData] = useState<ReceivedData[]>([]);
   const [dataRequested, setDataRequested] = useState(false);
   const [requestFilters, setRequestFilters] = useState<DataFilters | null>(null);
+  const [requestDataType, setRequestDataType] = useState<TransferDataType | null>(null);
+  const [dataPushed, setDataPushed] = useState(false);
+  const [pushedData, setPushedData] = useState<unknown | null>(null);
+  const [pushedDataType, setPushedDataType] = useState<TransferDataType | null>(null);
   const [connectionStatus, setConnectionStatus] = useState('Not connected');
 
   // Use refs to avoid stale closures
@@ -75,7 +91,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   const scoutDataChannelRef = useRef<RTCDataChannel | null>(null);
   
   // Chunk reassembly storage
-  const chunksRef = useRef<Map<string, { chunks: string[], totalChunks: number, scoutName: string }>>(new Map());
+  const chunksRef = useRef<Map<string, { chunks: string[], totalChunks: number, scoutName: string, dataType?: TransferDataType }>>(new Map());
 
   // Update state when ref changes
   const updateConnectedScouts = useCallback(() => {
@@ -86,6 +102,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   const handleReceivedMessage = useCallback((scoutName: string, rawMessage: string) => {
     try {
       const message = JSON.parse(rawMessage);
+      console.log(`🔍 handleReceivedMessage from ${scoutName}, type: ${message.type}, dataType: ${message.dataType}`);
       
       // Skip request-data messages (these are for scouts, not leads)
       if (message.type === 'request-data') {
@@ -104,23 +121,38 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
         return;
       }
       
+      // Handle push declined
+      if (message.type === 'push-declined') {
+        console.log(`⛔ ${scoutName} declined pushed ${message.dataType || 'data'}`);
+        // Store the decline so we can show it in the UI
+        setReceivedData(prev => [...prev, {
+          scoutName,
+          data: { type: 'push-declined', dataType: message.dataType },
+          timestamp: Date.now()
+        }]);
+        return;
+      }
+      
       if (message.type === 'complete') {
         // Single complete message
+        console.log(`📦 Complete message dataType: ${message.dataType}`);
         const data = JSON.parse(message.data);
         setReceivedData(prev => [...prev, { 
           scoutName, 
           data, 
+          dataType: message.dataType,
           timestamp: Date.now() 
         }]);
       } else if (message.type === 'chunk') {
         // Chunked message - reassemble
-        const { transferId, chunkIndex, totalChunks, data } = message;
+        const { transferId, chunkIndex, totalChunks, data, dataType } = message;
         
         if (!chunksRef.current.has(transferId)) {
           chunksRef.current.set(transferId, { 
             chunks: new Array(totalChunks).fill(null), 
             totalChunks,
-            scoutName 
+            scoutName,
+            dataType
           });
         }
         
@@ -134,17 +166,29 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
         if (allReceived) {
           const completeData = transfer.chunks.join('');
           const parsedData = JSON.parse(completeData);
-          setReceivedData(prev => [...prev, { 
-            scoutName, 
-            data: parsedData, 
-            timestamp: Date.now() 
-          }]);
+          
+          // Check if this is a control message (like push-data)
+          if (parsedData.type === 'push-data') {
+            console.log(`📥 Reassembled push-data message: ${parsedData.dataType}`);
+            setPushedData(parsedData.data);
+            setPushedDataType(parsedData.dataType);
+            setDataPushed(true);
+          } else {
+            // Regular data transfer
+            setReceivedData(prev => [...prev, { 
+              scoutName, 
+              data: parsedData,
+              dataType: transfer.dataType,
+              timestamp: Date.now() 
+            }]);
+          }
+          
           chunksRef.current.delete(transferId);
           console.log(`✅ Reassembled complete data from ${scoutName}`);
         }
       } else if (message.type) {
         // Unknown message type - log and ignore
-        console.log(`⚠️ Unknown message type: ${message.type}`);
+        console.log(`⚠️ Unknown message type from ${scoutName}: ${message.type}`);
       } else {
         // Legacy format (no type field) - assume complete data
         setReceivedData(prev => [...prev, { 
@@ -270,8 +314,8 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   }, [updateConnectedScouts]);
 
   // LEAD: Request data from all connected scouts
-  const requestDataFromAll = useCallback((filters?: DataFilters) => {
-    console.log(`📤 Requesting data from ${connectedScoutsRef.current.length} scouts...`);
+  const requestDataFromAll = useCallback((filters?: DataFilters, dataType?: TransferDataType) => {
+    console.log(`📤 Requesting ${dataType || 'scouting'} data from ${connectedScoutsRef.current.length} scouts...`);
     if (filters) {
       console.log('📋 With filters:', filters);
     }
@@ -279,20 +323,128 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     // Clear previous received data to avoid reprocessing
     setReceivedData([]);
     
-    // Store filters so scouts can access them
+    // Store filters and data type so scouts can access them
     setRequestFilters(filters || null);
+    setRequestDataType(dataType || 'scouting');
     
     connectedScoutsRef.current.forEach(scout => {
       if (scout.dataChannel && scout.dataChannel.readyState === 'open') {
-        console.log(`📤 Sending request to ${scout.name}`);
+        console.log(`📤 Sending ${dataType || 'scouting'} request to ${scout.name}`);
         scout.dataChannel.send(JSON.stringify({ 
           type: 'request-data',
-          filters: filters || null
+          filters: filters || null,
+          dataType: dataType || 'scouting'
         }));
       } else {
         console.warn(`⚠️ Data channel not open for ${scout.name}`);
       }
     });
+  }, []);
+
+  // LEAD: Request data from a specific scout
+  const requestDataFromScout = useCallback((scoutId: string, filters?: DataFilters, dataType?: TransferDataType) => {
+    const scout = connectedScoutsRef.current.find(s => s.id === scoutId);
+    if (!scout) {
+      console.error(`❌ Scout ${scoutId} not found`);
+      return;
+    }
+
+    console.log(`📤 Requesting ${dataType || 'scouting'} data from ${scout.name}...`);
+    if (filters) {
+      console.log('📋 With filters:', filters);
+    }
+
+    if (scout.dataChannel && scout.dataChannel.readyState === 'open') {
+      scout.dataChannel.send(JSON.stringify({ 
+        type: 'request-data',
+        filters: filters || null,
+        dataType: dataType || 'scouting'
+      }));
+    } else {
+      console.warn(`⚠️ Data channel not open for ${scout.name}`);
+    }
+  }, []);
+
+  // LEAD: Push data to all connected scouts
+  const pushDataToAll = useCallback((data: unknown, dataType: TransferDataType) => {
+    console.log(`📤 Pushing ${dataType} data to ${connectedScoutsRef.current.length} scouts...`);
+    
+    const dataString = JSON.stringify({ 
+      type: 'push-data',
+      dataType,
+      data
+    });
+    const CHUNK_SIZE = 16000;
+
+    connectedScoutsRef.current.forEach(scout => {
+      if (scout.dataChannel && scout.dataChannel.readyState === 'open') {
+        console.log(`📤 Pushing ${dataType} data to ${scout.name}`);
+        
+        if (dataString.length <= CHUNK_SIZE) {
+          scout.dataChannel.send(dataString);
+        } else {
+          // Send as chunks
+          const chunks = Math.ceil(dataString.length / CHUNK_SIZE);
+          const transferId = crypto.randomUUID();
+          
+          for (let i = 0; i < chunks; i++) {
+            const chunk = dataString.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+            scout.dataChannel.send(JSON.stringify({
+              type: 'chunk',
+              transferId,
+              chunkIndex: i,
+              totalChunks: chunks,
+              data: chunk,
+              dataType
+            }));
+          }
+        }
+      } else {
+        console.warn(`⚠️ Data channel not open for ${scout.name}`);
+      }
+    });
+  }, []);
+
+  // LEAD: Push data to a specific scout
+  const pushDataToScout = useCallback((scoutId: string, data: unknown, dataType: TransferDataType) => {
+    const scout = connectedScoutsRef.current.find(s => s.id === scoutId);
+    if (!scout) {
+      console.error(`❌ Scout ${scoutId} not found`);
+      return;
+    }
+
+    console.log(`📤 Pushing ${dataType} data to ${scout.name}...`);
+    
+    const dataString = JSON.stringify({ 
+      type: 'push-data',
+      dataType,
+      data
+    });
+    const CHUNK_SIZE = 16000;
+
+    if (scout.dataChannel && scout.dataChannel.readyState === 'open') {
+      if (dataString.length <= CHUNK_SIZE) {
+        scout.dataChannel.send(dataString);
+      } else {
+        // Send as chunks
+        const chunks = Math.ceil(dataString.length / CHUNK_SIZE);
+        const transferId = crypto.randomUUID();
+        
+        for (let i = 0; i < chunks; i++) {
+          const chunk = dataString.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+          scout.dataChannel.send(JSON.stringify({
+            type: 'chunk',
+            transferId,
+            chunkIndex: i,
+            totalChunks: chunks,
+            data: chunk,
+            dataType
+          }));
+        }
+      }
+    } else {
+      console.warn(`⚠️ Data channel not open for ${scout.name}`);
+    }
   }, []);
 
   // SCOUT: Process offer and create answer
@@ -334,15 +486,27 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
         // Try to parse as control message first
         try {
           const message = JSON.parse(event.data);
+          
+          // Handle data request from lead
           if (message.type === 'request-data') {
-            console.log('📥 Lead is requesting data');
+            console.log(`📥 Lead is requesting ${message.dataType || 'scouting'} data`);
             if (message.filters) {
               console.log('📋 With filters:', message.filters);
               setRequestFilters(message.filters);
             } else {
               setRequestFilters(null);
             }
+            setRequestDataType(message.dataType || 'scouting');
             setDataRequested(true);
+            return; // Control message handled
+          }
+          
+          // Handle data push from lead
+          if (message.type === 'push-data') {
+            console.log(`📥 Lead is pushing ${message.dataType} data`);
+            setPushedData(message.data);
+            setPushedDataType(message.dataType);
+            setDataPushed(true);
             return; // Control message handled
           }
         } catch {
@@ -410,7 +574,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // SCOUT: Send data to lead
-  const sendData = useCallback((data: unknown) => {
+  const sendData = useCallback((data: unknown, dataType?: TransferDataType) => {
     const dataChannel = scoutDataChannelRef.current;
     
     if (!dataChannel) {
@@ -431,11 +595,11 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
       const dataString = JSON.stringify(data);
       const CHUNK_SIZE = 15000; // 15KB chunks to leave room for JSON wrapper overhead
       
-      console.log(`📤 Scout sending data, size: ${dataString.length} chars`);
+      console.log(`📤 Scout sending ${dataType || 'data'}, size: ${dataString.length} chars`);
       
       if (dataString.length <= CHUNK_SIZE) {
         // Small enough to send directly
-        dataChannel.send(JSON.stringify({ type: 'complete', data: dataString }));
+        dataChannel.send(JSON.stringify({ type: 'complete', data: dataString, dataType }));
         console.log('✅ Data sent successfully (single message)');
       } else {
         // Split into chunks
@@ -451,7 +615,8 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
             transferId,
             chunkIndex: i,
             totalChunks,
-            data: chunk
+            data: chunk,
+            dataType
           });
           dataChannel.send(message);
           console.log(`📦 Sent chunk ${i + 1}/${totalChunks}`);
@@ -517,6 +682,9 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     createOfferForScout,
     processScoutAnswer,
     requestDataFromAll,
+    requestDataFromScout,
+    pushDataToAll,
+    pushDataToScout,
     receivedData,
     clearReceivedData,
     startAsScout,
@@ -524,7 +692,12 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     sendControlMessage,
     dataRequested,
     setDataRequested,
+    dataPushed,
+    setDataPushed,
+    pushedData,
+    pushedDataType,
     requestFilters,
+    requestDataType,
     connectionStatus,
     disconnectAll
   };

@@ -45,7 +45,7 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { QRCodeCanvas } from 'qrcode.react';
 import { Scanner } from '@yudiel/react-qr-scanner';
-import { Wifi, Users, Download, AlertCircle, CheckCircle2, UserCheck, QrCode, Camera, Loader2 } from 'lucide-react';
+import { Wifi, Users, Download, Upload, AlertCircle, CheckCircle2, UserCheck, QrCode, Camera, Loader2 } from 'lucide-react';
 import { useWebRTCQRTransfer } from '@/hooks/useWebRTCQRTransfer';
 import { detectConflicts, type ScoutingDataWithId, type ConflictInfo } from '@/lib/scoutingDataUtils';
 import { convertTeamRole } from '@/lib/utils';
@@ -56,6 +56,7 @@ import { DataFilteringControls } from '@/components/DataTransferComponents/DataF
 import { createDefaultFilters, type DataFilters } from '@/lib/dataFiltering';
 import { loadScoutingData } from '@/lib/scoutingDataUtils';
 import { toast } from 'sonner';
+import type { TransferDataType } from '@/contexts/WebRTCContext';
 
 const PeerTransferPage = () => {
   const [mode, setMode] = useState<'select' | 'lead' | 'scout'>('select');
@@ -68,6 +69,9 @@ const PeerTransferPage = () => {
   // Filtering state
   const [filters, setFilters] = useState<DataFilters>(createDefaultFilters());
   const [allScoutingData, setAllScoutingData] = useState<Awaited<ReturnType<typeof loadScoutingData>> | null>(null);
+  
+  // Data type selection
+  const [dataType, setDataType] = useState<TransferDataType>('scouting');
   
   // Dialog states
   const [showCustomNameDialog, setShowCustomNameDialog] = useState(false);
@@ -117,6 +121,8 @@ const PeerTransferPage = () => {
     startAsScout,
     requestDataFromScout,
     requestDataFromAll,
+    pushDataToAll,
+    pushDataToScout,
     reset,
   } = useWebRTCQRTransfer();
 
@@ -275,16 +281,29 @@ const PeerTransferPage = () => {
     if (receivedData.length > importedDataCount) {
       debugLog('✅ Condition met, starting import...');
       const latest = receivedData[receivedData.length - 1];
-      const receivedDataObj = latest.data as { entries: ScoutingDataWithId[] };
       
-      console.log(`✅ Received data from ${latest.scoutName}:`, receivedDataObj);
+      // Check if this is a decline message first (before accessing entries)
+      const declineData = latest.data as { type?: string; dataType?: string; entries?: ScoutingDataWithId[] };
+      
+      if (declineData.type === 'declined') {
+        toast.error(`${latest.scoutName} declined the data request`);
+        setImportedDataCount(receivedData.length); // Mark as processed
+        return;
+      }
+      
+      if (declineData.type === 'push-declined') {
+        const dataTypeLabel = declineData.dataType || 'data';
+        toast.warning(`${latest.scoutName} declined pushed ${dataTypeLabel}`);
+        setImportedDataCount(receivedData.length); // Mark as processed
+        return;
+      }
+      
+      // Now we know it's actual data, check what type it is
+      const receivedDataObj = latest.data;
+      const receivedDataType = (latest as { dataType?: string }).dataType;
+      
+      console.log(`✅ Received data from ${latest.scoutName}, type: ${receivedDataType}:`, receivedDataObj);
       console.log('Received data size:', JSON.stringify(receivedDataObj).length, 'characters');
-      console.log('Data structure check:', {
-        hasEntries: 'entries' in receivedDataObj,
-        entriesType: Array.isArray(receivedDataObj.entries),
-        entriesCount: receivedDataObj.entries?.length || 0,
-        firstEntry: receivedDataObj.entries?.[0]
-      });
       
       // Clear requesting state for this scout
       const scoutId = connectedScouts.find(s => s.name === latest.scoutName)?.id;
@@ -296,19 +315,80 @@ const PeerTransferPage = () => {
         });
       }
       
-      // Check if this is a decline message
-      const declineData = receivedDataObj as { type?: string };
-      if (declineData.type === 'declined') {
-        toast.error(`${latest.scoutName} declined the data request`);
-        setImportedDataCount(receivedData.length); // Mark as processed
-        return;
-      }
-      
-      // Import data into database with conflict detection
+      // Import data into database based on type
       const importData = async () => {
-        debugLog(`📥 Attempting to import data from ${latest.scoutName}...`);
+        debugLog(`📥 Attempting to import ${receivedDataType} data from ${latest.scoutName}...`);
         try {
-          const newDataWithIds = receivedDataObj.entries;
+          // Handle different data types
+          if (receivedDataType === 'scout') {
+            // Scout profiles: { scouts, predictions, achievements }
+            console.log('📊 Scout profile data structure:', receivedDataObj);
+            
+            const scoutData = receivedDataObj as { scouts?: unknown[]; predictions?: unknown[]; achievements?: unknown[] };
+            const { gameDB } = await import('@/lib/dexieDB');
+            
+            let importedCount = 0;
+            if (scoutData.scouts && Array.isArray(scoutData.scouts)) {
+              await gameDB.scouts.bulkPut(scoutData.scouts as never[]);
+              importedCount += scoutData.scouts.length;
+              console.log(`✅ Imported ${scoutData.scouts.length} scouts`);
+            }
+            if (scoutData.predictions && Array.isArray(scoutData.predictions)) {
+              await gameDB.predictions.bulkPut(scoutData.predictions as never[]);
+              importedCount += scoutData.predictions.length;
+              console.log(`✅ Imported ${scoutData.predictions.length} predictions`);
+            }
+            if (scoutData.achievements && Array.isArray(scoutData.achievements)) {
+              await gameDB.scoutAchievements.bulkPut(scoutData.achievements as never[]);
+              importedCount += scoutData.achievements.length;
+              console.log(`✅ Imported ${scoutData.achievements.length} achievements`);
+            }
+            
+            if (importedCount > 0) {
+              toast.success(`Imported ${importedCount} scout profile items from ${latest.scoutName}`);
+            } else {
+              toast.warning(`No scout profile data to import from ${latest.scoutName}`);
+            }
+            console.log('✅ Scout profile import complete, returning early');
+            setImportedDataCount(receivedData.length);
+            return;
+          }
+          
+          console.log('⚠️ Not scout type, continuing to other handlers...');
+          
+          if (receivedDataType === 'match') {
+            // Match data: { matches }
+            const matchData = receivedDataObj as { matches?: unknown[] };
+            if (matchData.matches && Array.isArray(matchData.matches)) {
+              localStorage.setItem('matchData', JSON.stringify(matchData.matches));
+              toast.success(`Imported ${matchData.matches.length} matches from ${latest.scoutName}`);
+            }
+            setImportedDataCount(receivedData.length);
+            return;
+          }
+          
+          if (receivedDataType === 'pit-scouting') {
+            // Pit scouting data: { entries }
+            const pitData = receivedDataObj as { entries?: unknown[] };
+            if (pitData.entries && Array.isArray(pitData.entries)) {
+              const { pitDB } = await import('@/lib/dexieDB');
+              await pitDB.pitScoutingData.bulkPut(pitData.entries as never[]);
+              toast.success(`Imported ${pitData.entries.length} pit scouting entries from ${latest.scoutName}`);
+            }
+            setImportedDataCount(receivedData.length);
+            return;
+          }
+          
+          // Handle scouting data and combined (which has entries)
+          const scoutingDataObj = receivedDataObj as { entries?: ScoutingDataWithId[]; scoutProfiles?: unknown };
+          const newDataWithIds = scoutingDataObj.entries;
+          
+          if (!newDataWithIds || !Array.isArray(newDataWithIds)) {
+            console.error('No valid entries found in received data');
+            toast.error(`Invalid data structure from ${latest.scoutName}`);
+            setImportedDataCount(receivedData.length);
+            return;
+          }
           
           console.log('📊 Incoming data count:', newDataWithIds.length);
           console.log('📊 Sample entry:', newDataWithIds[0]);
@@ -764,12 +844,8 @@ const PeerTransferPage = () => {
                             <span className="font-medium">{scout.name}</span>
                           </div>
                           <div className="flex items-center gap-2 ml-6">
-                            {isRequesting ? (
+                            {isRequesting && (
                               <Badge variant="outline" className="text-xs text-blue-600 animate-pulse">Receiving...</Badge>
-                            ) : isReady ? (
-                              <Badge variant="outline" className="text-xs">Ready</Badge>
-                            ) : (
-                              <Badge variant="outline" className="text-xs text-yellow-600">Connecting...</Badge>
                             )}
                             {hasReceived && receivedLog && !isRequesting && (
                               <span className="text-xs text-muted-foreground">
@@ -778,18 +854,93 @@ const PeerTransferPage = () => {
                             )}
                           </div>
                         </div>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => {
-                            setRequestingScouts(prev => new Set(prev).add(scout.id));
-                            debugLog('📤 Requesting data from', scout.name, 'with filters:', filters);
-                            requestDataFromScout(scout.id, filters);
-                          }}
-                          disabled={!isReady || isRequesting}
-                        >
-                          {isRequesting ? '...' : 'Request'}
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="default"
+                            onClick={() => {
+                              setRequestingScouts(prev => new Set(prev).add(scout.id));
+                              debugLog('📤 Requesting', dataType, 'data from', scout.name, 'with filters:', filters);
+                              requestDataFromScout(scout.id, filters, dataType);
+                            }}
+                            disabled={!isReady || isRequesting}
+                          >
+                            {isRequesting ? '...' : 'Request'}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={async () => {
+                              try {
+                                debugLog('📤 Pushing', dataType, 'data to', scout.name);
+                                let data: unknown;
+
+                                // Load data based on selected type (same logic as push to all)
+                                switch (dataType) {
+                                  case 'scouting': {
+                                    const { loadScoutingData } = await import('@/lib/scoutingDataUtils');
+                                    data = await loadScoutingData();
+                                    break;
+                                  }
+                                  case 'pit-scouting': {
+                                    const { loadPitScoutingData } = await import('@/lib/pitScoutingUtils');
+                                    data = await loadPitScoutingData();
+                                    break;
+                                  }
+                                  case 'match': {
+                                    const matchDataStr = localStorage.getItem('matchData');
+                                    const matches = matchDataStr ? JSON.parse(matchDataStr) : [];
+                                    data = { matches };
+                                    break;
+                                  }
+                                  case 'scout': {
+                                    const { gameDB } = await import('@/lib/dexieDB');
+                                    const scouts = await gameDB.scouts.toArray();
+                                    const predictions = await gameDB.predictions.toArray();
+                                    const achievements = await gameDB.scoutAchievements.toArray();
+                                    data = { scouts, predictions, achievements };
+                                    break;
+                                  }
+                                  case 'combined': {
+                                    const { loadScoutingData } = await import('@/lib/scoutingDataUtils');
+                                    const { gameDB } = await import('@/lib/dexieDB');
+                                    
+                                    const [scoutingData, scouts, predictions] = await Promise.all([
+                                      loadScoutingData(),
+                                      gameDB.scouts.toArray(),
+                                      gameDB.predictions.toArray()
+                                    ]);
+                                    
+                                    data = {
+                                      entries: scoutingData.entries,
+                                      metadata: {
+                                        exportedAt: new Date().toISOString(),
+                                        version: "1.0",
+                                        scoutingEntriesCount: scoutingData.entries.length,
+                                        scoutsCount: scouts.length,
+                                        predictionsCount: predictions.length
+                                      },
+                                      scoutProfiles: {
+                                        scouts,
+                                        predictions
+                                      }
+                                    };
+                                    break;
+                                  }
+                                }
+
+                                pushDataToScout(scout.id, data, dataType);
+                                toast.info(`Pushing ${dataType} to ${scout.name}...`);
+                              } catch (err) {
+                                console.error('Failed to push data:', err);
+                                toast.error('Failed to push data to ' + scout.name);
+                              }
+                            }}
+                            disabled={!isReady}
+                          >
+                            Push
+                          </Button>
+                        </div>
                       </div>
                     );
                   })}
@@ -798,45 +949,197 @@ const PeerTransferPage = () => {
             </CardContent>
           </Card>
 
-          {/* Request from All Button */}
+          {/* Data Transfer Controls */}
           {connectedScouts.length > 0 && (
-            <Button
-              onClick={() => {
-                // Mark all ready scouts as requesting
-                const readyScouts = connectedScouts.filter(s => s.channel?.readyState === 'open');
-                setRequestingScouts(new Set(readyScouts.map(s => s.id)));
-                // Reset imported count for fresh import tracking
-                setImportedDataCount(0);
-                debugLog('📤 Requesting data with filters:', filters);
-                requestDataFromAll(filters);
-              }}
-              disabled={connectedScouts.filter(s => s.channel?.readyState === 'open').length === 0}
-              className="w-full h-14 text-lg"
-              size="lg"
-            >
-              <Download className="h-5 w-5 mr-2" />
-              Request Data from All Scouts ({connectedScouts.filter(s => s.channel?.readyState === 'open').length} ready)
-            </Button>
+            <Card className="w-full">
+              <CardHeader>
+                <CardTitle>Data Transfer</CardTitle>
+                <CardDescription>
+                  Select data type, then request from or push to scouts
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Data Type Selector */}
+                <div className="space-y-2">
+                  <Label htmlFor="dataType">Data Type</Label>
+                  <Select value={dataType} onValueChange={(value: TransferDataType) => setDataType(value)}>
+                    <SelectTrigger id="dataType">
+                      <SelectValue placeholder="Select data type..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="scouting">Scouting Data</SelectItem>
+                      <SelectItem value="pit-scouting">Pit Scouting (no images)</SelectItem>
+                      <SelectItem value="match">Match Schedule</SelectItem>
+                      <SelectItem value="scout">Scout Profiles</SelectItem>
+                      <SelectItem value="combined">Combined (Scouting + Profiles)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Request Button */}
+                <Button
+                  onClick={() => {
+                    // Mark all ready scouts as requesting
+                    const readyScouts = connectedScouts.filter(s => s.channel?.readyState === 'open');
+                    setRequestingScouts(new Set(readyScouts.map(s => s.id)));
+                    // Reset imported count for fresh import tracking
+                    setImportedDataCount(0);
+                    debugLog('📤 Requesting', dataType, 'data with filters:', filters);
+                    requestDataFromAll(filters, dataType);
+                  }}
+                  disabled={connectedScouts.filter(s => s.channel?.readyState === 'open').length === 0}
+                  className="w-full"
+                  size="lg"
+                >
+                  <Download className="h-5 w-5 mr-2" />
+                  Request {dataType === 'scouting' ? 'Scouting' : 
+                           dataType === 'pit-scouting' ? 'Pit Scouting' :
+                           dataType === 'match' ? 'Match' :
+                           dataType === 'scout' ? 'Scout Profile' :
+                           'Combined'} Data ({connectedScouts.filter(s => s.channel?.readyState === 'open').length} scouts)
+                </Button>
+
+                {/* Push Button */}
+                <Button
+                  onClick={async () => {
+                    try {
+                      debugLog('📤 Pushing', dataType, 'data to all scouts');
+                      let data: any;
+
+                      // Load data based on selected type
+                      switch (dataType) {
+                        case 'scouting': {
+                          const { loadScoutingData } = await import('@/lib/scoutingDataUtils');
+                          data = await loadScoutingData();
+                          debugLog('Loaded scouting data:', data.entries?.length || 0, 'entries');
+                          break;
+                        }
+                        case 'pit-scouting': {
+                          const { loadPitScoutingData } = await import('@/lib/pitScoutingUtils');
+                          data = await loadPitScoutingData();
+                          debugLog('Loaded pit scouting data:', data.entries?.length || 0, 'entries');
+                          break;
+                        }
+                        case 'match': {
+                          const matchDataStr = localStorage.getItem('matchData');
+                          const matches = matchDataStr ? JSON.parse(matchDataStr) : [];
+                          data = { matches };
+                          debugLog('Loaded match data:', Array.isArray(matches) ? matches.length : 0, 'matches');
+                          break;
+                        }
+                        case 'scout': {
+                          const { gameDB } = await import('@/lib/dexieDB');
+                          const scouts = await gameDB.scouts.toArray();
+                          const predictions = await gameDB.predictions.toArray();
+                          const achievements = await gameDB.scoutAchievements.toArray();
+                          data = { scouts, predictions, achievements };
+                          debugLog('Loaded scout profiles:', scouts.length, 'scouts');
+                          break;
+                        }
+                        case 'combined': {
+                          const { loadScoutingData } = await import('@/lib/scoutingDataUtils');
+                          const { gameDB } = await import('@/lib/dexieDB');
+                          
+                          const [scoutingData, scouts, predictions] = await Promise.all([
+                            loadScoutingData(),
+                            gameDB.scouts.toArray(),
+                            gameDB.predictions.toArray()
+                          ]);
+                          
+                          data = {
+                            entries: scoutingData.entries,
+                            metadata: {
+                              exportedAt: new Date().toISOString(),
+                              version: "1.0",
+                              scoutingEntriesCount: scoutingData.entries.length,
+                              scoutsCount: scouts.length,
+                              predictionsCount: predictions.length
+                            },
+                            scoutProfiles: {
+                              scouts,
+                              predictions
+                            }
+                          };
+                          debugLog('Loaded combined data:', {
+                            scouting: scoutingData.entries?.length || 0,
+                            scouts: scouts.length,
+                            predictions: predictions.length
+                          });
+                          break;
+                        }
+                      }
+
+                      // Push data to all scouts
+                      pushDataToAll(data, dataType);
+                      toast.success(`Pushed ${dataType} data to ${connectedScouts.filter(s => s.channel?.readyState === 'open').length} scouts`);
+                    } catch (err) {
+                      console.error('Failed to push data:', err);
+                      toast.error('Failed to push data: ' + (err instanceof Error ? err.message : 'Unknown error'));
+                    }
+                  }}
+                  disabled={connectedScouts.filter(s => s.channel?.readyState === 'open').length === 0}
+                  className="w-full"
+                  variant="outline"
+                  size="lg"
+                >
+                  <Upload className="h-5 w-5 mr-2" />
+                  Push {dataType === 'scouting' ? 'Scouting' : 
+                       dataType === 'pit-scouting' ? 'Pit Scouting' :
+                       dataType === 'match' ? 'Match' :
+                       dataType === 'scout' ? 'Scout Profile' :
+                       'Combined'} Data to Scouts
+                </Button>
+              </CardContent>
+            </Card>
           )}
 
-          {/* Received Data Log */}
+          {/* Data Transfer History */}
           {receivedData.length > 0 && (
             <Card className="w-full">
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
-                  Received Data
+                  Transfer History
                   <Badge variant="outline" className="">
-                    ✅ {receivedData.length} imported
+                    {receivedData.filter(d => {
+                      const dataObj = d.data as { type?: string; entries?: unknown[] };
+                      return dataObj.type !== 'declined' && dataObj.type !== 'push-declined';
+                    }).length} completed
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  Data automatically saved to database
+                  Recent data requests and pushes
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2 max-h-40 overflow-y-auto">
                   {receivedData.map((log, idx) => {
-                    const dataObj = log.data as { entries?: unknown[] };
+                    const dataObj = log.data as { type?: string; dataType?: string; entries?: unknown[] };
+                    
+                    // Handle declined request
+                    if (dataObj.type === 'declined') {
+                      return (
+                        <div key={idx} className="text-sm border-l-2 border-red-500 pl-3 py-1">
+                          <p className="font-medium">{log.scoutName} declined request</p>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(log.timestamp).toLocaleTimeString()}
+                          </p>
+                        </div>
+                      );
+                    }
+                    
+                    // Handle declined push
+                    if (dataObj.type === 'push-declined') {
+                      return (
+                        <div key={idx} className="text-sm border-l-2 border-yellow-500 pl-3 py-1">
+                          <p className="font-medium">{log.scoutName} declined push</p>
+                          <p className="text-xs text-muted-foreground">
+                            {dataObj.dataType} • {new Date(log.timestamp).toLocaleTimeString()}
+                          </p>
+                        </div>
+                      );
+                    }
+                    
+                    // Handle successful data transfer
                     const entryCount = dataObj.entries?.length || 0;
                     return (
                       <div key={idx} className="text-sm border-l-2 border-green-500 pl-3 py-1">
