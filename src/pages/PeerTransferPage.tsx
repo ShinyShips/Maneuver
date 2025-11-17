@@ -606,7 +606,7 @@ const PeerTransferPage = () => {
         <div className="h-screen w-full flex flex-col items-center justify-center px-4 pb-32">
           <div className="flex flex-col items-center gap-6 max-w-md w-full">
           <Wifi className="h-16 w-16 text-primary" />
-          <h1 className="text-3xl font-bold text-center">WebRTC Data Transfer</h1>
+          <h1 className="text-3xl font-bold text-center">WiFi Transfer</h1>
           <p className="text-muted-foreground text-center">
             Fast peer-to-peer transfer when network available
           </p>
@@ -634,9 +634,10 @@ const PeerTransferPage = () => {
               <div>
                 <p className="font-semibold text-primary">Lead Scout:</p>
                 <ol className="list-decimal list-inside space-y-1 ml-2 mt-1">
-                  <li>For each scout: enter name → show QR</li>
+                  <li>Select scout profiles → show QR for each</li>
                   <li>Scan each scout's answer QR</li>
-                  <li>Request data from all instantly</li>
+                  <li>Request or push data to scouts instantly</li>
+                  <li>Push: Send match schedule, scouting data, or profiles</li>
                 </ol>
               </div>
               
@@ -647,7 +648,7 @@ const PeerTransferPage = () => {
                 <ol className="list-decimal list-inside space-y-1 ml-2 mt-1">
                   <li>Scan lead's QR code</li>
                   <li>Show your answer QR to lead</li>
-                  <li>Approve when lead requests data</li>
+                  <li>Approve/decline when lead requests or pushes data</li>
                 </ol>
               </div>
             </CardContent>
