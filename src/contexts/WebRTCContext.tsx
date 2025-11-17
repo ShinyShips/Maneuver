@@ -5,6 +5,7 @@
 
 import { createContext, useContext, useRef, useState, useCallback, useEffect } from 'react';
 import type { ReactNode } from 'react';
+import type { DataFilters } from '@/lib/dataFiltering';
 
 // Configuration
 const STUN_SERVERS = [
@@ -38,12 +39,15 @@ interface WebRTCContextValue {
   connectedScouts: ConnectedScout[];
   createOfferForScout: (scoutName: string) => Promise<{ scoutId: string; offer: string }>;
   processScoutAnswer: (scoutId: string, answerString: string) => Promise<void>;
-  requestDataFromAll: () => void;
+  requestDataFromAll: (filters?: DataFilters) => void;
   receivedData: ReceivedData[];
+  clearReceivedData: () => void;
 
   // Scout functionality
   startAsScout: (scoutName: string, offerString: string) => Promise<string>;
+  requestFilters: DataFilters | null;
   sendData: (data: unknown) => void;
+  sendControlMessage: (message: { type: string; [key: string]: unknown }) => void;
   dataRequested: boolean;
   setDataRequested: (requested: boolean) => void;
   connectionStatus: string;
@@ -58,6 +62,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<'lead' | 'scout' | 'select'>('select');
   const [receivedData, setReceivedData] = useState<ReceivedData[]>([]);
   const [dataRequested, setDataRequested] = useState(false);
+  const [requestFilters, setRequestFilters] = useState<DataFilters | null>(null);
   const [connectionStatus, setConnectionStatus] = useState('Not connected');
 
   // Use refs to avoid stale closures
@@ -66,10 +71,91 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   const pendingScoutsRef = useRef<Map<string, ConnectedScout>>(new Map());
   const scoutConnectionRef = useRef<RTCPeerConnection | null>(null);
   const scoutDataChannelRef = useRef<RTCDataChannel | null>(null);
+  
+  // Chunk reassembly storage
+  const chunksRef = useRef<Map<string, { chunks: string[], totalChunks: number, scoutName: string }>>(new Map());
 
   // Update state when ref changes
   const updateConnectedScouts = useCallback(() => {
     setConnectedScouts([...connectedScoutsRef.current]);
+  }, []);
+  
+  // Handle received message (with chunk reassembly)
+  const handleReceivedMessage = useCallback((scoutName: string, rawMessage: string) => {
+    try {
+      const message = JSON.parse(rawMessage);
+      
+      // Skip request-data messages (these are for scouts, not leads)
+      if (message.type === 'request-data') {
+        return; // This is handled elsewhere
+      }
+      
+      // Handle request declined - just log it, PeerTransferPage will handle via event/toast
+      if (message.type === 'request-declined') {
+        console.log(`⛔ ${scoutName} declined data request`);
+        // Store the decline so we can show it in the UI
+        setReceivedData(prev => [...prev, {
+          scoutName,
+          data: { type: 'declined' },
+          timestamp: Date.now()
+        }]);
+        return;
+      }
+      
+      if (message.type === 'complete') {
+        // Single complete message
+        const data = JSON.parse(message.data);
+        setReceivedData(prev => [...prev, { 
+          scoutName, 
+          data, 
+          timestamp: Date.now() 
+        }]);
+      } else if (message.type === 'chunk') {
+        // Chunked message - reassemble
+        const { transferId, chunkIndex, totalChunks, data } = message;
+        
+        if (!chunksRef.current.has(transferId)) {
+          chunksRef.current.set(transferId, { 
+            chunks: new Array(totalChunks).fill(null), 
+            totalChunks,
+            scoutName 
+          });
+        }
+        
+        const transfer = chunksRef.current.get(transferId)!;
+        transfer.chunks[chunkIndex] = data;
+        
+        console.log(`📦 Received chunk ${chunkIndex + 1}/${totalChunks} from ${scoutName}`);
+        
+        // Check if all chunks received
+        const allReceived = transfer.chunks.every(c => c !== null);
+        if (allReceived) {
+          const completeData = transfer.chunks.join('');
+          const parsedData = JSON.parse(completeData);
+          setReceivedData(prev => [...prev, { 
+            scoutName, 
+            data: parsedData, 
+            timestamp: Date.now() 
+          }]);
+          chunksRef.current.delete(transferId);
+          console.log(`✅ Reassembled complete data from ${scoutName}`);
+        }
+      } else if (message.type) {
+        // Unknown message type - log and ignore
+        console.log(`⚠️ Unknown message type: ${message.type}`);
+      } else {
+        // Legacy format (no type field) - assume complete data
+        setReceivedData(prev => [...prev, { 
+          scoutName, 
+          data: message, 
+          timestamp: Date.now() 
+        }]);
+      }
+    } catch (err) {
+      console.error('Failed to parse received data:', err);
+      console.error('Raw message length:', rawMessage.length);
+      console.error('Raw message preview:', rawMessage.substring(0, 200));
+    }
   }, []);
 
   // LEAD: Create offer for a specific scout
@@ -87,17 +173,8 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     };
 
     dataChannel.onmessage = (event) => {
-      console.log(`📩 Received data from ${scoutName}:`, event.data);
-      try {
-        const data = JSON.parse(event.data);
-        setReceivedData(prev => [...prev, { 
-          scoutName, 
-          data, 
-          timestamp: Date.now() 
-        }]);
-      } catch (err) {
-        console.error('Failed to parse received data:', err);
-      }
+      console.log(`📩 Received message from ${scoutName}`);
+      handleReceivedMessage(scoutName, event.data);
     };
 
     // Store in pending map (not connected yet)
@@ -163,7 +240,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     console.log(`✅ Offer created for ${scoutName}, size: ${offerString.length} chars`);
 
     return { scoutId, offer: offerString };
-  }, [updateConnectedScouts]);
+  }, [updateConnectedScouts, handleReceivedMessage]);
 
   // LEAD: Process answer from scout
   const processScoutAnswer = useCallback(async (scoutId: string, answerString: string): Promise<void> => {
@@ -190,13 +267,25 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   }, [updateConnectedScouts]);
 
   // LEAD: Request data from all connected scouts
-  const requestDataFromAll = useCallback(() => {
+  const requestDataFromAll = useCallback((filters?: DataFilters) => {
     console.log(`📤 Requesting data from ${connectedScoutsRef.current.length} scouts...`);
+    if (filters) {
+      console.log('📋 With filters:', filters);
+    }
+    
+    // Clear previous received data to avoid reprocessing
+    setReceivedData([]);
+    
+    // Store filters so scouts can access them
+    setRequestFilters(filters || null);
     
     connectedScoutsRef.current.forEach(scout => {
       if (scout.dataChannel && scout.dataChannel.readyState === 'open') {
         console.log(`📤 Sending request to ${scout.name}`);
-        scout.dataChannel.send(JSON.stringify({ type: 'request-data' }));
+        scout.dataChannel.send(JSON.stringify({ 
+          type: 'request-data',
+          filters: filters || null
+        }));
       } else {
         console.warn(`⚠️ Data channel not open for ${scout.name}`);
       }
@@ -237,16 +326,28 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
       };
 
       dataChannel.onmessage = (event) => {
-        console.log('📩 Scout received message:', event.data);
+        console.log('📩 Scout received message');
+        
+        // Try to parse as control message first
         try {
           const message = JSON.parse(event.data);
           if (message.type === 'request-data') {
             console.log('📥 Lead is requesting data');
+            if (message.filters) {
+              console.log('📋 With filters:', message.filters);
+              setRequestFilters(message.filters);
+            } else {
+              setRequestFilters(null);
+            }
             setDataRequested(true);
+            return; // Control message handled
           }
-        } catch (err) {
-          console.error('Failed to parse message:', err);
+        } catch {
+          // Not a control message, could be data - ignore parse error
         }
+        
+        // Forward all other messages to handleReceivedMessage for chunk reassembly
+        handleReceivedMessage('lead', event.data);
       };
     };
 
@@ -287,19 +388,84 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     return answerString;
   }, []);
 
+  // SCOUT: Send a simple control message (like decline)
+  const sendControlMessage = useCallback((message: { type: string; [key: string]: unknown }) => {
+    const dataChannel = scoutDataChannelRef.current;
+    
+    if (!dataChannel || dataChannel.readyState !== 'open') {
+      console.warn('Cannot send control message - data channel not open');
+      return;
+    }
+    
+    try {
+      dataChannel.send(JSON.stringify(message));
+      console.log('📤 Sent control message:', message.type);
+    } catch (err) {
+      console.error('Failed to send control message:', err);
+    }
+  }, []);
+
   // SCOUT: Send data to lead
   const sendData = useCallback((data: unknown) => {
     const dataChannel = scoutDataChannelRef.current;
-    if (!dataChannel || dataChannel.readyState !== 'open') {
-      console.error('❌ Data channel not open');
-      alert('Not connected to lead scout. Please scan QR code first.');
+    
+    if (!dataChannel) {
+      const error = 'ERROR: No data channel exists. Please scan the QR code from the lead scout first.';
+      console.error('❌', error);
+      alert(error);
+      return;
+    }
+    
+    if (dataChannel.readyState !== 'open') {
+      const error = `ERROR: Data channel state is "${dataChannel.readyState}". Expected "open". Try reconnecting.`;
+      console.error('❌', error);
+      alert(error);
       return;
     }
 
-    const dataString = JSON.stringify(data);
-    console.log(`📤 Scout sending data, size: ${dataString.length} chars`);
-    dataChannel.send(dataString);
-    console.log('✅ Data sent successfully');
+    try {
+      const dataString = JSON.stringify(data);
+      const CHUNK_SIZE = 15000; // 15KB chunks to leave room for JSON wrapper overhead
+      
+      console.log(`📤 Scout sending data, size: ${dataString.length} chars`);
+      
+      if (dataString.length <= CHUNK_SIZE) {
+        // Small enough to send directly
+        dataChannel.send(JSON.stringify({ type: 'complete', data: dataString }));
+        console.log('✅ Data sent successfully (single message)');
+      } else {
+        // Split into chunks
+        const totalChunks = Math.ceil(dataString.length / CHUNK_SIZE);
+        const transferId = crypto.randomUUID();
+        
+        console.log(`📦 Splitting into ${totalChunks} chunks`);
+        
+        for (let i = 0; i < totalChunks; i++) {
+          const chunk = dataString.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+          const message = JSON.stringify({
+            type: 'chunk',
+            transferId,
+            chunkIndex: i,
+            totalChunks,
+            data: chunk
+          });
+          dataChannel.send(message);
+          console.log(`📦 Sent chunk ${i + 1}/${totalChunks}`);
+        }
+        
+        console.log('✅ All chunks sent successfully');
+      }
+    } catch (err) {
+      const error = `ERROR sending data: ${err instanceof Error ? err.message : String(err)}`;
+      console.error('❌', error);
+      alert(error);
+    }
+  }, []);
+
+  // Clear received data (called after successful import)
+  const clearReceivedData = useCallback(() => {
+    console.log('🧹 Clearing received data');
+    setReceivedData([]);
   }, []);
 
   // Disconnect all connections
@@ -348,10 +514,13 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     processScoutAnswer,
     requestDataFromAll,
     receivedData,
+    clearReceivedData,
     startAsScout,
     sendData,
+    sendControlMessage,
     dataRequested,
     setDataRequested,
+    requestFilters,
     connectionStatus,
     disconnectAll
   };
