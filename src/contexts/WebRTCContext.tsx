@@ -51,6 +51,7 @@ interface WebRTCContextValue {
   pushDataToScout: (scoutId: string, data: unknown, dataType: TransferDataType) => void;
   receivedData: ReceivedData[];
   clearReceivedData: () => void;
+  addToReceivedData: (entry: ReceivedData) => void;
 
   // Scout functionality
   startAsScout: (scoutName: string, offerString: string) => Promise<string>;
@@ -67,6 +68,7 @@ interface WebRTCContextValue {
   connectionStatus: string;
 
   // Cleanup
+  disconnectScout: (scoutId: string) => void;
   disconnectAll: () => void;
 }
 
@@ -637,6 +639,23 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     setReceivedData([]);
   }, []);
 
+  // Add entry to received data (for tracking pushes)
+  const addToReceivedData = useCallback((entry: ReceivedData) => {
+    setReceivedData(prev => [...prev, entry]);
+  }, []);
+
+  // Disconnect a specific scout
+  const disconnectScout = useCallback((scoutId: string) => {
+    console.log(`🔌 Disconnecting scout ${scoutId}...`);
+    const scout = connectedScoutsRef.current.find(s => s.id === scoutId);
+    if (scout) {
+      scout.connection.close();
+      scout.dataChannel?.close();
+      connectedScoutsRef.current = connectedScoutsRef.current.filter(s => s.id !== scoutId);
+      updateConnectedScouts();
+    }
+  }, [updateConnectedScouts]);
+
   // Disconnect all connections
   const disconnectAll = useCallback(() => {
     console.log('🔌 Disconnecting all connections...');
@@ -687,6 +706,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     pushDataToScout,
     receivedData,
     clearReceivedData,
+    addToReceivedData,
     startAsScout,
     sendData,
     sendControlMessage,
@@ -699,6 +719,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     requestFilters,
     requestDataType,
     connectionStatus,
+    disconnectScout,
     disconnectAll
   };
 

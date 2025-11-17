@@ -61,6 +61,7 @@ export function useWebRTCQRTransfer() {
     connectedScouts: context.connectedScouts,
     receivedData: context.receivedData,
     clearReceivedData: context.clearReceivedData,
+    addToReceivedData: context.addToReceivedData,
     isConnecting: false, // Not tracking this state anymore
     
     // Scout functionality  
@@ -81,6 +82,7 @@ export function useWebRTCQRTransfer() {
     requestDataFromAll,
     pushDataToAll,
     pushDataToScout,
+    disconnectScout: context.disconnectScout,
     reset: () => {
       context.disconnectAll();
       context.setMode('select');

@@ -45,7 +45,7 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { QRCodeCanvas } from 'qrcode.react';
 import { Scanner } from '@yudiel/react-qr-scanner';
-import { Wifi, Users, Download, Upload, AlertCircle, CheckCircle2, UserCheck, QrCode, Camera, Loader2, RefreshCw } from 'lucide-react';
+import { Wifi, Users, Download, Upload, AlertCircle, CheckCircle2, UserCheck, QrCode, Camera, Loader2, RefreshCw, X, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { useWebRTCQRTransfer } from '@/hooks/useWebRTCQRTransfer';
 import { detectConflicts, type ScoutingDataWithId, type ConflictInfo } from '@/lib/scoutingDataUtils';
 import { convertTeamRole } from '@/lib/utils';
@@ -58,6 +58,18 @@ import { loadScoutingData } from '@/lib/scoutingDataUtils';
 import { toast } from 'sonner';
 import type { TransferDataType } from '@/contexts/WebRTCContext';
 
+// Helper function for relative timestamps
+const getRelativeTime = (timestamp: number): string => {
+  const seconds = Math.floor((Date.now() - timestamp) / 1000);
+  if (seconds < 60) return 'just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+};
+
 const PeerTransferPage = () => {
   const [mode, setMode] = useState<'select' | 'lead' | 'scout'>('select');
   const [showScanner, setShowScanner] = useState(false);
@@ -65,6 +77,7 @@ const PeerTransferPage = () => {
   const [currentOffer, setCurrentOffer] = useState<{ scoutId: string; offer: string; scoutRole: string } | null>(null);
   const [importedDataCount, setImportedDataCount] = useState(0); // Track how many items we've imported
   const [requestingScouts, setRequestingScouts] = useState<Set<string>>(new Set()); // Track which scouts we're requesting from
+  const [historyCollapsed, setHistoryCollapsed] = useState(false); // Collapse transfer history
   
   // Filtering state
   const [filters, setFilters] = useState<DataFilters>(createDefaultFilters());
@@ -112,6 +125,7 @@ const PeerTransferPage = () => {
     connectedScouts,
     receivedData,
     clearReceivedData,
+    addToReceivedData,
     connectionStatus,
     scoutAnswer,
     scoutOfferReceived,
@@ -123,6 +137,7 @@ const PeerTransferPage = () => {
     requestDataFromAll,
     pushDataToAll,
     pushDataToScout,
+    disconnectScout,
     reset,
   } = useWebRTCQRTransfer();
 
@@ -957,7 +972,15 @@ const PeerTransferPage = () => {
                                 }
 
                                 pushDataToScout(scout.id, data, dataType);
-                                toast.info(`Pushing ${dataType} to ${scout.name}...`);
+                                
+                                // Add to received data for history tracking
+                                addToReceivedData({
+                                  scoutName: scout.name,
+                                  data: { type: 'pushed', dataType },
+                                  timestamp: Date.now()
+                                });
+                                
+                                toast.info(`Pushed ${dataType} to ${scout.name}`);
                               } catch (err) {
                                 console.error('Failed to push data:', err);
                                 toast.error('Failed to push data to ' + scout.name);
@@ -966,6 +989,18 @@ const PeerTransferPage = () => {
                             disabled={!isReady}
                           >
                             Push
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => {
+                              disconnectScout(scout.id);
+                              toast.info(`Disconnected ${scout.name}`);
+                            }}
+                            className="px-2"
+                            title="Disconnect scout"
+                          >
+                            <X className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>
@@ -1098,7 +1133,18 @@ const PeerTransferPage = () => {
 
                       // Push data to all scouts
                       pushDataToAll(data, dataType);
-                      toast.success(`Pushed ${dataType} data to ${connectedScouts.filter(s => s.channel?.readyState === 'open').length} scouts`);
+                      
+                      // Add entries to received data for each scout that was pushed to
+                      const readyScouts = connectedScouts.filter(s => s.channel?.readyState === 'open');
+                      readyScouts.forEach(scout => {
+                        addToReceivedData({
+                          scoutName: scout.name,
+                          data: { type: 'pushed', dataType },
+                          timestamp: Date.now()
+                        });
+                      });
+                      
+                      toast.success(`Pushed ${dataType} data to ${readyScouts.length} scouts`);
                     } catch (err) {
                       console.error('Failed to push data:', err);
                       toast.error('Failed to push data: ' + (err instanceof Error ? err.message : 'Unknown error'));
@@ -1125,18 +1171,42 @@ const PeerTransferPage = () => {
             <Card className="w-full">
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
-                  Transfer History
-                  <Badge variant="outline" className="">
-                    {receivedData.filter(d => {
-                      const dataObj = d.data as { type?: string; entries?: unknown[] };
-                      return dataObj.type !== 'declined' && dataObj.type !== 'push-declined';
-                    }).length} completed
-                  </Badge>
+                  <span className="flex items-center gap-2">
+                    Transfer History
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setHistoryCollapsed(!historyCollapsed)}
+                      className="px-2"
+                    >
+                      {historyCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+                    </Button>
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="">
+                      {receivedData.filter(d => {
+                        const dataObj = d.data as { type?: string; entries?: unknown[] };
+                        return dataObj.type !== 'declined' && dataObj.type !== 'push-declined' && dataObj.type !== 'pushed';
+                      }).length} received
+                    </Badge>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        clearReceivedData();
+                        toast.success('Transfer history cleared');
+                      }}
+                      title="Clear history"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </CardTitle>
                 <CardDescription>
                   Recent data requests and pushes
                 </CardDescription>
               </CardHeader>
+              {!historyCollapsed && (
               <CardContent>
                 <div className="space-y-2 max-h-40 overflow-y-auto">
                   {receivedData.map((log, idx) => {
@@ -1148,7 +1218,7 @@ const PeerTransferPage = () => {
                         <div key={idx} className="text-sm border-l-2 border-red-500 pl-3 py-1">
                           <p className="font-medium">{log.scoutName} declined request</p>
                           <p className="text-xs text-muted-foreground">
-                            {new Date(log.timestamp).toLocaleTimeString()}
+                            {getRelativeTime(log.timestamp)}
                           </p>
                         </div>
                       );
@@ -1160,7 +1230,19 @@ const PeerTransferPage = () => {
                         <div key={idx} className="text-sm border-l-2 border-yellow-500 pl-3 py-1">
                           <p className="font-medium">{log.scoutName} declined push</p>
                           <p className="text-xs text-muted-foreground">
-                            {dataObj.dataType} • {new Date(log.timestamp).toLocaleTimeString()}
+                            {dataObj.dataType} • {getRelativeTime(log.timestamp)}
+                          </p>
+                        </div>
+                      );
+                    }
+                    
+                    // Handle pushed data (outgoing from lead)
+                    if (dataObj.type === 'pushed') {
+                      return (
+                        <div key={idx} className="text-sm border-l-2 border-blue-500 pl-3 py-1">
+                          <p className="font-medium">Pushed to {log.scoutName}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {dataObj.dataType} • {getRelativeTime(log.timestamp)}
                           </p>
                         </div>
                       );
@@ -1197,13 +1279,14 @@ const PeerTransferPage = () => {
                       <div key={idx} className="text-sm border-l-2 border-green-500 pl-3 py-1">
                         <p className="font-medium">{log.scoutName} • {displayText}</p>
                         <p className="text-xs text-muted-foreground">
-                          {transferDataType && `${transferDataType} • `}{new Date(log.timestamp).toLocaleTimeString()}
+                          {transferDataType && `${transferDataType} • `}{getRelativeTime(log.timestamp)}
                         </p>
                       </div>
                     );
                   })}
                 </div>
               </CardContent>
+              )}
             </Card>
           )}
         </div>
