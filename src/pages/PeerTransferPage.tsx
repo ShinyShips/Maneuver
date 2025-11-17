@@ -510,8 +510,6 @@ const PeerTransferPage = () => {
               `${conflictResult.batchReview.length} duplicates need review.`
             );
             setImportedDataCount(receivedData.length);
-            clearReceivedData();
-            setImportedDataCount(0); // Reset for next request
             return;
           }
           
@@ -531,8 +529,6 @@ const PeerTransferPage = () => {
             
             setShowConflictDialog(true);
             setImportedDataCount(receivedData.length);
-            clearReceivedData();
-            setImportedDataCount(0); // Reset for next request
             return;
           }
           
@@ -561,11 +557,6 @@ const PeerTransferPage = () => {
             );
           }
           setImportedDataCount(receivedData.length);
-          
-          // Clear received data to prevent re-importing on navigation
-          clearReceivedData();
-          // Reset import count for next request
-          setImportedDataCount(0);
         } catch (err) {
           console.error(`❌ FAILED to import data from ${latest.scoutName}:`, err);
           setErrorMessage(`Failed to import data from ${latest.scoutName}: ${err instanceof Error ? err.message : 'Unknown error'}`);
