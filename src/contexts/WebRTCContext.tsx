@@ -8,7 +8,9 @@ import type { ReactNode } from 'react';
 import type { DataFilters } from '@/lib/dataFiltering';
 
 // Configuration
-const STUN_SERVERS = [
+// STUN servers help with NAT traversal on shared networks like venue WiFi
+// All devices must be on the same network (e.g., event WiFi)
+const STUN_SERVERS: RTCIceServer[] = [
   { urls: 'stun:stun.l.google.com:19302' },
   { urls: 'stun:stun1.l.google.com:19302' }
 ];
@@ -213,25 +215,26 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     await connection.setLocalDescription(offer);
 
     // Wait for ICE gathering with timeout
+    // In offline mode (no STUN), we only need local candidates which gather quickly
     await new Promise<void>((resolve) => {
       if (connection.iceGatheringState === 'complete') {
+        console.log('✅ Lead ICE gathering already complete');
         resolve();
       } else {
-        let timeout: NodeJS.Timeout;
-        const handler = () => {
+        const timeout = setTimeout(() => {
+          console.log(`⏱️ Lead ICE gathering timeout (state: ${connection.iceGatheringState}) - proceeding with available candidates`);
+          connection.onicegatheringstatechange = null;
+          resolve();
+        }, 1000); // Reduced to 1 second for local-only candidates
+        
+        connection.onicegatheringstatechange = () => {
+          console.log(`🧊 Lead ICE gathering state: ${connection.iceGatheringState}`);
           if (connection.iceGatheringState === 'complete') {
             clearTimeout(timeout);
+            connection.onicegatheringstatechange = null;
             resolve();
           }
         };
-        connection.onicegatheringstatechange = handler;
-        
-        // Timeout after 3 seconds - offline mode doesn't need STUN servers
-        timeout = setTimeout(() => {
-          console.log('⏱️ Lead ICE gathering timeout - proceeding with local candidates only');
-          connection.onicegatheringstatechange = null;
-          resolve();
-        }, 3000);
       }
     });
 
@@ -360,25 +363,26 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     await connection.setLocalDescription(answer);
 
     // Wait for ICE gathering with timeout
+    // In offline mode (no STUN), we only need local candidates which gather quickly
     await new Promise<void>((resolve) => {
       if (connection.iceGatheringState === 'complete') {
+        console.log('✅ Scout ICE gathering already complete');
         resolve();
       } else {
-        let timeout: NodeJS.Timeout;
-        const handler = () => {
+        const timeout = setTimeout(() => {
+          console.log(`⏱️ Scout ICE gathering timeout (state: ${connection.iceGatheringState}) - proceeding with available candidates`);
+          connection.onicegatheringstatechange = null;
+          resolve();
+        }, 1000); // Reduced to 1 second for local-only candidates
+        
+        connection.onicegatheringstatechange = () => {
+          console.log(`🧊 Scout ICE gathering state: ${connection.iceGatheringState}`);
           if (connection.iceGatheringState === 'complete') {
             clearTimeout(timeout);
+            connection.onicegatheringstatechange = null;
             resolve();
           }
         };
-        connection.onicegatheringstatechange = handler;
-        
-        // Timeout after 3 seconds - offline mode doesn't need STUN servers
-        timeout = setTimeout(() => {
-          console.log('⏱️ ICE gathering timeout - proceeding with local candidates only');
-          connection.onicegatheringstatechange = null;
-          resolve();
-        }, 3000);
       }
     });
 

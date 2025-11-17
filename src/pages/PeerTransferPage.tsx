@@ -42,6 +42,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { QRCodeCanvas } from 'qrcode.react';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import { Wifi, Users, Download, AlertCircle, CheckCircle2, UserCheck, QrCode, Camera, Loader2 } from 'lucide-react';
@@ -483,8 +484,20 @@ const PeerTransferPage = () => {
           <Wifi className="h-16 w-16 text-primary" />
           <h1 className="text-3xl font-bold text-center">WebRTC Data Transfer</h1>
           <p className="text-muted-foreground text-center">
-            Connect scouts directly using QR codes - no WiFi needed
+            Fast peer-to-peer transfer when network available
           </p>
+
+          {/* Network Requirements */}
+          <Alert className="w-full">
+            <Wifi className="h-4 w-4" />
+            <AlertDescription>
+              <strong>Requirements:</strong> All devices need internet connectivity (WiFi or cellular data) for WebRTC to establish peer connections.
+              <br/><br/>
+              <strong>Best for:</strong> Practice sessions, pit area, off-season events, testing environments, or if venue provides WiFi.
+              <br/><br/>
+              <strong>No network available?</strong> Use the standard QR Code transfer method instead.
+            </AlertDescription>
+          </Alert>
 
           <Card className="w-full">
             <CardHeader>
@@ -633,6 +646,7 @@ const PeerTransferPage = () => {
                 <p className="text-xs text-center text-muted-foreground">
                   QR Size: {currentOffer.offer.length} chars
                 </p>
+                
                 <Button
                   onClick={() => setShowScanner(true)}
                   className="w-full"
