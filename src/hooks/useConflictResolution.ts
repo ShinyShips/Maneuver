@@ -3,6 +3,12 @@ import { toast } from "sonner";
 import type { ConflictInfo, ScoutingDataWithId } from "@/lib/scoutingDataUtils";
 import { computeChangedFields } from "@/lib/scoutingDataUtils";
 
+// Debug logging helper - only logs in development
+const DEBUG = import.meta.env.DEV;
+const debugLog = (...args: unknown[]) => {
+  if (DEBUG) console.log(...args);
+};
+
 export const useConflictResolution = () => {
   // Conflict resolution state
   const [showConflictDialog, setShowConflictDialog] = useState(false);
@@ -10,6 +16,7 @@ export const useConflictResolution = () => {
   const [currentConflictIndex, setCurrentConflictIndex] = useState(0);
   const [conflictResolutions, setConflictResolutions] = useState<Map<string, 'replace' | 'skip'>>(new Map());
   const [resolutionHistory, setResolutionHistory] = useState<Array<{ index: number; action: 'replace' | 'skip' }>>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Generate conflict key from conflict info
   const getConflictKey = (conflict: ConflictInfo): string => {
@@ -75,44 +82,60 @@ export const useConflictResolution = () => {
 
   // Batch resolve all remaining conflicts
   const handleBatchResolve = async (action: 'replace' | 'skip') => {
-    // Apply action to all remaining conflicts
-    const newResolutions = new Map(conflictResolutions);
-    for (let i = currentConflictIndex; i < currentConflicts.length; i++) {
-      const conflict = currentConflicts[i];
-      const key = getConflictKey(conflict);
-      newResolutions.set(key, action);
-    }
-    setConflictResolutions(newResolutions);
-
-    // Apply immediately
-    const { saveScoutingEntry, db } = await import('@/lib/dexieDB');
-    let replaced = 0;
-    let skipped = 0;
-
-    for (let i = currentConflictIndex; i < currentConflicts.length; i++) {
-      const conflict = currentConflicts[i];
-      const conflictKey = getConflictKey(conflict);
-      const decision = newResolutions.get(conflictKey);
-
-      if (decision === 'replace') {
-        await db.scoutingData.delete(conflict.local.id);
-        await saveScoutingEntry(conflict.incoming);
-        replaced++;
-      } else {
-        skipped++;
+    setIsProcessing(true);
+    
+    try {
+      // Apply action to all remaining conflicts
+      const newResolutions = new Map(conflictResolutions);
+      for (let i = currentConflictIndex; i < currentConflicts.length; i++) {
+        const conflict = currentConflicts[i];
+        const key = getConflictKey(conflict);
+        newResolutions.set(key, action);
       }
+      setConflictResolutions(newResolutions);
+
+      // Apply immediately
+      const { saveScoutingEntry, db } = await import('@/lib/dexieDB');
+      let replaced = 0;
+      let skipped = 0;
+
+      const remainingCount = currentConflicts.length - currentConflictIndex;
+      debugLog(`🔄 Batch ${action}ing ${remainingCount} conflicts...`);
+
+      for (let i = currentConflictIndex; i < currentConflicts.length; i++) {
+        const conflict = currentConflicts[i];
+        const conflictKey = getConflictKey(conflict);
+        const decision = newResolutions.get(conflictKey);
+
+        if (decision === 'replace') {
+          await db.scoutingData.delete(conflict.local.id);
+          await saveScoutingEntry(conflict.incoming);
+          replaced++;
+        } else {
+          skipped++;
+        }
+        
+        // Log progress for large batches
+        if (i % 50 === 0 && i > currentConflictIndex) {
+          debugLog(`📊 Progress: ${i - currentConflictIndex}/${remainingCount} conflicts processed`);
+        }
+      }
+
+      debugLog(`✅ Batch operation complete: ${replaced} replaced, ${skipped} skipped`);
+
+      toast.success(
+        `Batch operation complete! ${replaced} entries replaced, ${skipped} entries kept.`
+      );
+
+      // Reset state
+      setShowConflictDialog(false);
+      setCurrentConflicts([]);
+      setCurrentConflictIndex(0);
+      setConflictResolutions(new Map());
+      setResolutionHistory([]);
+    } finally {
+      setIsProcessing(false);
     }
-
-    toast.success(
-      `Batch operation complete! ${replaced} entries replaced, ${skipped} entries kept.`
-    );
-
-    // Reset state
-    setShowConflictDialog(false);
-    setCurrentConflicts([]);
-    setCurrentConflictIndex(0);
-    setConflictResolutions(new Map());
-    setResolutionHistory([]);
   };
 
   // Undo last conflict resolution
@@ -141,11 +164,16 @@ export const useConflictResolution = () => {
     pendingConflicts: ConflictInfo[],
     decision: 'replace-all' | 'skip-all' | 'review-each'
   ) => {
-    const { saveScoutingEntry, db } = await import('@/lib/dexieDB');
+    setIsProcessing(true);
     
-    if (decision === 'replace-all') {
-      let replaced = 0;
-      for (const entry of batchReviewEntries) {
+    try {
+      const { saveScoutingEntry, db } = await import('@/lib/dexieDB');
+      
+      if (decision === 'replace-all') {
+        debugLog(`🔄 Batch replacing ${batchReviewEntries.length} duplicate entries...`);
+        let replaced = 0;
+        for (let i = 0; i < batchReviewEntries.length; i++) {
+        const entry = batchReviewEntries[i];
         const incomingData = entry.data;
         const matchNumber = String(incomingData.matchNumber || '');
         const teamNumber = String(incomingData.selectTeam || incomingData.teamNumber || '');
@@ -166,7 +194,13 @@ export const useConflictResolution = () => {
         }
         await saveScoutingEntry(entry);
         replaced++;
+        
+        // Log progress for large batches
+        if (i % 50 === 0 && i > 0) {
+          debugLog(`📊 Progress: ${i}/${batchReviewEntries.length} entries replaced`);
+        }
       }
+      debugLog(`✅ Batch replace complete: ${replaced} entries replaced`);
       toast.success(`Replaced ${replaced} entries with incoming data`);
       
       // Check if there are pending conflicts after batch
@@ -269,6 +303,9 @@ export const useConflictResolution = () => {
     }
     
     return { hasMoreConflicts: false };
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return {
@@ -283,6 +320,7 @@ export const useConflictResolution = () => {
     setConflictResolutions,
     resolutionHistory,
     setResolutionHistory,
+    isProcessing,
     
     // Actions
     handleConflictResolution,

@@ -37,12 +37,14 @@ import {
 import type { ScoutingDataCollection } from "@/lib/scoutingTypes";
 
 interface DataFilteringControlsProps {
-  data: ScoutingDataCollection;
+  data?: ScoutingDataCollection; // Optional - when undefined, shows manual input mode
   filters: DataFilters;
   onFiltersChange: (filters: DataFilters) => void;
   onApplyFilters: () => void;
   useCompression?: boolean;
   filteredData?: ScoutingDataCollection | null;
+  hideQRStats?: boolean; // Hide QR code estimates (for WebRTC transfers)
+  hideApplyButton?: boolean; // Hide apply button (for real-time filtering like WebRTC)
 }
 
 export const DataFilteringControls: React.FC<DataFilteringControlsProps> = ({
@@ -51,14 +53,16 @@ export const DataFilteringControls: React.FC<DataFilteringControlsProps> = ({
   onFiltersChange,
   onApplyFilters,
   useCompression = true,
-  filteredData
+  filteredData,
+  hideQRStats = false,
+  hideApplyButton = false
 }) => {
-  const teams = extractTeamNumbers(data);
-  const matchRange = extractMatchRange(data);
+  const teams = data ? extractTeamNumbers(data) : [];
+  const matchRange = data ? extractMatchRange(data) : { min: 1, max: 1 };
   // Use filtered data if available, otherwise use original data
   const currentData = filteredData || data;
-  const currentMatchRange = extractMatchRange(currentData);
-  const stats = calculateFilterStats(data, currentData, useCompression);
+  const currentMatchRange = currentData ? extractMatchRange(currentData) : { min: 1, max: 1 };
+  const stats = data && currentData ? calculateFilterStats(data, currentData, useCompression) : null;
   const filterValidation = validateFilters(filters);
 
   const handleMatchRangeChange = (type: 'preset' | 'custom', value?: string) => {
@@ -123,20 +127,24 @@ export const DataFilteringControls: React.FC<DataFilteringControlsProps> = ({
 
         {/* Match Range Filtering */}
         <div className="space-y-2">
-            {/* Current Data Stats */}
-            <Label className="flex flex-col text-green-400 text-sm items-start gap-0">
-                Current dataset: ~{stats.estimatedQRCodes} QR codes from {currentData.entries.length} entries
-                {filteredData && (
-                  <span className="text-muted-foreground"> Original: {data.entries.length} entries</span>
-                )}
-            </Label>
+            {/* Current Data Stats - hide QR estimates for WebRTC */}
+            {!hideQRStats && stats && currentData && (
+              <Label className="flex flex-col text-green-400 text-sm items-start gap-0">
+                  Current dataset: ~{stats.estimatedQRCodes} QR codes from {currentData.entries.length} entries
+                  {filteredData && data && (
+                    <span className="text-muted-foreground"> Original: {data.entries.length} entries</span>
+                  )}
+              </Label>
+            )}
           <div className="space-y-2">
-            <Label className="flex flex-col text-green-400 text-sm items-start gap-0">
-              Data range: Match {currentMatchRange.min} - {currentMatchRange.max} ({currentData.entries.length} entries)
-              {filteredData && (
-                <span className="text-muted-foreground">Original: Match {matchRange.min} - {matchRange.max}</span>
-              )}
-            </Label>
+            {currentData && (
+              <Label className="flex flex-col text-green-400 text-sm items-start gap-0">
+                {hideQRStats ? 'Available data:' : 'Data range:'} Match {currentMatchRange.min} - {currentMatchRange.max} ({currentData.entries.length} entries)
+                {filteredData && (
+                  <span className="text-muted-foreground">Original: Match {matchRange.min} - {matchRange.max}</span>
+                )}
+              </Label>
+            )}
             
             <Select 
               value={filters.matchRange.type === 'preset' ? filters.matchRange.preset : 'custom'} 
@@ -248,14 +256,16 @@ export const DataFilteringControls: React.FC<DataFilteringControlsProps> = ({
           </Alert>
         )}
 
-        {/* Apply Filters Button */}
-        <Button 
-          onClick={onApplyFilters}
-          disabled={!filterValidation.valid}
-          className="w-full mt-4"
-        >
-          {filteredData ? 'Update Filter' : 'Apply Filters'}
-        </Button>
+        {/* Apply Filters Button - hidden for real-time filtering */}
+        {!hideApplyButton && (
+          <Button 
+            onClick={onApplyFilters}
+            disabled={!filterValidation.valid}
+            className="w-full mt-4"
+          >
+            {filteredData ? 'Update Filter' : 'Apply Filters'}
+          </Button>
+        )}
     </div>
   );
 };

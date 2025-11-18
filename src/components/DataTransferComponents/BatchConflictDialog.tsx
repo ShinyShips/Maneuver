@@ -1,18 +1,20 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, FileStack } from "lucide-react";
+import { AlertCircle, FileStack, Loader2 } from "lucide-react";
 import type { ScoutingDataWithId } from "@/lib/scoutingDataUtils";
 
 interface BatchConflictDialogProps {
   isOpen: boolean;
   entries: ScoutingDataWithId[];
   onResolve: (decision: 'replace-all' | 'skip-all' | 'review-each') => void;
+  isProcessing?: boolean;
 }
 
 export const BatchConflictDialog: React.FC<BatchConflictDialogProps> = ({
   isOpen,
   entries,
-  onResolve
+  onResolve,
+  isProcessing = false
 }) => {
   if (entries.length === 0) return null;
 
@@ -31,6 +33,17 @@ export const BatchConflictDialog: React.FC<BatchConflictDialogProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+        {/* Processing Overlay */}
+        {isProcessing && (
+          <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[100] flex items-center justify-center">
+            <div className="flex flex-col items-center gap-3 bg-card p-6 rounded-lg shadow-lg border">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-sm font-medium">Processing duplicates...</p>
+              <p className="text-xs text-muted-foreground">This may take a moment for large datasets</p>
+            </div>
+          </div>
+        )}
+        
         <DialogHeader>
           <div className="flex items-center gap-2">
             <AlertCircle className="h-6 w-6 text-yellow-500" />
@@ -103,21 +116,32 @@ export const BatchConflictDialog: React.FC<BatchConflictDialogProps> = ({
             variant="outline"
             onClick={() => onResolve('skip-all')}
             className="flex-1"
+            disabled={isProcessing}
           >
-            Skip All - Keep Local
+            {isProcessing ? (
+              <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Processing...</>
+            ) : (
+              <>Skip All - Keep Local</>
+            )}
           </Button>
           <Button
             variant="outline"
             onClick={() => onResolve('review-each')}
             className="flex-1"
+            disabled={isProcessing}
           >
             Review Each
           </Button>
           <Button
             onClick={() => onResolve('replace-all')}
             className="flex-1"
+            disabled={isProcessing}
           >
-            Replace All
+            {isProcessing ? (
+              <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Processing...</>
+            ) : (
+              <>Replace All</>
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

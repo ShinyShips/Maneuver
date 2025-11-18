@@ -352,6 +352,43 @@ export const PAGE_HELP_CONFIG: Record<string, PageHelpConfig> = {
       "- Assignments persist until manually cleared, perfect for multi-day events",
       "- Import new event data from TBA Data page will replace the current event automatically"
     ]
+  },
+  "/peer-transfer": {
+    title: "WiFi Transfer",
+    useDialog: true,
+    content: [
+      "Fast peer-to-peer data transfer over WiFi or cellular networks for real-time bidirectional data exchange between devices. Requires all devices to have internet connectivity. For offline environments, use the QR Code transfer method instead.",
+      "",
+      "**Data Transfer Types:**",
+      "• **Scouting Data** - Match scouting entries from scouts to lead",
+      "• **Pit Scouting Data** - Pit scouting reports and team observations",
+      "• **Match Schedule** - Event schedules and match lineups from lead to scouts",
+      "• **Scout Profiles** - Team member profiles and role assignments",
+      "• **Combined Data** - Scouting data + scout profiles in one transfer",
+      "",
+      "**Connection Management:**",
+      "• **Individual Actions** - Each scout has dedicated request/push buttons",
+      "• **Batch Operations** - Request from all or push to all scouts simultaneously",
+      "• **Disconnect Scout** - X button to disconnect individual scouts (notifies scout)",
+      "• **Connection Status** - Real-time indicators show active connections",
+      "",
+      "**Transfer History:**",
+      "• **Collapsible View** - Expand/collapse history section to manage screen space",
+      "• **Clear History** - Trash button to remove all transfer records",
+      "",
+      "**Troubleshooting:**",
+      "- Connection failed? Both devices need internet access",
+      "- QR won't scan? Ensure good lighting and steady camera",
+      "- Scout not responding? Check if they're still connected (look for status indicator)",
+      "- Transfer incomplete? Try disconnecting and reconnecting the scout",
+      "- No internet available? Fall back to QR Code transfer method",
+      "",
+      "**When to Use QR Instead:**",
+      "• No WiFi or cellular data available at venue",
+      "• Sharing data between different teams/organizations",
+      "• One-time transfers without ongoing connection needs",
+      "• Backup method when WiFi transfer fails to connect"
+    ]
   }
 };
 
