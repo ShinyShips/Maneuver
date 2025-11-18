@@ -314,8 +314,9 @@ export const LeadScoutMode = ({
               // Mark all ready scouts as requesting
               const readyScouts = connectedScouts.filter(s => s.channel?.readyState === 'open');
               setRequestingScouts(new Set(readyScouts.map(s => s.id)));
-              // Reset imported count for fresh import tracking
-              setImportedDataCount(0);
+              // Set imported count to current length so only NEW data after this request is imported
+              // This prevents re-importing existing history data
+              setImportedDataCount(receivedData.length);
               debugLog('📤 Requesting', dataType, 'data with filters:', filters);
               onRequestDataFromAll(filters, dataType);
             }}

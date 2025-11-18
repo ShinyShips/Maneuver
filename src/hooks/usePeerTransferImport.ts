@@ -234,18 +234,26 @@ export function usePeerTransferImport(options: UsePeerTransferImportOptions) {
       debugLog('✅ Condition met, starting import...');
       const latest = receivedData[receivedData.length - 1];
       
-      // Check if this is a decline message first
-      const declineData = latest.data as { type?: string; dataType?: string; entries?: ScoutingDataWithId[] };
+      // Check if this is a special message type (not actual data to import)
+      const messageData = latest.data as { type?: string; dataType?: string; entries?: ScoutingDataWithId[] };
       
-      if (declineData.type === 'declined') {
+      if (messageData.type === 'declined') {
         toast.error(`${latest.scoutName} declined the data request`);
         setImportedDataCount(receivedData.length);
         return;
       }
       
-      if (declineData.type === 'push-declined') {
-        const dataTypeLabel = declineData.dataType || 'data';
+      if (messageData.type === 'push-declined') {
+        const dataTypeLabel = messageData.dataType || 'data';
         toast.warning(`${latest.scoutName} declined pushed ${dataTypeLabel}`);
+        setImportedDataCount(receivedData.length);
+        return;
+      }
+      
+      if (messageData.type === 'pushed') {
+        // This is a push confirmation for history tracking only, not actual received data
+        // Just update the counter and skip import
+        debugLog(`✅ Push confirmation logged for ${latest.scoutName}`);
         setImportedDataCount(receivedData.length);
         return;
       }
