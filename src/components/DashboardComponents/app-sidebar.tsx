@@ -55,6 +55,10 @@ const data = {
           url: "/qr-data-transfer",
         },
         {
+          title: "WiFi Transfer",
+          url: "/peer-transfer",
+        },
+        {
           title: "API Data",
           url: "/api-data",
         }
