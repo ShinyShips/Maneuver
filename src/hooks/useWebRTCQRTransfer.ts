@@ -68,10 +68,16 @@ export function useWebRTCQRTransfer() {
     connectionStatus: context.connectionStatus,
     scoutAnswer,
     scoutOfferReceived: context.mode === 'scout' && context.connectionStatus.includes('Connected'),
+    dataRequested: context.dataRequested,
+    setDataRequested: context.setDataRequested,
     requestDataType: context.requestDataType,
+    requestFilters: context.requestFilters,
     dataPushed: context.dataPushed,
+    setDataPushed: context.setDataPushed,
     pushedData: context.pushedData,
     pushedDataType: context.pushedDataType,
+    sendData: context.sendData,
+    sendControlMessage: context.sendControlMessage,
     
     // Actions
     startAsLead: () => context.setMode('lead'),

@@ -142,6 +142,24 @@ const PeerTransferPage = () => {
     setShowErrorDialog,
   });
 
+  // Clear requesting state when new data arrives (separate from import logic)
+  // This ensures the UI updates immediately even if import is delayed
+  useEffect(() => {
+    if (receivedData.length > importedDataCount) {
+      const latest = receivedData[receivedData.length - 1];
+      const scoutId = connectedScouts.find(s => s.name === latest.scoutName)?.id;
+      
+      if (scoutId && requestingScouts.has(scoutId)) {
+        debugLog(`🔄 Clearing requesting state for ${latest.scoutName}`);
+        setRequestingScouts(prev => {
+          const next = new Set(prev);
+          next.delete(scoutId);
+          return next;
+        });
+      }
+    }
+  }, [receivedData, importedDataCount, connectedScouts, requestingScouts]);
+
   // Load scouting data for filter preview (lead mode)
   useEffect(() => {
     if (mode === 'lead') {

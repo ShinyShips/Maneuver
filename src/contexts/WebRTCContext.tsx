@@ -330,8 +330,8 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
       console.log('📋 With filters:', filters);
     }
     
-    // Clear previous received data to avoid reprocessing
-    setReceivedData([]);
+    // Don't clear received data - we handle avoiding reprocessing via importedDataCount
+    // Clearing here removes the transfer history which we want to keep
     
     // Store filters and data type so scouts can access them
     setRequestFilters(filters || null);
