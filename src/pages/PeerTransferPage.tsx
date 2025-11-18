@@ -96,6 +96,10 @@ const PeerTransferPage = () => {
     connectionStatus,
     scoutAnswer,
     scoutOfferReceived,
+    shouldAttemptReconnect,
+    setShouldAttemptReconnect,
+    lastScoutName,
+    lastOffer,
     startAsLead,
     createOfferForScout,
     processScoutAnswer,
@@ -243,6 +247,25 @@ const PeerTransferPage = () => {
       window.removeEventListener('webrtc-disconnected-by-lead', handleDisconnect);
     };
   }, [reset]);
+
+  // Handle auto-reconnect
+  useEffect(() => {
+    if (shouldAttemptReconnect && lastScoutName && lastOffer && mode === 'scout') {
+      console.log('🔄 Auto-reconnecting...');
+      
+      toast.promise(
+        startAsScout(lastScoutName, lastOffer),
+        {
+          loading: 'Reconnecting...',
+          success: 'Reconnected successfully!',
+          error: 'Failed to reconnect. Please scan QR again.',
+        }
+      );
+      
+      // Reset the reconnect flag
+      setShouldAttemptReconnect(false);
+    }
+  }, [shouldAttemptReconnect, lastScoutName, lastOffer, mode, startAsScout, setShouldAttemptReconnect]);
 
   // Render main content based on mode
   const renderContent = () => {

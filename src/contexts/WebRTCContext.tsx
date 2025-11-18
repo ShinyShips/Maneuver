@@ -67,6 +67,12 @@ interface WebRTCContextValue {
   pushedDataType: TransferDataType | null;
   connectionStatus: string;
 
+  // Auto-reconnect
+  shouldAttemptReconnect: boolean;
+  setShouldAttemptReconnect: (should: boolean) => void;
+  lastScoutName: string | null;
+  lastOffer: string | null;
+
   // Cleanup
   disconnectScout: (scoutId: string) => void;
   disconnectAll: () => void;
@@ -84,6 +90,12 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   const [pushedData, setPushedData] = useState<unknown | null>(null);
   const [pushedDataType, setPushedDataType] = useState<TransferDataType | null>(null);
   const [connectionStatus, setConnectionStatus] = useState('Not connected');
+  
+  // Auto-reconnect state
+  const [shouldAttemptReconnect, setShouldAttemptReconnect] = useState(false);
+  const reconnectAttemptRef = useRef(false);
+  const [lastScoutName, setLastScoutName] = useState<string | null>(null);
+  const [lastOffer, setLastOffer] = useState<string | null>(null);
 
   // Use refs to avoid stale closures
   const connectedScoutsRef = useRef<ConnectedScout[]>([]);
@@ -461,6 +473,15 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   const startAsScout = useCallback(async (scoutName: string, offerString: string): Promise<string> => {
     console.log(`📡 Scout ${scoutName} processing offer...`);
     
+    // Save connection info for auto-reconnect
+    setLastScoutName(scoutName);
+    setLastOffer(offerString);
+    localStorage.setItem('webrtc_last_connection', JSON.stringify({
+      scoutName,
+      offer: offerString,
+      timestamp: Date.now()
+    }));
+    
     // Clean up any existing connection
     if (scoutConnectionRef.current) {
       scoutConnectionRef.current.close();
@@ -697,6 +718,68 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     setReceivedData([]);
   }, [updateConnectedScouts]);
 
+  // Auto-reconnect: Save connection info when scout connects
+  useEffect(() => {
+    if (mode === 'scout' && connectionStatus.includes('Connected')) {
+      // Save connection info for auto-reconnect
+      const connectionInfo = {
+        mode: 'scout',
+        timestamp: Date.now(),
+        status: connectionStatus
+      };
+      localStorage.setItem('webrtc_connection_info', JSON.stringify(connectionInfo));
+      console.log('💾 Saved connection info for auto-reconnect');
+    }
+  }, [mode, connectionStatus]);
+
+  // Auto-reconnect: Detect when user returns and reconnect if needed
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        console.log('👀 App became visible');
+        
+        // Check if we should attempt reconnect
+        const savedInfo = localStorage.getItem('webrtc_connection_info');
+        if (!savedInfo) return;
+        
+        try {
+          const connectionInfo = JSON.parse(savedInfo);
+          
+          // Only attempt reconnect if:
+          // 1. We were in scout mode
+          // 2. Connection was lost
+          // 3. Haven't already attempted reconnect recently
+          const timeSinceLastConnection = Date.now() - connectionInfo.timestamp;
+          const shouldReconnect = 
+            connectionInfo.mode === 'scout' &&
+            mode === 'scout' &&
+            !connectionStatus.includes('Connected') &&
+            timeSinceLastConnection < 30 * 60 * 1000 && // Within last 30 minutes
+            !reconnectAttemptRef.current;
+          
+          if (shouldReconnect) {
+            console.log('🔄 Attempting auto-reconnect...');
+            reconnectAttemptRef.current = true;
+            setShouldAttemptReconnect(true);
+            
+            // Reset the flag after 5 seconds to allow another attempt if this fails
+            setTimeout(() => {
+              reconnectAttemptRef.current = false;
+            }, 5000);
+          }
+        } catch (err) {
+          console.error('Failed to parse connection info:', err);
+        }
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [mode, connectionStatus]);
+
   // Cleanup on unmount (only if app is closing)
   useEffect(() => {
     return () => {
@@ -731,6 +814,10 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     requestFilters,
     requestDataType,
     connectionStatus,
+    shouldAttemptReconnect,
+    setShouldAttemptReconnect,
+    lastScoutName,
+    lastOffer,
     disconnectScout,
     disconnectAll
   };

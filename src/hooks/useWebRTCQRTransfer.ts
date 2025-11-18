@@ -79,6 +79,12 @@ export function useWebRTCQRTransfer() {
     sendData: context.sendData,
     sendControlMessage: context.sendControlMessage,
     
+    // Auto-reconnect
+    shouldAttemptReconnect: context.shouldAttemptReconnect,
+    setShouldAttemptReconnect: context.setShouldAttemptReconnect,
+    lastScoutName: context.lastScoutName,
+    lastOffer: context.lastOffer,
+    
     // Actions
     startAsLead: () => context.setMode('lead'),
     createOfferForScout: context.createOfferForScout,

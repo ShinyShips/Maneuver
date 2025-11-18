@@ -33,16 +33,18 @@ export function QRScannerCard({
           {description}
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-2">
-        <Scanner
-          onScan={(results) => {
-            const result = results[0]?.rawValue;
-            if (result) onScan(result);
-          }}
-          onError={(error) => console.error(error)}
-          constraints={{ facingMode: 'environment' }}
-          styles={{ container: { width: '100%' } }}
-        />
+      <CardContent className="space-y-4">
+        <div className="w-full overflow-hidden rounded-lg">
+          <Scanner
+            onScan={(results) => {
+              const result = results[0]?.rawValue;
+              if (result) onScan(result);
+            }}
+            onError={(error) => console.error(error)}
+            constraints={{ facingMode: 'environment' }}
+            styles={{ container: { width: '100%' } }}
+          />
+        </div>
         <Button
           onClick={onCancel}
           variant="outline"
