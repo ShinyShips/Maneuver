@@ -4,7 +4,7 @@
  * Scout Mode: Scan lead's QR, display answer, respond to requests
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Button from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -25,6 +25,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { useWebRTC } from '@/contexts/WebRTCContext';
 import { useWebRTCQRTransfer } from '@/hooks/useWebRTCQRTransfer';
 import { type ScoutingDataWithId, type ConflictInfo } from '@/lib/scoutingDataUtils';
 import { useConflictResolution } from '@/hooks/useConflictResolution';
@@ -37,7 +38,8 @@ import type { TransferDataType } from '@/contexts/WebRTCContext';
 import { 
   ModeSelectionScreen, 
   LeadScoutMode,
-  ScoutMode
+  ScoutMode,
+  RoomCodeConnection
 } from '@/components/PeerTransferComponents';
 import { useQRCodeConnection } from '@/hooks/useQRCodeConnection';
 import { usePeerTransferPush } from '@/hooks/usePeerTransferPush';
@@ -45,7 +47,10 @@ import { usePeerTransferImport } from '@/hooks/usePeerTransferImport';
 import { debugLog } from '@/lib/peerTransferUtils';
 
 const PeerTransferPage = () => {
-  const [mode, setMode] = useState<'select' | 'lead' | 'scout'>('select');
+  // Use WebRTC context mode directly (persists across navigation)
+  const { mode: webrtcMode, setMode: setWebrtcMode, signaling } = useWebRTC();
+  const mode = webrtcMode;
+  const setMode = setWebrtcMode;
   const [importedDataCount, setImportedDataCount] = useState(0); // Track how many items we've imported
   const [requestingScouts, setRequestingScouts] = useState<Set<string>>(new Set()); // Track which scouts we're requesting from
   const [historyCollapsed, setHistoryCollapsed] = useState(false); // Collapse transfer history
@@ -248,24 +253,53 @@ const PeerTransferPage = () => {
     };
   }, [reset]);
 
-  // Handle auto-reconnect
+  // Clean up WebRTC state when returning to mode selection
+  // Only reset once when transitioning TO select mode (not on every render while in select mode)
+  const previousMode = useRef<string>(mode);
   useEffect(() => {
-    if (shouldAttemptReconnect && lastScoutName && lastOffer && mode === 'scout') {
-      console.log('🔄 Auto-reconnecting...');
+    if (mode === 'select' && previousMode.current !== 'select') {
+      // Reset WebRTC connection state when going back to mode selection
+      reset();
+    }
+    previousMode.current = mode;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode]); // Intentionally not including reset to avoid infinite loop
+
+  // Handle auto-reconnect
+  // With room codes, scout can auto-rejoin the saved room
+  useEffect(() => {
+    if (shouldAttemptReconnect && mode === 'scout') {
+      const savedRoomCode = localStorage.getItem('webrtc_scout_room_code');
       
-      toast.promise(
-        startAsScout(lastScoutName, lastOffer),
-        {
-          loading: 'Reconnecting...',
-          success: 'Reconnected successfully!',
-          error: 'Failed to reconnect. Please scan QR again.',
+      if (savedRoomCode) {
+        console.log('🔄 Connection lost. Will auto-rejoin room:', savedRoomCode);
+        
+        toast.info(`Connection lost. Rejoining room ${savedRoomCode}...`, {
+          duration: 3000,
+        });
+        
+        // Trigger the scout to send a new join message
+        // The signaling is still connected, so we just need to rejoin
+        if (signaling?.connected) {
+          console.log('🔄 Sending new join message after connection loss');
+          signaling.join();
         }
-      );
+      } else {
+        console.log('🔄 Connection lost. No saved room code.');
+        
+        toast.info('Connection lost. Please rejoin the room code to reconnect.', {
+          duration: 5000,
+        });
+        
+        // Reset to select mode so user can rejoin
+        setMode('select');
+        reset();
+      }
       
       // Reset the reconnect flag
       setShouldAttemptReconnect(false);
     }
-  }, [shouldAttemptReconnect, lastScoutName, lastOffer, mode, startAsScout, setShouldAttemptReconnect]);
+  }, [shouldAttemptReconnect, mode, setShouldAttemptReconnect, reset, setMode, signaling]);
 
   // Render main content based on mode
   const renderContent = () => {
@@ -274,7 +308,6 @@ const PeerTransferPage = () => {
       return (
         <ModeSelectionScreen
           onSelectLead={() => {
-            startAsLead();
             setMode('lead');
           }}
           onSelectScout={() => setMode('scout')}
@@ -286,14 +319,8 @@ const PeerTransferPage = () => {
     if (mode === 'lead') {
       return (
         <LeadScoutMode
-          isConnecting={isConnecting}
           connectedScouts={connectedScouts}
           receivedData={receivedData}
-          currentOffer={qrConnection.currentOffer}
-          selectedRole={qrConnection.selectedRole}
-          setSelectedRole={qrConnection.setSelectedRole}
-          showScanner={qrConnection.showScanner}
-          setShowScanner={qrConnection.setShowScanner}
           dataType={dataType}
           setDataType={setDataType}
           filters={filters}
@@ -304,8 +331,6 @@ const PeerTransferPage = () => {
           setRequestingScouts={setRequestingScouts}
           setImportedDataCount={setImportedDataCount}
           onBack={() => setMode('select')}
-          onGenerateQR={handleGenerateQR}
-          onAnswerScan={handleAnswerScan}
           onRequestDataFromScout={requestDataFromScout}
           onRequestDataFromAll={requestDataFromAll}
           onPushData={pushData}
@@ -326,19 +351,12 @@ const PeerTransferPage = () => {
     if (mode === 'scout') {
       return (
         <ScoutMode
-          role={role}
           myRole={myRole}
-          scoutAnswer={scoutAnswer}
-          scoutOfferReceived={scoutOfferReceived}
-          connectionStatus={connectionStatus}
-          showScanner={qrConnection.showScanner}
-          setShowScanner={qrConnection.setShowScanner}
           onBack={() => setMode('select')}
           onCancel={() => {
             reset();
             setMode('select');
           }}
-          onOfferScan={handleOfferScan}
         />
       );
     }

@@ -223,11 +223,11 @@ export function usePeerTransferImport(options: UsePeerTransferImportOptions) {
 
   // Auto-import effect
   useEffect(() => {
-    debugLog('📦 Auto-import check:', { 
-      receivedDataLength: receivedData.length, 
-      importedDataCount,
-      shouldImport: receivedData.length > importedDataCount
-    });
+    // debugLog('📦 Auto-import check:', { 
+    //   receivedDataLength: receivedData.length, 
+    //   importedDataCount,
+    //   shouldImport: receivedData.length > importedDataCount
+    // });
     
     // Only import new data that hasn't been imported yet
     if (receivedData.length > importedDataCount) {

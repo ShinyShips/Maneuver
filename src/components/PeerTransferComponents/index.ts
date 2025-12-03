@@ -7,3 +7,4 @@ export { ScoutAnswerQRCard } from './ScoutAnswerQRCard';
 export { ScoutConnectedCard } from './ScoutConnectedCard';
 export { LeadScoutMode } from './LeadScoutMode';
 export { ScoutMode } from './ScoutMode';
+export { RoomCodeConnection } from './RoomCodeConnection';

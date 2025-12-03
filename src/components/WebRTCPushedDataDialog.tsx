@@ -243,7 +243,7 @@ export function WebRTCPushedDataDialog() {
   return (
     <>
       <AlertDialog open={dataPushed && !importStatus}>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-[calc(100vw-2rem)]">
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <Upload className="h-5 w-5" />
@@ -280,7 +280,7 @@ export function WebRTCPushedDataDialog() {
 
       {/* Import status overlay */}
       <AlertDialog open={!!importStatus}>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-[calc(100vw-2rem)]">
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <Upload className="h-5 w-5" />

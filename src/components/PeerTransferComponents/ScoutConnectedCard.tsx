@@ -9,11 +9,13 @@ import { CheckCircle2 } from 'lucide-react';
 
 interface ScoutConnectedCardProps {
   roleName: string;
+  roomCode: string | null;
   onDisconnect: () => void;
 }
 
 export function ScoutConnectedCard({
   roleName,
+  roomCode,
   onDisconnect
 }: ScoutConnectedCardProps) {
   return (
@@ -30,6 +32,12 @@ export function ScoutConnectedCard({
           <div className="text-center py-4">
             <p className="text-lg font-semibold">{roleName}</p>
             <Badge variant="secondary" className="mt-2">Ready ✓</Badge>
+            {roomCode && (
+              <div className="mt-4 pt-4 border-t">
+                <p className="text-sm text-muted-foreground mb-1">Room Code</p>
+                <p className="text-2xl font-bold tracking-wider">{roomCode}</p>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

@@ -6,6 +6,27 @@
 import { createContext, useContext, useRef, useState, useCallback, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { DataFilters } from '@/lib/dataFiltering';
+import { useWebRTCSignaling } from '@/hooks/useWebRTCSignaling';
+
+// Utility: Generate UUID with fallback for non-secure contexts
+function generateUUID(): string {
+  try {
+    if (typeof crypto !== 'undefined' && 
+        crypto.randomUUID && 
+        typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+  } catch {
+    console.warn('crypto.randomUUID not available, using fallback');
+  }
+  
+  // Fallback for non-secure contexts (HTTP, older browsers)
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 // Configuration
 // STUN servers help with NAT traversal on shared networks like venue WiFi
@@ -27,6 +48,7 @@ export interface ConnectedScout {
   channel: RTCDataChannel | null; // Alias for backward compatibility
   status: 'connecting' | 'connected' | 'disconnected';
   offer: string; // Add offer field for compatibility
+  signalingPeerId?: string; // Signaling server peerId for targeting messages
 }
 
 export interface ReceivedData {
@@ -72,6 +94,20 @@ interface WebRTCContextValue {
   setShouldAttemptReconnect: (should: boolean) => void;
   lastScoutName: string | null;
   lastOffer: string | null;
+  roomCode: string | null; // Room code for signaling server
+  setRoomCode: (code: string | null) => void;
+  generateRoomCodeForLead: () => string;
+  
+  // Signaling (persistent across navigation)
+  signaling: {
+    connected: boolean;
+    error: string | null;
+    join: () => Promise<void>;
+    leave: () => Promise<void>;
+    sendOffer: (offer: RTCSessionDescriptionInit) => Promise<void>;
+    sendAnswer: (answer: RTCSessionDescriptionInit) => Promise<void>;
+    sendIceCandidate: (candidate: RTCIceCandidate) => Promise<void>;
+  } | null;
 
   // Cleanup
   disconnectScout: (scoutId: string) => void;
@@ -81,7 +117,24 @@ interface WebRTCContextValue {
 const WebRTCContext = createContext<WebRTCContextValue | undefined>(undefined);
 
 export function WebRTCProvider({ children }: { children: ReactNode }) {
-  const [mode, setMode] = useState<'lead' | 'scout' | 'select'>('select');
+  // Persist mode to localStorage so it survives navigation
+  const [mode, setModeState] = useState<'lead' | 'scout' | 'select'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('webrtc_mode');
+      console.log('🎯 Restoring mode on mount:', saved);
+      if (saved === 'lead' || saved === 'scout') {
+        return saved;
+      }
+    }
+    return 'select';
+  });
+
+  const setMode = useCallback((newMode: 'lead' | 'scout' | 'select') => {
+    setModeState(newMode);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('webrtc_mode', newMode);
+    }
+  }, []);
   const [receivedData, setReceivedData] = useState<ReceivedData[]>([]);
   const [dataRequested, setDataRequested] = useState(false);
   const [requestFilters, setRequestFilters] = useState<DataFilters | null>(null);
@@ -96,6 +149,66 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   const reconnectAttemptRef = useRef(false);
   const [lastScoutName, setLastScoutName] = useState<string | null>(null);
   const [lastOffer, setLastOffer] = useState<string | null>(null);
+  
+  // Room code for persistent connections - restored from localStorage on mount
+  const [roomCode, setRoomCodeState] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      // Check mode to determine which storage key to use
+      const savedMode = localStorage.getItem('webrtc_mode');
+      const storageKey = savedMode === 'scout' ? 'webrtc_scout_room_code' : 'webrtc_room_code';
+      const saved = localStorage.getItem(storageKey);
+      
+      console.log('🔑 Restoring room code on mount:', { savedMode, storageKey, saved });
+      
+      // Validate: must be a 6-digit number, not a UUID
+      if (saved && /^\d{6}$/.test(saved)) {
+        console.log('✅ Room code restored:', saved);
+        return saved;
+      }
+      // Clear invalid/old format room codes
+      if (saved) {
+        console.log('❌ Invalid room code format, clearing:', saved);
+        localStorage.removeItem(storageKey);
+      }
+    }
+    return null;
+  });
+
+  // Wrapper to persist room code to localStorage (mode-aware)
+  const setRoomCode = useCallback((code: string | null) => {
+    setRoomCodeState(code);
+    if (typeof window !== 'undefined') {
+      // Lead uses 'webrtc_room_code', Scout uses 'webrtc_scout_room_code'
+      const storageKey = mode === 'scout' ? 'webrtc_scout_room_code' : 'webrtc_room_code';
+      if (code) {
+        localStorage.setItem(storageKey, code);
+      } else {
+        localStorage.removeItem(storageKey);
+      }
+    }
+  }, [mode]);
+
+  // Sync room code when mode changes (load from correct storage key)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storageKey = mode === 'scout' ? 'webrtc_scout_room_code' : 'webrtc_room_code';
+      const saved = localStorage.getItem(storageKey);
+      if (saved && /^\d{6}$/.test(saved)) {
+        setRoomCodeState(saved);
+      } else if (mode === 'select') {
+        // Clear room code when returning to select mode
+        setRoomCodeState(null);
+      }
+    }
+  }, [mode]);
+
+  // Generate a new room code for the lead
+  const generateRoomCodeForLead = useCallback(() => {
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    setRoomCode(code);
+    console.log('🔑 Generated new room code:', code);
+    return code;
+  }, [setRoomCode]);
 
   // Use refs to avoid stale closures
   const connectedScoutsRef = useRef<ConnectedScout[]>([]);
@@ -103,9 +216,24 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   const pendingScoutsRef = useRef<Map<string, ConnectedScout>>(new Map());
   const scoutConnectionRef = useRef<RTCPeerConnection | null>(null);
   const scoutDataChannelRef = useRef<RTCDataChannel | null>(null);
+  const leadPeerIdRef = useRef<string | null>(null); // Track lead's signaling peerId
+  
+  // Buffer for ICE candidates that arrive before connections are ready
+  const pendingIceCandidatesRef = useRef<Map<string, RTCIceCandidateInit[]>>(new Map()); // peerId -> candidates[]
   
   // Chunk reassembly storage
   const chunksRef = useRef<Map<string, { chunks: string[], totalChunks: number, scoutName: string, dataType?: TransferDataType }>>(new Map());
+
+  // Unique peer ID for this session (tab/window)
+  // Generate fresh each time to support multiple scouts from same device
+  const [peerId] = useState(() => generateUUID());
+
+  // Display name for signaling
+  const displayName = mode === 'lead' ? 'Lead Scout' : (() => {
+    const scoutName = typeof window !== 'undefined' ? localStorage.getItem('scoutName') : null;
+    const playerStation = typeof window !== 'undefined' ? localStorage.getItem('playerStation') : null;
+    return scoutName && playerStation ? `${scoutName} (${playerStation})` : 'Scout';
+  })();
 
   // Update state when ref changes
   const updateConnectedScouts = useCallback(() => {
@@ -116,7 +244,6 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   const handleReceivedMessage = useCallback((scoutName: string, rawMessage: string) => {
     try {
       const message = JSON.parse(rawMessage);
-      console.log(`🔍 handleReceivedMessage from ${scoutName}, type: ${message.type}, dataType: ${message.dataType}`);
       
       // Skip request-data messages (these are for scouts, not leads)
       if (message.type === 'request-data') {
@@ -125,7 +252,6 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
       
       // Handle disconnected notification from lead
       if (message.type === 'disconnected') {
-        console.log(`🔌 Lead has disconnected us`);
         // Emit event for PeerTransferPage to handle
         window.dispatchEvent(new CustomEvent('webrtc-disconnected-by-lead'));
         return;
@@ -133,7 +259,6 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
       
       // Handle request declined - just log it, PeerTransferPage will handle via event/toast
       if (message.type === 'request-declined') {
-        console.log(`⛔ ${scoutName} declined data request`);
         // Store the decline so we can show it in the UI
         setReceivedData(prev => [...prev, {
           scoutName,
@@ -145,7 +270,6 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
       
       // Handle push declined
       if (message.type === 'push-declined') {
-        console.log(`⛔ ${scoutName} declined pushed ${message.dataType || 'data'}`);
         // Store the decline so we can show it in the UI
         setReceivedData(prev => [...prev, {
           scoutName,
@@ -157,7 +281,6 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
       
       if (message.type === 'complete') {
         // Single complete message
-        console.log(`📦 Complete message dataType: ${message.dataType}`);
         const data = JSON.parse(message.data);
         setReceivedData(prev => [...prev, { 
           scoutName, 
@@ -181,8 +304,6 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
         const transfer = chunksRef.current.get(transferId)!;
         transfer.chunks[chunkIndex] = data;
         
-        console.log(`📦 Received chunk ${chunkIndex + 1}/${totalChunks} from ${scoutName}`);
-        
         // Check if all chunks received
         const allReceived = transfer.chunks.every(c => c !== null);
         if (allReceived) {
@@ -191,7 +312,6 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
           
           // Check if this is a control message (like push-data)
           if (parsedData.type === 'push-data') {
-            console.log(`📥 Reassembled push-data message: ${parsedData.dataType}`);
             setPushedData(parsedData.data);
             setPushedDataType(parsedData.dataType);
             setDataPushed(true);
@@ -206,11 +326,12 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
           }
           
           chunksRef.current.delete(transferId);
-          console.log(`✅ Reassembled complete data from ${scoutName}`);
         }
       } else if (message.type) {
-        // Unknown message type - log and ignore
-        console.log(`⚠️ Unknown message type from ${scoutName}: ${message.type}`);
+        // Unknown message type - ignore
+        if (import.meta.env.DEV) {
+          console.log(`⚠️ Unknown message type from ${scoutName}: ${message.type}`);
+        }
       } else {
         // Legacy format (no type field) - assume complete data
         setReceivedData(prev => [...prev, { 
@@ -228,20 +349,43 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
 
   // LEAD: Create offer for a specific scout
   const createOfferForScout = useCallback(async (scoutName: string): Promise<{ scoutId: string; offer: string }> => {
-    const scoutId = crypto.randomUUID();
+    const scoutId = generateUUID();
     const connection = new RTCPeerConnection({ iceServers: STUN_SERVERS });
     
     console.log(`📡 Lead creating offer for scout: ${scoutName} (ID: ${scoutId})`);
+
+    // Send ICE candidates to scout via signaling
+    connection.onicecandidate = (event) => {
+      if (event.candidate) {
+        // Look up the scout to get their signaling peerId
+        const scout = pendingScoutsRef.current.get(scoutId) || connectedScoutsRef.current.find(s => s.id === scoutId);
+        if (scout?.signalingPeerId) {
+          console.log('🧊 Lead: Sending ICE candidate to scout', scout.name, 'targetPeerId:', scout.signalingPeerId);
+          signalingRef.current?.sendIceCandidate(event.candidate, scout.signalingPeerId);
+        } else {
+          console.warn('⚠️ Lead: Cannot send ICE candidate, scout signalingPeerId not known yet');
+        }
+      }
+    };
 
     // Create data channel
     const dataChannel = connection.createDataChannel('scoutData');
     
     dataChannel.onopen = () => {
-      console.log(`✅ Data channel opened for ${scoutName}`);
+      console.log(`✅ Data channel opened for scout: ${scoutName}`);
+      
+      // Move scout from pending to connected
+      const pendingScout = pendingScoutsRef.current.get(scoutId);
+      if (pendingScout) {
+        pendingScout.status = 'connected';
+        connectedScoutsRef.current.push(pendingScout);
+        pendingScoutsRef.current.delete(scoutId);
+        updateConnectedScouts();
+        console.log(`✅ Scout ${scoutName} moved to connected list`);
+      }
     };
 
     dataChannel.onmessage = (event) => {
-      console.log(`📩 Received message from ${scoutName}`);
       handleReceivedMessage(scoutName, event.data);
     };
 
@@ -259,20 +403,33 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
 
     // Monitor connection state
     connection.oniceconnectionstatechange = () => {
-      console.log(`🔌 ${scoutName} ICE state: ${connection.iceConnectionState}`);
+      const state = connection.iceConnectionState;
       const existingScout = connectedScoutsRef.current.find(s => s.id === scoutId);
       if (existingScout) {
-        existingScout.status = connection.iceConnectionState === 'connected' ? 'connected' : 'connecting';
+        existingScout.status = state === 'connected' ? 'connected' : 'connecting';
         updateConnectedScouts();
+        
+        // Detect disconnection - mark scout as disconnected but keep in list
+        if (state === 'disconnected' || state === 'failed') {
+          existingScout.status = 'disconnected';
+          updateConnectedScouts();
+        }
       }
     };
 
     connection.onconnectionstatechange = () => {
-      console.log(`🔗 ${scoutName} Connection state: ${connection.connectionState}`);
-      if (connection.connectionState === 'disconnected' || connection.connectionState === 'failed') {
-        // Remove from connected scouts
-        connectedScoutsRef.current = connectedScoutsRef.current.filter(s => s.id !== scoutId);
-        updateConnectedScouts();
+      const state = connection.connectionState;
+      
+      // Only remove scout after extended disconnection (30 seconds)
+      // This gives time for auto-reconnect to work
+      if (state === 'disconnected' || state === 'failed') {
+        setTimeout(() => {
+          // Check if still disconnected after timeout
+          if (connection.connectionState === 'disconnected' || connection.connectionState === 'failed') {
+            connectedScoutsRef.current = connectedScoutsRef.current.filter(s => s.id !== scoutId);
+            updateConnectedScouts();
+          }
+        }, 30000); // 30 second grace period for reconnection
       }
     };
 
@@ -284,17 +441,14 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     // In offline mode (no STUN), we only need local candidates which gather quickly
     await new Promise<void>((resolve) => {
       if (connection.iceGatheringState === 'complete') {
-        console.log('✅ Lead ICE gathering already complete');
         resolve();
       } else {
         const timeout = setTimeout(() => {
-          console.log(`⏱️ Lead ICE gathering timeout (state: ${connection.iceGatheringState}) - proceeding with available candidates`);
           connection.onicegatheringstatechange = null;
           resolve();
         }, 1000); // Reduced to 1 second for local-only candidates
         
         connection.onicegatheringstatechange = () => {
-          console.log(`🧊 Lead ICE gathering state: ${connection.iceGatheringState}`);
           if (connection.iceGatheringState === 'complete') {
             clearTimeout(timeout);
             connection.onicegatheringstatechange = null;
@@ -306,7 +460,6 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
 
     const offerString = JSON.stringify(connection.localDescription);
     scout.offer = offerString;
-    console.log(`✅ Offer created for ${scoutName}, size: ${offerString.length} chars`);
 
     return { scoutId, offer: offerString };
   }, [updateConnectedScouts, handleReceivedMessage]);
@@ -407,7 +560,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
         } else {
           // Send as chunks
           const chunks = Math.ceil(dataString.length / CHUNK_SIZE);
-          const transferId = crypto.randomUUID();
+          const transferId = generateUUID();
           
           for (let i = 0; i < chunks; i++) {
             const chunk = dataString.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
@@ -450,7 +603,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
       } else {
         // Send as chunks
         const chunks = Math.ceil(dataString.length / CHUNK_SIZE);
-        const transferId = crypto.randomUUID();
+        const transferId = generateUUID();
         
         for (let i = 0; i < chunks; i++) {
           const chunk = dataString.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
@@ -473,12 +626,16 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   const startAsScout = useCallback(async (scoutName: string, offerString: string): Promise<string> => {
     console.log(`📡 Scout ${scoutName} processing offer...`);
     
+    // Set mode to scout
+    setMode('scout');
+    
     // Save connection info for auto-reconnect
     setLastScoutName(scoutName);
     setLastOffer(offerString);
     localStorage.setItem('webrtc_last_connection', JSON.stringify({
       scoutName,
       offer: offerString,
+      roomCode: roomCode, // Use existing room code from context
       timestamp: Date.now()
     }));
     
@@ -490,9 +647,29 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     const connection = new RTCPeerConnection({ iceServers: STUN_SERVERS });
     scoutConnectionRef.current = connection;
 
+    // Send ICE candidates to lead via signaling
+    connection.onicecandidate = (event) => {
+      if (event.candidate) {
+        console.log('🧊 Scout: Sending ICE candidate to lead, targetPeerId:', leadPeerIdRef.current);
+        signalingRef.current?.sendIceCandidate(event.candidate, leadPeerIdRef.current || undefined);
+      }
+    };
+
     connection.oniceconnectionstatechange = () => {
-      setConnectionStatus(`ICE: ${connection.iceConnectionState}`);
-      console.log(`🔌 Scout ICE state: ${connection.iceConnectionState}`);
+      const state = connection.iceConnectionState;
+      setConnectionStatus(`ICE: ${state}`);
+      console.log(`🔌 Scout ICE state: ${state}`);
+      
+      // Detect disconnection for auto-reconnect
+      if (state === 'disconnected' || state === 'failed') {
+        console.log('🔄 Connection lost - auto-reconnect available');
+        // Set flag to enable reconnection UI
+        setShouldAttemptReconnect(true);
+      } else if (state === 'connected') {
+        // Clear reconnect flag when successfully connected
+        setShouldAttemptReconnect(false);
+        reconnectAttemptRef.current = false;
+      }
     };
 
     connection.onconnectionstatechange = () => {
@@ -552,6 +729,22 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     // Set remote description (offer)
     const offer: RTCSessionDescriptionInit = JSON.parse(offerString);
     await connection.setRemoteDescription(offer);
+
+    // Process any buffered ICE candidates now that remote description is set
+    const bufferKey = 'scout-buffer';
+    const bufferedCandidates = pendingIceCandidatesRef.current.get(bufferKey);
+    if (bufferedCandidates && bufferedCandidates.length > 0) {
+      console.log(`📦 Context: Processing ${bufferedCandidates.length} buffered ICE candidates`);
+      for (const candidateInit of bufferedCandidates) {
+        try {
+          await connection.addIceCandidate(new RTCIceCandidate(candidateInit));
+        } catch (err) {
+          console.error('❌ Failed to add buffered ICE candidate:', err);
+        }
+      }
+      pendingIceCandidatesRef.current.delete(bufferKey);
+      console.log('✅ Context: All buffered ICE candidates processed');
+    }
 
     // Create answer
     const answer = await connection.createAnswer();
@@ -635,7 +828,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
       } else {
         // Split into chunks
         const totalChunks = Math.ceil(dataString.length / CHUNK_SIZE);
-        const transferId = crypto.randomUUID();
+        const transferId = generateUUID();
         
         console.log(`📦 Splitting into ${totalChunks} chunks`);
         
@@ -691,7 +884,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
 
   // Disconnect all connections
   const disconnectAll = useCallback(() => {
-    console.log('🔌 Disconnecting all connections...');
+    // console.log('🔌 Disconnecting all connections...');
     
     // Close all lead connections
     connectedScoutsRef.current.forEach(scout => {
@@ -789,6 +982,193 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  // Store function refs to avoid circular dependencies in signaling callback
+  const createOfferRef = useRef(createOfferForScout);
+  const processAnswerRef = useRef(processScoutAnswer);
+  const startAsScoutRef = useRef(startAsScout);
+  
+  useEffect(() => {
+    createOfferRef.current = createOfferForScout;
+    processAnswerRef.current = processScoutAnswer;
+    startAsScoutRef.current = startAsScout;
+  }, [createOfferForScout, processScoutAnswer, startAsScout]);
+
+  // Persistent signaling - stays alive across navigation
+  const signalingEnabled = mode !== 'select' && !!roomCode;
+  const signalingRoomId = roomCode || '';
+  
+  // Ref to store signaling instance to avoid circular dependency
+  const signalingRef = useRef<ReturnType<typeof useWebRTCSignaling> | null>(null);
+  
+  const signaling = useWebRTCSignaling({
+    roomId: signalingRoomId,
+    peerId,
+    peerName: displayName,
+    role: mode === 'select' ? 'scout' : mode,
+    enabled: signalingEnabled,
+    onMessage: useCallback(async (message: { type: string; role?: string; peerId: string; peerName?: string; data?: unknown }) => {
+      try {
+        console.log('📨 Context signaling message:', message.type, 'from', message.peerName, '| My mode:', mode, '| Message role:', message.role);
+        
+        if (mode === 'lead' && message.type === 'join' && message.role === 'scout') {
+          // Scout joined - create offer
+          console.log('👑 Context: Scout joined, creating offer');
+          const { scoutId, offer } = await createOfferRef.current(message.peerName || 'Scout');
+          
+          // Store mapping by signaling peerId for ICE candidate lookup
+          // Scout is currently in pendingScoutsRef with scoutId as key
+          const scout = pendingScoutsRef.current.get(scoutId);
+          if (scout) {
+            // Store the signaling peerId in the scout object
+            scout.signalingPeerId = message.peerId;
+            // Also store by signaling peerId so we can find it when ICE candidates arrive
+            pendingScoutsRef.current.set(message.peerId, scout);
+            console.log(`✅ Stored scout mapping: peerId ${message.peerId} -> scoutId ${scoutId}`);
+          } else {
+            console.error('❌ Could not find scout with scoutId:', scoutId);
+          }
+          
+          console.log('📤 Context: Sending offer to scout with peerId:', message.peerId);
+          if (!signalingRef.current) {
+            console.error('❌ Signaling not available to send offer!');
+            return;
+          }
+          // Send offer targeted to this specific scout's peerId
+          await signalingRef.current.sendOffer(JSON.parse(offer), message.peerId);
+          console.log('✅ Context: Offer sent to scout');
+        }
+
+        if (mode === 'lead' && message.type === 'answer') {
+          // Process scout's answer
+          console.log('📥 Context: Received answer from scout');
+          const scout = pendingScoutsRef.current.get(message.peerId);
+          if (scout) {
+            console.log(`✅ Context: Processing answer for scout ${scout.name}`);
+            await processAnswerRef.current(scout.id, JSON.stringify(message.data));
+            pendingScoutsRef.current.delete(message.peerId);
+            console.log('✅ Context: Answer processed, connection should establish');
+          } else {
+            console.warn('⚠️ Context: Received answer but no pending scout found for peerId:', message.peerId);
+          }
+        }
+
+        if (mode === 'scout' && message.type === 'offer') {
+          // Scout received offer - create answer
+          console.log('📱 Context: Scout received offer from lead peerId:', message.peerId);
+          // Store lead's peerId for targeting ICE candidates
+          leadPeerIdRef.current = message.peerId;
+          const answer = await startAsScoutRef.current(displayName, JSON.stringify(message.data));
+          console.log('📤 Context: Sending answer back to lead...');
+          
+          if (!signalingRef.current) {
+            console.error('❌ Signaling not available to send answer!');
+            return;
+          }
+          
+          // Send answer targeted to the lead's peerId
+          await signalingRef.current.sendAnswer(JSON.parse(answer), message.peerId);
+          console.log('✅ Context: Answer sent to lead');
+        }
+
+        if (message.type === 'ice-candidate') {
+          // Received ICE candidate from peer
+          console.log('🧊 Context: Received ICE candidate from', message.peerName, 'peerId:', message.peerId, 'mode:', mode);
+          
+          try {
+            const candidate = new RTCIceCandidate(message.data as RTCIceCandidateInit);
+            console.log('🧊 Context: ICE candidate created successfully');
+            
+            if (mode === 'lead') {
+              console.log('🧊 Context: Lead mode - looking for scout connection...');
+              console.log('Pending scouts:', Array.from(pendingScoutsRef.current.keys()));
+              console.log('Connected scouts:', connectedScoutsRef.current.map(s => ({ id: s.id, name: s.name })));
+              
+              // Add to scout connection - check pending first, then connected
+              console.log(`🔍 Looking up scout with peerId: ${message.peerId}`);
+              let scout = pendingScoutsRef.current.get(message.peerId);
+              console.log('📍 Found in pending?', !!scout);
+              
+              if (!scout) {
+                // Also check by matching peerId to connected scouts
+                console.log('🔍 Checking connected scouts...');
+                scout = connectedScoutsRef.current.find(s => s.id === message.peerId);
+                console.log('📍 Found in connected?', !!scout);
+              }
+              
+              if (scout) {
+                console.log(`✅ Scout found: ${scout.name}, connection exists: ${!!scout.connection}`);
+              }
+              
+              if (scout?.connection) {
+                console.log(`✅ Context: Adding ICE candidate to scout ${scout.name} (signaling state: ${scout.connection.signalingState})`);
+                // Check if remote description is set
+                if (scout.connection.remoteDescription) {
+                  await scout.connection.addIceCandidate(candidate);
+                  console.log('✅ Context: ICE candidate added successfully');
+                } else {
+                  console.warn('⚠️ Context: Remote description not set yet, cannot add ICE candidate');
+                }
+              } else {
+                console.warn(`⚠️ Context: No scout connection found for peerId ${message.peerId}`);
+                console.warn(`Pending scouts:`, Array.from(pendingScoutsRef.current.keys()));
+                console.warn(`Connected scouts:`, connectedScoutsRef.current.map(s => s.id));
+              }
+            } else if (mode === 'scout') {
+              // Add to scout's own connection
+              if (scoutConnectionRef.current && scoutConnectionRef.current.remoteDescription) {
+                console.log(`✅ Context: Adding ICE candidate (signaling state: ${scoutConnectionRef.current.signalingState})`);
+                await scoutConnectionRef.current.addIceCandidate(candidate);
+                console.log('✅ Context: ICE candidate added successfully');
+              } else {
+                // Buffer ICE candidate until connection is ready
+                console.log('📦 Context: Buffering ICE candidate (connection not ready yet)');
+                const bufferKey = 'scout-buffer'; // Scout only connects to one lead at a time
+                if (!pendingIceCandidatesRef.current.has(bufferKey)) {
+                  pendingIceCandidatesRef.current.set(bufferKey, []);
+                }
+                pendingIceCandidatesRef.current.get(bufferKey)!.push(message.data as RTCIceCandidateInit);
+                console.log(`📦 Context: ${pendingIceCandidatesRef.current.get(bufferKey)!.length} candidates buffered`);
+              }
+            }
+          } catch (err) {
+            console.error('❌ Failed to add ICE candidate:', err);
+          }
+        }
+      } catch (err) {
+        console.error('❌ Context signaling error:', err);
+      }
+    }, [mode, displayName]),
+  });
+  
+  // Store signaling in ref
+  signalingRef.current = signaling;
+
+  // Global auto-reconnect for scouts with saved room code
+  // This allows scouts to automatically reconnect even when on other pages
+  const hasAutoJoinedRef = useRef(false);
+  useEffect(() => {
+    // Only auto-join for scouts with a saved room code who aren't already connected
+    if (mode === 'scout' && roomCode && signaling && !signaling.connected && !hasAutoJoinedRef.current) {
+      const savedRoomCode = localStorage.getItem('webrtc_scout_room_code');
+      if (savedRoomCode === roomCode) {
+        console.log('🔄 Context: Auto-joining room', roomCode, 'from any page');
+        hasAutoJoinedRef.current = true;
+        // Small delay to ensure signaling is ready
+        setTimeout(() => {
+          signaling.join().catch(err => {
+            console.error('❌ Auto-join failed:', err);
+            hasAutoJoinedRef.current = false; // Allow retry
+          });
+        }, 500);
+      }
+    }
+    
+    // Reset flag when disconnecting or changing modes
+    if (mode !== 'scout' || !roomCode) {
+      hasAutoJoinedRef.current = false;
+    }
+  }, [mode, roomCode, signaling]);
+
   const value: WebRTCContextValue = {
     mode,
     setMode,
@@ -818,6 +1198,18 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     setShouldAttemptReconnect,
     lastScoutName,
     lastOffer,
+    roomCode,
+    setRoomCode,
+    generateRoomCodeForLead,
+    signaling: signaling ? {
+      connected: signaling.connected,
+      error: signaling.error,
+      join: signaling.join,
+      leave: signaling.leave,
+      sendOffer: signaling.sendOffer,
+      sendAnswer: signaling.sendAnswer,
+      sendIceCandidate: signaling.sendIceCandidate,
+    } : null,
     disconnectScout,
     disconnectAll
   };

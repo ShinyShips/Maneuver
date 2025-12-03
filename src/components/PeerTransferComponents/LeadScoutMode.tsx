@@ -10,22 +10,13 @@
 
 import Button from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { QRCodeCanvas } from 'qrcode.react';
-import { AlertCircle, QrCode, Camera, RefreshCw } from 'lucide-react';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 import {
   ConnectedScoutCard,
-  QRScannerCard,
   DataTransferControls,
-  TransferHistoryCard
+  TransferHistoryCard,
+  RoomCodeConnection
 } from '@/components/PeerTransferComponents';
 import { DataFilteringControls } from '@/components/DataTransferComponents/DataFilteringControls';
 import { type DataFilters } from '@/lib/dataFiltering';
@@ -47,16 +38,8 @@ interface ReceivedDataEntry {
 
 interface LeadScoutModeProps {
   // Connection state
-  isConnecting: boolean;
   connectedScouts: ConnectedScout[];
   receivedData: ReceivedDataEntry[];
-  
-  // QR Connection state
-  currentOffer: { offer: string; scoutRole: string } | null;
-  selectedRole: string;
-  setSelectedRole: (role: string) => void;
-  showScanner: boolean;
-  setShowScanner: (show: boolean) => void;
   
   // Data state
   dataType: TransferDataType;
@@ -73,8 +56,6 @@ interface LeadScoutModeProps {
   
   // Handlers
   onBack: () => void;
-  onGenerateQR: () => void;
-  onAnswerScan: (data: string) => void;
   onRequestDataFromScout: (scoutId: string, filters: DataFilters, dataType: TransferDataType) => void;
   onRequestDataFromAll: (filters: DataFilters, dataType: TransferDataType) => void;
   onPushData: (dataType: TransferDataType, scouts: ConnectedScout[]) => void;
@@ -87,14 +68,8 @@ interface LeadScoutModeProps {
 }
 
 export const LeadScoutMode = ({
-  isConnecting,
   connectedScouts,
   receivedData,
-  currentOffer,
-  selectedRole,
-  setSelectedRole,
-  showScanner,
-  setShowScanner,
   dataType,
   setDataType,
   filters,
@@ -105,8 +80,6 @@ export const LeadScoutMode = ({
   setRequestingScouts,
   setImportedDataCount,
   onBack,
-  onGenerateQR,
-  onAnswerScan,
   onRequestDataFromScout,
   onRequestDataFromAll,
   onPushData,
@@ -118,7 +91,7 @@ export const LeadScoutMode = ({
   onApplyFilters,
 }: LeadScoutModeProps) => {
   return (
-    <div className="h-screen w-full flex flex-col items-center justify-start px-4 pt-12 pb-32 overflow-y-auto">
+    <div className="h-screen w-full flex flex-col items-center justify-start px-4 pt-12 pb-8 md:pb-6 overflow-y-auto">
       <div className="flex flex-col items-start gap-6 max-w-md w-full">
         <Button onClick={onBack} variant="ghost" size="sm">
           ← Change Mode
@@ -127,100 +100,12 @@ export const LeadScoutMode = ({
         <div className="w-full">
           <h1 className="text-2xl font-bold mb-2">Lead Scout Session</h1>
           <p className="text-muted-foreground">
-            Connect each scout one at a time
+            Scouts connect using the room code below
           </p>
         </div>
 
-        {/* Add New Scout Section */}
-        {!currentOffer && (
-          <Card className="w-full">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <QrCode className="h-5 w-5" />
-                Connect New Scout
-              </CardTitle>
-              <CardDescription>
-                Select scout role to generate their QR code
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="scoutRole">Scout Role</Label>
-                <Select value={selectedRole} onValueChange={setSelectedRole}>
-                  <SelectTrigger id="scoutRole">
-                    <SelectValue placeholder="Select a role..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="red-1">Red 1</SelectItem>
-                    <SelectItem value="red-2">Red 2</SelectItem>
-                    <SelectItem value="red-3">Red 3</SelectItem>
-                    <SelectItem value="blue-1">Blue 1</SelectItem>
-                    <SelectItem value="blue-2">Blue 2</SelectItem>
-                    <SelectItem value="blue-3">Blue 3</SelectItem>
-                    <SelectItem value="other">Other (Custom Name)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <Button
-                onClick={onGenerateQR}
-                disabled={!selectedRole || isConnecting}
-                className="w-full"
-                size="lg"
-              >
-                <QrCode className="h-5 w-5 mr-2" />
-                {isConnecting ? 'Generating...' : 'Generate QR Code'}
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Show Offer QR to Scout */}
-        {currentOffer && !showScanner && (
-          <Card className="w-full border-2 border-primary">
-            <CardHeader>
-              <CardTitle className="text-center flex items-center justify-center gap-2">
-                <QrCode className="h-5 w-5" />
-                Show to {currentOffer.scoutRole}
-              </CardTitle>
-              <CardDescription className="text-center">
-                Step 1: {currentOffer.scoutRole} scans this QR
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex justify-center py-4">
-                <QRCodeCanvas 
-                  value={currentOffer.offer} 
-                  size={320}
-                  level="L"
-                  includeMargin
-                />
-              </div>
-              <p className="text-xs text-center text-muted-foreground">
-                QR Size: {currentOffer.offer.length} chars
-              </p>
-              
-              <Button
-                onClick={() => setShowScanner(true)}
-                className="w-full"
-                size="lg"
-              >
-                <Camera className="h-5 w-5 mr-2" />
-                Scan {currentOffer.scoutRole}'s Answer
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Scan Scout Answer */}
-        {currentOffer && showScanner && (
-          <QRScannerCard
-            title={`Scan ${currentOffer.scoutRole}'s Answer`}
-            description="Step 2: Point camera at their QR code"
-            onScan={onAnswerScan}
-            onCancel={() => setShowScanner(false)}
-            cancelButtonText="Back to QR"
-          />
-        )}
+        {/* Room Code Connection Card */}
+        <RoomCodeConnection mode="lead" />
 
         {/* Data Filtering - Show if scouts are connected */}
         {connectedScouts.length > 0 && (

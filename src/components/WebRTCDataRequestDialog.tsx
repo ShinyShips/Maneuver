@@ -189,12 +189,12 @@ export function WebRTCDataRequestDialog() {
   };
 
   // Debug: log when dialog opens
-  console.log('🔍 Dialog state - dataRequested:', dataRequested, 'requestFilters:', requestFilters);
+  // console.log('🔍 Dialog state - dataRequested:', dataRequested, 'requestFilters:', requestFilters);
 
   return (
     <>
       <AlertDialog open={dataRequested && !transferStatus}>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-[calc(100vw-2rem)] mx-4">
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <Download className="h-5 w-5" />
@@ -245,7 +245,7 @@ export function WebRTCDataRequestDialog() {
 
       {/* Transfer status overlay - shows what's being sent */}
       <AlertDialog open={!!transferStatus}>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-[calc(100vw-2rem)]">
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <Download className="h-5 w-5" />
