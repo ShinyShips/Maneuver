@@ -40,6 +40,7 @@ import { FullscreenProvider } from '@/contexts/FullscreenContext';
 import { WebRTCProvider } from '@/contexts/WebRTCContext';
 import { WebRTCDataRequestDialog } from '@/components/WebRTCDataRequestDialog';
 import { WebRTCPushedDataDialog } from '@/components/WebRTCPushedDataDialog';
+import { WebRTCNotifications } from '@/components/WebRTCNotifications';
 
 
 
@@ -167,6 +168,7 @@ function App() {
             <StatusBarSpacer />
             <WebRTCDataRequestDialog />
             <WebRTCPushedDataDialog />
+            <WebRTCNotifications />
           </div>
         </WebRTCProvider>
       </FullscreenProvider>

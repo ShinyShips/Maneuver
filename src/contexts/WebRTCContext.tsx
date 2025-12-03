@@ -778,7 +778,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     console.log(`✅ Answer created, size: ${answerString.length} chars`);
 
     return answerString;
-  }, []);
+  }, [handleReceivedMessage, roomCode, setMode]);
 
   // SCOUT: Send a simple control message (like decline)
   const sendControlMessage = useCallback((message: { type: string; [key: string]: unknown }) => {
@@ -1010,7 +1010,29 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
       try {
         console.log('📨 Context signaling message:', message.type, 'from', message.peerName, '| My mode:', mode, '| Message role:', message.role);
         
+        if (mode === 'scout' && message.type === 'join' && message.role === 'lead') {
+          // Lead (re)joined the room - scouts should re-announce themselves
+          console.log('📢 Context: Lead (re)joined room, scout re-announcing presence');
+          if (signalingRef.current && signalingRef.current.connected) {
+            // Add small random delay to prevent all scouts from sending join messages simultaneously
+            const delay = Math.random() * 1000; // 0-1000ms random delay
+            setTimeout(async () => {
+              // Re-send join message so lead knows we're here
+              await signalingRef.current?.join();
+            }, delay);
+          }
+        }
+        
         if (mode === 'lead' && message.type === 'join' && message.role === 'scout') {
+          // Scout joined - check if already connected or pending
+          const existingPending = pendingScoutsRef.current.get(message.peerId);
+          const existingConnected = connectedScoutsRef.current.find(s => s.signalingPeerId === message.peerId);
+          
+          if (existingPending || existingConnected) {
+            console.log('👑 Context: Scout already has connection, ignoring duplicate join');
+            return;
+          }
+          
           // Scout joined - create offer
           console.log('👑 Context: Scout joined, creating offer');
           const { scoutId, offer } = await createOfferRef.current(message.peerName || 'Scout');
@@ -1146,20 +1168,48 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
   // Global auto-reconnect for scouts with saved room code
   // This allows scouts to automatically reconnect even when on other pages
   const hasAutoJoinedRef = useRef(false);
+  const lastConnectionStatusRef = useRef(connectionStatus);
+  
+  useEffect(() => {
+    // Detect when connection is lost (was connected, now not)
+    const wasConnected = lastConnectionStatusRef.current.includes('Connected');
+    const isNowConnected = connectionStatus.includes('Connected');
+    const isNowDisconnected = !isNowConnected;
+    
+    if (wasConnected && isNowDisconnected) {
+      console.log('🔌 Context: Connection lost, resetting auto-join flag');
+      hasAutoJoinedRef.current = false; // Allow reconnection attempt
+    }
+    
+    lastConnectionStatusRef.current = connectionStatus;
+  }, [connectionStatus, mode]);
+  
   useEffect(() => {
     // Only auto-join for scouts with a saved room code who aren't already connected
-    if (mode === 'scout' && roomCode && signaling && !signaling.connected && !hasAutoJoinedRef.current) {
+    // Trigger when: scout mode + room code exists + not connected + haven't auto-joined yet
+    const isConnected = connectionStatus.includes('Connected');
+    
+    if (mode === 'scout' && roomCode && signaling && !isConnected && !hasAutoJoinedRef.current) {
       const savedRoomCode = localStorage.getItem('webrtc_scout_room_code');
       if (savedRoomCode === roomCode) {
-        console.log('🔄 Context: Auto-joining room', roomCode, 'from any page');
+        console.log('🔄 Context: Auto-joining room', roomCode, 'from any page (current status:', connectionStatus, ')');
         hasAutoJoinedRef.current = true;
-        // Small delay to ensure signaling is ready
-        setTimeout(() => {
-          signaling.join().catch(err => {
-            console.error('❌ Auto-join failed:', err);
-            hasAutoJoinedRef.current = false; // Allow retry
-          });
-        }, 500);
+        
+        // If signaling is not connected, join the room
+        if (!signaling.connected) {
+          console.log('📡 Context: Joining signaling room');
+          // Small delay to ensure signaling is ready
+          setTimeout(() => {
+            signaling.join().catch(err => {
+              console.error('❌ Auto-join failed:', err);
+              hasAutoJoinedRef.current = false; // Allow retry
+            });
+          }, 500);
+        } else {
+          console.log('📡 Context: Already in signaling room, waiting for lead offer');
+          // Signaling already connected, just wait for lead to send offer
+          // If no offer comes, the flag will be reset by connection status check above
+        }
       }
     }
     
@@ -1167,7 +1217,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     if (mode !== 'scout' || !roomCode) {
       hasAutoJoinedRef.current = false;
     }
-  }, [mode, roomCode, signaling]);
+  }, [mode, roomCode, signaling, connectionStatus]);
 
   const value: WebRTCContextValue = {
     mode,

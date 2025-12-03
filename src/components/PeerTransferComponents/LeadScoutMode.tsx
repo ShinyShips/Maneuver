@@ -1,10 +1,11 @@
 /**
  * Lead Scout Mode Component
  * Handles the lead scout's workflow:
- * - Generate QR codes for each scout
- * - Scan scout answer QRs to establish connections
+ * - Generate room code for scouts to join
+ * - Display room code and connection status
  * - Manage connected scouts
  * - Request/push data with filtering options
+ * - Auto-reconnect scouts on refresh/disconnect
  * - View transfer history
  */
 

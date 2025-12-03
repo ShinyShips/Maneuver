@@ -24,7 +24,7 @@ export function ModeSelectionScreen({ onSelectLead, onSelectScout }: ModeSelecti
           <AlertDescription>
             <strong>Requirements:</strong> All devices need internet connectivity (WiFi or cellular data) for WebRTC to establish peer connections.
             <br/><br/>
-            <strong>Best for:</strong> Practice sessions, pit area, off-season events, testing environments, or if venue provides WiFi.
+            <strong>Best for:</strong> Fast bulk transfers when network is available. Lead can push data to multiple scouts simultaneously.
             <br/><br/>
             <strong>No network available?</strong> Use the standard QR Code transfer method instead.
           </AlertDescription>
@@ -41,9 +41,10 @@ export function ModeSelectionScreen({ onSelectLead, onSelectScout }: ModeSelecti
             <div>
               <p className="font-semibold text-primary">Lead Scout:</p>
               <ol className="list-decimal list-inside space-y-1 ml-2 mt-1">
-                <li>Select scout profiles → show QR for each</li>
-                <li>Scan each scout's answer QR</li>
-                <li>Request or push data to scouts instantly</li>
+                <li>Generate a 6-digit room code</li>
+                <li>Share code with scouts (verbal/text/display)</li>
+                <li>Wait for scouts to join your room</li>
+                <li>Request or push data to connected scouts</li>
                 <li>Push: Send match schedule, scouting data, or profiles</li>
               </ol>
             </div>
@@ -53,9 +54,9 @@ export function ModeSelectionScreen({ onSelectLead, onSelectScout }: ModeSelecti
             <div>
               <p className="font-semibold text-primary">Scouts:</p>
               <ol className="list-decimal list-inside space-y-1 ml-2 mt-1">
-                <li>Scan lead's QR code</li>
-                <li>Show your answer QR to lead</li>
+                <li>Enter lead's 6-digit room code and connect</li>
                 <li>Approve/decline when lead requests or pushes data</li>
+                <li>Connection persists even when navigating away</li>
               </ol>
             </div>
           </CardContent>

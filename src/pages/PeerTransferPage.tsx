@@ -1,30 +1,11 @@
 /**
- * Peer-to-Peer Data Transfer Page with WebRTC QR Signaling
- * Lead Scout Mode: Generate QR per scout, scan answers, request data
- * Scout Mode: Scan lead's QR, display answer, respond to requests
+ * Peer-to-Peer Data Transfer Page with WebRTC Room Code System
+ * Lead Scout Mode: Generate room code, wait for scouts to join, push/request data
+ * Scout Mode: Enter room code, join lead's room, respond to requests
+ * Features: Auto-reconnect, persistent connections across navigation, bulk transfers
  */
 
 import { useState, useEffect, useRef } from 'react';
-import Button from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
 import { useWebRTC } from '@/contexts/WebRTCContext';
 import { useWebRTCQRTransfer } from '@/hooks/useWebRTCQRTransfer';
 import { type ScoutingDataWithId, type ConflictInfo } from '@/lib/scoutingDataUtils';
@@ -39,7 +20,8 @@ import {
   ModeSelectionScreen, 
   LeadScoutMode,
   ScoutMode,
-  RoomCodeConnection
+  CustomNameDialog,
+  ErrorDialog,
 } from '@/components/PeerTransferComponents';
 import { useQRCodeConnection } from '@/hooks/useQRCodeConnection';
 import { usePeerTransferPush } from '@/hooks/usePeerTransferPush';
@@ -92,20 +74,12 @@ const PeerTransferPage = () => {
   const myRole = localStorage.getItem("playerStation") || 'unknown';
   
   const {
-    role,
-    isConnecting,
     connectedScouts,
     receivedData,
     clearReceivedData,
     addToReceivedData,
-    connectionStatus,
-    scoutAnswer,
-    scoutOfferReceived,
     shouldAttemptReconnect,
     setShouldAttemptReconnect,
-    lastScoutName,
-    lastOffer,
-    startAsLead,
     createOfferForScout,
     processScoutAnswer,
     startAsScout,
@@ -189,28 +163,10 @@ const PeerTransferPage = () => {
   };
 
   // Wrap QR connection handlers to handle errors with dialog
-  const handleGenerateQR = qrConnection.handleGenerateQR;
-  
   const handleCustomNameSubmit = async () => {
     const result = await qrConnection.handleCustomNameSubmit();
     if (result?.error) {
       setErrorMessage(result.error);
-      setShowErrorDialog(true);
-    }
-  };
-
-  const handleAnswerScan = async (result: string) => {
-    const response = await qrConnection.handleAnswerScan(result);
-    if (response?.error) {
-      setErrorMessage(response.error);
-      setShowErrorDialog(true);
-    }
-  };
-  
-  const handleOfferScan = async (result: string) => {
-    const response = await qrConnection.handleOfferScan(result, myRole);
-    if (response?.error) {
-      setErrorMessage(response.error);
       setShowErrorDialog(true);
     }
   };
@@ -221,19 +177,18 @@ const PeerTransferPage = () => {
     const result = await handleBatchReviewDecisionBase(batchReviewEntries, pendingConflicts, decision);
     debugLog(`📋 hasMoreConflicts: ${result.hasMoreConflicts}`);
     
-    // Close batch dialog if no more conflicts
+    // Always close batch dialog when moving forward
+    setShowBatchDialog(false);
+    
+    // If no more conflicts, clear everything
     if (!result.hasMoreConflicts) {
-      setShowBatchDialog(false);
       setBatchReviewEntries([]);
       setPendingConflicts([]);
-      // Clear received data and reset import counter since processing is complete
-      debugLog('🧹 Clearing received data after batch review complete');
       clearReceivedData();
       setImportedDataCount(0); // Reset so next request will be processed
+      debugLog('🧹 Clearing received data after batch review complete');
     } else {
-      // Move to conflict dialog (review-each selected, or there are pending conflicts)
-      setShowBatchDialog(false);
-      // Don't clear received data yet - will be cleared after conflicts are resolved
+      // Moving to conflict dialog - don't clear data yet
       debugLog('⏭️ Moving to conflict dialog, not clearing data yet');
     }
   };
@@ -251,7 +206,7 @@ const PeerTransferPage = () => {
     return () => {
       window.removeEventListener('webrtc-disconnected-by-lead', handleDisconnect);
     };
-  }, [reset]);
+  }, [reset, setMode]);
 
   // Clean up WebRTC state when returning to mode selection
   // Only reset once when transitioning TO select mode (not on every render while in select mode)
@@ -367,100 +322,27 @@ const PeerTransferPage = () => {
   return (
     <>
       {renderContent()}
+      
       {/* Custom Name Dialog */}
-      <Dialog open={qrConnection.showCustomNameDialog} onOpenChange={qrConnection.setShowCustomNameDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Enter Scout Name</DialogTitle>
-            <DialogDescription>
-              Enter a custom name for this scout (e.g., "Pit Scout", "Strategy Lead", etc.)
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            <Input
-              placeholder="Scout name..."
-              value={qrConnection.customNameInput}
-              onChange={(e) => qrConnection.setCustomNameInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleCustomNameSubmit();
-                }
-              }}
-              autoFocus
-            />
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                qrConnection.setShowCustomNameDialog(false);
-                qrConnection.setCustomNameInput('');
-                qrConnection.setSelectedRole('');
-              }}
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleCustomNameSubmit}>
-              Create QR Code
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <CustomNameDialog
+        open={qrConnection.showCustomNameDialog}
+        onOpenChange={qrConnection.setShowCustomNameDialog}
+        customNameInput={qrConnection.customNameInput}
+        onCustomNameInputChange={qrConnection.setCustomNameInput}
+        onSubmit={handleCustomNameSubmit}
+        onCancel={() => {
+          qrConnection.setShowCustomNameDialog(false);
+          qrConnection.setCustomNameInput('');
+          qrConnection.setSelectedRole('');
+        }}
+      />
 
       {/* Error Dialog */}
-      <AlertDialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Error</AlertDialogTitle>
-            <AlertDialogDescription className="whitespace-pre-wrap">
-              {errorMessage}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction className='p-2' onClick={() => setShowErrorDialog(false)}>
-              OK
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* Role Mismatch Dialog */}
-      <AlertDialog open={qrConnection.showRoleMismatchDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>⚠️ Role Mismatch Warning</AlertDialogTitle>
-            <AlertDialogDescription className="space-y-2">
-              {qrConnection.roleMismatchInfo && (
-                <>
-                  <p className="font-semibold">
-                    Expected: {qrConnection.roleMismatchInfo.expected}
-                    <br />
-                    Connected as: {qrConnection.roleMismatchInfo.actual}
-                  </p>
-                  <p>
-                    The scout connected with the wrong role. They should:
-                  </p>
-                  <ol className="list-decimal list-inside ml-2 space-y-1">
-                    <li>Change their role to "{qrConnection.roleMismatchInfo.expected}" in the sidebar</li>
-                    <li>Disconnect and reconnect</li>
-                  </ol>
-                  <p className="mt-2">
-                    Do you want to keep this connection anyway?
-                  </p>
-                </>
-              )}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={qrConnection.handleRoleMismatchDisconnect}>
-              Disconnect
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={qrConnection.keepRoleMismatchConnection}>
-              Keep Connection
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ErrorDialog
+        open={showErrorDialog}
+        onOpenChange={setShowErrorDialog}
+        errorMessage={errorMessage}
+      />
 
       {/* Batch Review Dialog */}
       <BatchConflictDialog
