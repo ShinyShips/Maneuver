@@ -40,3 +40,6 @@ Thumbs.db
 .github/copilot-instructions.md
 docs/db-examples.md
 docs/QR_ENHANCEMENT_ROADMAP.md
+
+# Local Netlify folder
+.netlify
