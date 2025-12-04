@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Loader2 } from 'lucide-react';
 import type { ConflictInfo } from '@/lib/scoutingDataUtils';
 
 interface ConflictResolutionDialogProps {
@@ -16,6 +16,7 @@ interface ConflictResolutionDialogProps {
   onBatchResolve?: (action: 'replace' | 'skip') => void;
   onUndo?: () => void;
   canUndo?: boolean;
+  isProcessing?: boolean;
 }
 
 const ConflictResolutionDialog: React.FC<ConflictResolutionDialogProps> = ({
@@ -27,7 +28,8 @@ const ConflictResolutionDialog: React.FC<ConflictResolutionDialogProps> = ({
   onResolve,
   onBatchResolve,
   onUndo,
-  canUndo = false
+  canUndo = false,
+  isProcessing = false
 }) => {
   if (!conflict) return null;
 
@@ -43,6 +45,17 @@ const ConflictResolutionDialog: React.FC<ConflictResolutionDialogProps> = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        {/* Processing Overlay */}
+        {isProcessing && (
+          <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[100] flex items-center justify-center">
+            <div className="flex flex-col items-center gap-3 bg-card p-6 rounded-lg shadow-lg border">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-sm font-medium">Processing conflicts...</p>
+              <p className="text-xs text-muted-foreground">This may take a moment for large datasets</p>
+            </div>
+          </div>
+        )}
+        
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-amber-500" />
@@ -236,6 +249,7 @@ const ConflictResolutionDialog: React.FC<ConflictResolutionDialogProps> = ({
             <Button 
               onClick={() => onResolve('skip')}
               className="p-2"
+              disabled={isProcessing}
             >
               Skip - Keep Local Data
             </Button>
@@ -243,6 +257,7 @@ const ConflictResolutionDialog: React.FC<ConflictResolutionDialogProps> = ({
               variant="destructive"
               onClick={() => onResolve('replace')}
               className="p-2"
+              disabled={isProcessing}
             >
               Replace - Use Incoming Data
             </Button>
@@ -254,15 +269,25 @@ const ConflictResolutionDialog: React.FC<ConflictResolutionDialogProps> = ({
                   variant="outline" 
                   onClick={() => onBatchResolve('skip')}
                   className="p-2"
+                  disabled={isProcessing}
                 >
-                  Skip All Remaining ({totalConflicts - currentIndex - 1} left)
+                  {isProcessing ? (
+                    <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Processing...</>
+                  ) : (
+                    <>Skip All Remaining ({totalConflicts - currentIndex - 1} left)</>
+                  )}
                 </Button>
                 <Button 
                   variant="outline" 
                   onClick={() => onBatchResolve('replace')}
                   className="p-2"
+                  disabled={isProcessing}
                 >
-                  Replace All Remaining ({totalConflicts - currentIndex - 1} left)
+                  {isProcessing ? (
+                    <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Processing...</>
+                  ) : (
+                    <>Replace All Remaining ({totalConflicts - currentIndex - 1} left)</>
+                  )}
                 </Button>
               </>
             )}
@@ -273,6 +298,7 @@ const ConflictResolutionDialog: React.FC<ConflictResolutionDialogProps> = ({
                 variant="outline" 
                 onClick={onUndo}
                 className="p-2 sm:col-span-2"
+                disabled={isProcessing}
               >
                 ↶ Undo Last Decision
               </Button>
