@@ -33,7 +33,24 @@ function generateUUID(): string {
 // All devices must be on the same network (e.g., event WiFi)
 const STUN_SERVERS: RTCIceServer[] = [
   { urls: 'stun:stun.l.google.com:19302' },
-  { urls: 'stun:stun1.l.google.com:19302' }
+  { urls: 'stun:stun1.l.google.com:19302' },
+  // Free TURN servers for testing (not guaranteed uptime)
+  // For production, use a paid service like Twilio, Metered.ca, or host your own
+  {
+    urls: 'turn:openrelay.metered.ca:80',
+    username: 'openrelayproject',
+    credential: 'openrelayproject',
+  },
+  {
+    urls: 'turn:openrelay.metered.ca:443',
+    username: 'openrelayproject',
+    credential: 'openrelayproject',
+  },
+  {
+    urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+    username: 'openrelayproject',
+    credential: 'openrelayproject',
+  },
 ];
 
 // Data types that can be transferred
@@ -482,6 +499,10 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     
     // Move from pending to connected
     pendingScoutsRef.current.delete(scoutId);
+    // Also delete the signaling peerId mapping if it exists
+    if (scout.signalingPeerId) {
+      pendingScoutsRef.current.delete(scout.signalingPeerId);
+    }
     connectedScoutsRef.current.push(scout);
     updateConnectedScouts();
     
