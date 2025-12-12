@@ -20,6 +20,7 @@ import ClearDataPage from "@/pages/ClearDataPage";
 import QRDataTransferPage from "@/pages/QRDataTransferPage";
 import JSONDataTransferPage from "@/pages/JSONDataTransferPage";
 import MatchDataQRPage from "@/pages/MatchDataQRPage";
+import PeerTransferPage from "@/pages/PeerTransferPage";
 import MatchStrategyPage from "@/pages/MatchStrategyPage";
 import { AutoScoringPage, TeleopScoringPage } from "@/pages/ScoringPage";
 import EndgamePage from "@/pages/EndgamePage";
@@ -36,6 +37,10 @@ import { InstallPrompt } from '@/components/InstallPrompt';
 import { StatusBarSpacer } from '@/components/StatusBarSpacer';
 import { SplashScreen } from '@/components/SplashScreen';
 import { FullscreenProvider } from '@/contexts/FullscreenContext';
+import { WebRTCProvider } from '@/contexts/WebRTCContext';
+import { WebRTCDataRequestDialog } from '@/components/WebRTCDataRequestDialog';
+import { WebRTCPushedDataDialog } from '@/components/WebRTCPushedDataDialog';
+import { WebRTCNotifications } from '@/components/WebRTCNotifications';
 
 
 
@@ -52,6 +57,7 @@ function App() {
         <Route path="/auto-start" element={<AutoStartPage />} />
         <Route path="/qr-data-transfer" element={<QRDataTransferPage />} />
         <Route path="/json-transfer" element={<JSONDataTransferPage />} />
+        <Route path="/peer-transfer" element={<PeerTransferPage />} />
         <Route path="/match-data-qr" element={<MatchDataQRPage />} />
         <Route path="/match-strategy" element={<MatchStrategyPage />} />
         <Route path="/auto-scoring" element={<AutoScoringPage />} />
@@ -155,11 +161,16 @@ function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <FullscreenProvider>
-        <div className="min-h-screen bg-background">
-          <RouterProvider router={router} />
-          <InstallPrompt />
-          <StatusBarSpacer />
-        </div>
+        <WebRTCProvider>
+          <div className="min-h-screen bg-background">
+            <RouterProvider router={router} />
+            <InstallPrompt />
+            <StatusBarSpacer />
+            <WebRTCDataRequestDialog />
+            <WebRTCPushedDataDialog />
+            <WebRTCNotifications />
+          </div>
+        </WebRTCProvider>
       </FullscreenProvider>
     </ThemeProvider>
   );
