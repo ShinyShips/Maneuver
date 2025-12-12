@@ -33,7 +33,24 @@ function generateUUID(): string {
 // All devices must be on the same network (e.g., event WiFi)
 const STUN_SERVERS: RTCIceServer[] = [
   { urls: 'stun:stun.l.google.com:19302' },
-  { urls: 'stun:stun1.l.google.com:19302' }
+  { urls: 'stun:stun1.l.google.com:19302' },
+  // Free TURN servers for testing (not guaranteed uptime)
+  // For production, use a paid service like Twilio, Metered.ca, or host your own
+  {
+    urls: 'turn:openrelay.metered.ca:80',
+    username: 'openrelayproject',
+    credential: 'openrelayproject',
+  },
+  {
+    urls: 'turn:openrelay.metered.ca:443',
+    username: 'openrelayproject',
+    credential: 'openrelayproject',
+  },
+  {
+    urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+    username: 'openrelayproject',
+    credential: 'openrelayproject',
+  },
 ];
 
 // Data types that can be transferred
@@ -353,10 +370,12 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     const connection = new RTCPeerConnection({ iceServers: STUN_SERVERS });
     
     console.log(`📡 Lead creating offer for scout: ${scoutName} (ID: ${scoutId})`);
+    console.log('🔧 Using ICE servers:', STUN_SERVERS);
 
     // Send ICE candidates to scout via signaling
     connection.onicecandidate = (event) => {
       if (event.candidate) {
+        console.log('🧊 Lead ICE candidate:', event.candidate.candidate.substring(0, 50) + '...', 'type:', event.candidate.type);
         // Look up the scout to get their signaling peerId
         const scout = pendingScoutsRef.current.get(scoutId) || connectedScoutsRef.current.find(s => s.id === scoutId);
         if (scout?.signalingPeerId) {
@@ -438,15 +457,16 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     await connection.setLocalDescription(offer);
 
     // Wait for ICE gathering with timeout
-    // In offline mode (no STUN), we only need local candidates which gather quickly
+    // Need longer timeout for TURN server candidates which can take 3-5 seconds
     await new Promise<void>((resolve) => {
       if (connection.iceGatheringState === 'complete') {
         resolve();
       } else {
         const timeout = setTimeout(() => {
           connection.onicegatheringstatechange = null;
+          console.log('⏱️ ICE gathering timeout reached, proceeding with gathered candidates');
           resolve();
-        }, 1000); // Reduced to 1 second for local-only candidates
+        }, 5000); // 5 seconds to allow TURN candidates to be gathered
         
         connection.onicegatheringstatechange = () => {
           if (connection.iceGatheringState === 'complete') {
@@ -482,6 +502,10 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     
     // Move from pending to connected
     pendingScoutsRef.current.delete(scoutId);
+    // Also delete the signaling peerId mapping if it exists
+    if (scout.signalingPeerId) {
+      pendingScoutsRef.current.delete(scout.signalingPeerId);
+    }
     connectedScoutsRef.current.push(scout);
     updateConnectedScouts();
     
@@ -646,12 +670,17 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
 
     const connection = new RTCPeerConnection({ iceServers: STUN_SERVERS });
     scoutConnectionRef.current = connection;
+    
+    console.log('🔧 Scout using ICE servers:', STUN_SERVERS);
 
     // Send ICE candidates to lead via signaling
     connection.onicecandidate = (event) => {
       if (event.candidate) {
+        console.log('🧊 Scout ICE candidate:', event.candidate.candidate.substring(0, 50) + '...', 'type:', event.candidate.type);
         console.log('🧊 Scout: Sending ICE candidate to lead, targetPeerId:', leadPeerIdRef.current);
         signalingRef.current?.sendIceCandidate(event.candidate, leadPeerIdRef.current || undefined);
+      } else {
+        console.log('🧊 Scout: ICE gathering complete');
       }
     };
 
@@ -751,7 +780,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
     await connection.setLocalDescription(answer);
 
     // Wait for ICE gathering with timeout
-    // In offline mode (no STUN), we only need local candidates which gather quickly
+    // Need longer timeout for TURN server candidates which can take 3-5 seconds
     await new Promise<void>((resolve) => {
       if (connection.iceGatheringState === 'complete') {
         console.log('✅ Scout ICE gathering already complete');
@@ -761,7 +790,7 @@ export function WebRTCProvider({ children }: { children: ReactNode }) {
           console.log(`⏱️ Scout ICE gathering timeout (state: ${connection.iceGatheringState}) - proceeding with available candidates`);
           connection.onicegatheringstatechange = null;
           resolve();
-        }, 1000); // Reduced to 1 second for local-only candidates
+        }, 5000); // 5 seconds to allow TURN candidates to be gathered
         
         connection.onicegatheringstatechange = () => {
           console.log(`🧊 Scout ICE gathering state: ${connection.iceGatheringState}`);
