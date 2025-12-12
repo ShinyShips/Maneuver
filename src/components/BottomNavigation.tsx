@@ -1,9 +1,8 @@
-import { Home, Binoculars, QrCode, TrendingUp, Settings } from 'lucide-react';
+import { Binoculars, Wifi, QrCode, TrendingUp, Map } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { usePWA } from '@/hooks/usePWA';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useFullscreen } from '@/hooks/useFullscreen';
 import { useNavigationConfirm } from '@/hooks/useNavigationConfirm';
 import { NavigationConfirmDialog } from '@/components/NavigationConfirmDialog';
 import { haptics } from '@/lib/haptics';
@@ -26,16 +25,16 @@ interface BottomNavItem {
   href: string;
 }
 
-const baseNavItems: BottomNavItem[] = [
-  {
-    icon: Home,
-    label: 'Home',
-    href: '/',
-  },
+const navItems: BottomNavItem[] = [
   {
     icon: Binoculars,
     label: 'Scout',
     href: '/game-start',
+  },
+  {
+    icon: Wifi,
+    label: 'WiFi Data',
+    href: '/peer-transfer',
   },
   {
     icon: QrCode,
@@ -47,23 +46,17 @@ const baseNavItems: BottomNavItem[] = [
     label: 'Strategy',
     href: '/strategy-overview',
   },
+  {
+    icon: Map,
+    label: 'Match',
+    href: '/match-strategy',
+  },
 ];
-
-const devNavItem: BottomNavItem = {
-  icon: Settings,
-  label: 'Dev',
-  href: '/dev-utilities',
-};
-
-const navItems: BottomNavItem[] = import.meta.env.DEV 
-  ? [...baseNavItems, devNavItem] 
-  : baseNavItems;
 
 export function BottomNavigation() {
   const location = useLocation();
   const isPWA = usePWA();
   const isMobile = useIsMobile();
-  const { isFullscreen } = useFullscreen();
   const { 
     confirmNavigation, 
     handleConfirm, 
@@ -73,9 +66,8 @@ export function BottomNavigation() {
   } = useNavigationConfirm();
 
   // Show in development for testing, or on mobile when installed as PWA
-  // But never show when in fullscreen mode
   const isDevelopment = import.meta.env.DEV;
-  const shouldShow = isMobile && (isPWA || isDevelopment) && !isFullscreen;
+  const shouldShow = isMobile && (isPWA || isDevelopment);
 
   if (!shouldShow) {
     return null;

@@ -1,0 +1,22 @@
+# Redirect all requests to index.html for SPA routing
+# Functions are automatically handled by Netlify at /.netlify/functions/*
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+[dev]
+  command = "vite --port 5173 --host"
+  targetPort = 5173
+  port = 8888
+  publish = "dist"
+  autoLaunch = false
+  framework = "#custom"
