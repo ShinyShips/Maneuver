@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Wifi, UserCheck, Users } from 'lucide-react';
 
@@ -11,9 +12,12 @@ interface ModeSelectionScreenProps {
 
 export function ModeSelectionScreen({ onSelectLead, onSelectScout }: ModeSelectionScreenProps) {
   return (
-    <div className="h-screen w-full flex flex-col items-center px-4 pt-6 pb-8 md:pb-6 overflow-y-auto">
+    <div className="min-h-screen w-full flex flex-col items-center px-4 pt-6 pb-8 md:pb-6">
       <div className="flex flex-col items-left gap-4 max-w-md w-full">
-        <h1 className="text-2xl font-bold">WiFi Transfer</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold">WiFi Transfer</h1>
+          <Badge variant="secondary">Beta</Badge>
+        </div>
         <p className="text-muted-foreground">
           Fast peer-to-peer transfer when network available
         </p>
@@ -22,11 +26,13 @@ export function ModeSelectionScreen({ onSelectLead, onSelectScout }: ModeSelecti
         <Alert className="w-full">
           <Wifi className="h-4 w-4" />
           <AlertDescription>
-            <strong>Requirements:</strong> All devices need internet connectivity (WiFi or cellular data) for WebRTC to establish peer connections.
+            <strong>Requirements:</strong> All devices need internet connection (WiFi or cellular data).
             <br/><br/>
-            <strong>Best for:</strong> Fast bulk transfers when network is available. Lead can push data to multiple scouts simultaneously.
+            <strong>Limitations:</strong> May not work if devices are very far apart or on certain restricted networks. Still in testing.
             <br/><br/>
-            <strong>No network available?</strong> Use the standard QR Code transfer method instead.
+            <strong>Best for:</strong> Fast bulk transfers at competitions. Lead can send data to multiple scouts at once.
+            <br/><br/>
+            <strong>Having trouble connecting?</strong> Use the QR Code transfer method instead - it always works!
           </AlertDescription>
         </Alert>
 

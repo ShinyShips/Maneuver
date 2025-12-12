@@ -55,7 +55,7 @@ const data = {
           url: "/qr-data-transfer",
         },
         {
-          title: "WiFi Transfer",
+          title: "WiFi Transfer (Beta)",
           url: "/peer-transfer",
         },
         {
@@ -215,15 +215,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button] h-fit"
             >
-              <a href="/" aria-label="Maneuver Home">
-                <img
-                  src={ManeuverHorizontalLogo}
-                  className="row-span-4 scale-75 dark:invert"
-                  width="240"
-                  height="160"
-                  alt="Maneuver Logo Wordmark Horizontal"
-                />
-              </a>
+              <img
+                src={ManeuverHorizontalLogo}
+                className="row-span-4 scale-75 dark:invert"
+                width="240"
+                height="160"
+                alt="Maneuver Logo Wordmark Horizontal"
+              />
             </SidebarMenuButton>
             <Separator className="my-1" />
           </SidebarMenuItem>
