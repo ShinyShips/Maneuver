@@ -150,7 +150,11 @@ const UniversalFountainScanner = ({
         try {
           // Convert base64 back to binary and create block
           const binaryData = toUint8Array(packet.data);
-          const block = binaryToBlock(binaryData);
+          const block = {
+            k: packet.k,
+            indices: packet.indices,
+            data: binaryData,
+          };
 
           // Add block to decoder
           addDebugMsg(`🔧 Adding block to decoder...`);
